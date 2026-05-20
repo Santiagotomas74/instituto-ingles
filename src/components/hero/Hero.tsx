@@ -2,16 +2,93 @@ export default function Hero() {
   return (
     <section
       className="
+        relative
+        overflow-hidden
         w-full
-        bg-gradient-to-r
-        from-blue-700
-        via-blue-600
-        to-blue-900
+        bg-gradient-to-br
+        from-blue-950
+        via-blue-800
+        to-blue-600
         py-28
+        lg:py-36
       "
     >
-      <div className="max-w-7xl mx-auto px-6">
+      {/* Background Effects */}
+      <div
+        className="
+          absolute
+          top-0
+          left-0
+          w-full
+          h-full
+          opacity-20
+          bg-[radial-gradient(circle_at_top_right,white,transparent_35%)]
+        "
+      />
+
+      <div
+        className="
+          absolute
+          -bottom-32
+          -right-32
+          w-[400px]
+          h-[400px]
+          rounded-full
+          bg-blue-400/20
+          blur-3xl
+        "
+      />
+
+      <div
+        className="
+          absolute
+          top-10
+          left-[-120px]
+          w-[280px]
+          h-[280px]
+          rounded-full
+          bg-cyan-300/10
+          blur-3xl
+        "
+      />
+
+      <div
+        className="
+          max-w-7xl
+          mx-auto
+          px-6
+          relative
+          z-10
+          grid
+          lg:grid-cols-2
+          gap-16
+          items-center
+        "
+      >
+        {/* Left Content */}
         <div className="max-w-3xl">
+          {/* Badge */}
+          <div
+            className="
+              inline-flex
+              items-center
+              gap-2
+              px-4
+              py-2
+              rounded-full
+              bg-white/10
+              border
+              border-white/20
+              backdrop-blur-sm
+              text-white/90
+              text-sm
+              font-medium
+              mb-8
+            "
+          >
+            ✨ Instituto de Inglés en San Miguel desde 2010
+          </div>
+
           {/* Title */}
           <h1
             className="
@@ -23,62 +100,202 @@ export default function Hero() {
               tracking-tight
             "
           >
-            Aprende inglés con un
-            <br />
-            método moderno y efectivo
+            Aprendé inglés con
+            <span className="font-semibold text-cyan-300">
+              {" "}
+              certificación Cambridge
+            </span>
           </h1>
 
           {/* Description */}
           <p
             className="
               mt-8
-              text-white/90
+              text-white/80
               text-lg
               md:text-xl
               leading-relaxed
               max-w-2xl
             "
           >
-            Clases personalizadas, profesores certificados y una plataforma
-            académica diseñada para tu éxito.
+            Clases dinámicas para niños, adolescentes y adultos. Modalidad
+            presencial y online con grupos reducidos, profesores especializados
+            y programas oficiales Cambridge.
           </p>
 
+          {/* Features */}
+          <div
+            className="
+              mt-10
+              flex
+              flex-wrap
+              gap-4
+            "
+          >
+            {[
+              "Cursos para todas las edades",
+              "Modalidad online y presencial",
+              "Clases reducidas",
+              "Certificación Cambridge",
+            ].map((item) => (
+              <div
+                key={item}
+                className="
+                  px-4
+                  py-2
+                  rounded-full
+                  bg-white/10
+                  border
+                  border-white/10
+                  text-white/90
+                  text-sm
+                  backdrop-blur-sm
+                "
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+
           {/* Buttons */}
-          <div className="flex items-center gap-4 mt-10">
+          <div
+            className="
+              flex
+              flex-col
+              sm:flex-row
+              items-start
+              sm:items-center
+              gap-4
+              mt-12
+            "
+          >
             <button
               className="
                 bg-white
-                text-blue-700
-                px-7
-                py-3
-                rounded-md
+                text-blue-800
+                px-8
+                py-4
+                rounded-xl
                 text-lg
-                font-medium
-                hover:bg-gray-100
+                font-semibold
+                hover:bg-blue-50
                 transition
-                shadow-lg
+                shadow-2xl
+                hover:scale-[1.02]
               "
             >
-              Comenzar ahora
+              Inscribirme ahora
             </button>
 
             <button
               className="
                 border
-                border-white
+                border-white/30
+                bg-white/5
+                backdrop-blur-sm
                 text-white
-                px-7
-                py-3
-                rounded-md
+                px-8
+                py-4
+                rounded-xl
                 text-lg
                 font-medium
                 hover:bg-white
-                hover:text-blue-700
+                hover:text-blue-800
                 transition
               "
             >
-              Conocer más
+              Ver programas
             </button>
+          </div>
+        </div>
+
+        {/* Right Card */}
+        <div
+          className="
+            hidden
+            lg:flex
+            justify-end
+          "
+        >
+          <div
+            className="
+              w-full
+              max-w-md
+              rounded-3xl
+              bg-white/10
+              border
+              border-white/20
+              backdrop-blur-xl
+              p-8
+              shadow-2xl
+            "
+          >
+            <div className="space-y-6">
+              <div>
+                <p className="text-cyan-300 text-sm font-medium">
+                  I.N.K Instituto de Inglés
+                </p>
+
+                <h3
+                  className="
+                    text-white
+                    text-3xl
+                    font-semibold
+                    mt-2
+                  "
+                >
+                  Inglés para el mundo real
+                </h3>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  "✔ Cursos regulares e intensivos",
+                  "✔ Inglés para profesionales",
+                  "✔ Conversación y apoyo escolar",
+                  "✔ Exámenes en sede propia",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="
+                      flex
+                      items-center
+                      text-white/90
+                      text-[15px]
+                    "
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div
+                className="
+                  pt-6
+                  border-t
+                  border-white/10
+                  flex
+                  items-center
+                  justify-between
+                "
+              >
+                <div>
+                  <p className="text-white text-2xl font-bold">+15 años</p>
+
+                  <span className="text-white/60 text-sm">
+                    enseñando inglés
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-white text-2xl font-bold">Cambridge</p>
+
+                  <span className="text-white/60 text-sm">
+                    Certificaciones oficiales
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

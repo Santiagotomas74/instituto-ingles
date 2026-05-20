@@ -1,56 +1,125 @@
 const levels = [
   {
-    level: "A1",
-    duration: "3 meses",
-    title: "Principiante",
-    description: "Fundamentos del inglés para empezar desde cero",
+    level: "Kids",
+    duration: "Desde 4 años",
+    title: "Niños",
+    description:
+      "Clases dinámicas y divertidas para aprender inglés jugando, comunicándose y desarrollando confianza desde pequeños.",
+    color: "from-pink-500 to-rose-500",
   },
   {
-    level: "A2",
-    duration: "3 meses",
-    title: "Elemental",
-    description: "Conversaciones básicas y gramática elemental",
+    level: "Teens",
+    duration: "Programa Cambridge",
+    title: "Adolescentes",
+    description:
+      "Cursos orientados al desarrollo académico, conversación y preparación para certificaciones internacionales.",
+    color: "from-blue-500 to-cyan-500",
   },
   {
-    level: "B1",
-    duration: "4 meses",
-    title: "Intermedio",
-    description: "Comunicación efectiva en situaciones cotidianas",
+    level: "Adults",
+    duration: "Flexible",
+    title: "Adultos",
+    description:
+      "Aprendé inglés para viajar, trabajar o desenvolverte profesionalmente en situaciones reales.",
+    color: "from-indigo-500 to-blue-700",
   },
   {
-    level: "B2",
-    duration: "4 meses",
-    title: "Intermedio Alto",
-    description: "Fluidez y precisión en contextos variados",
+    level: "Speaking",
+    duration: "Conversación",
+    title: "Cursos Orales",
+    description:
+      "Mejorá tu fluidez, pronunciación y comprensión auditiva con clases enfocadas en speaking real.",
+    color: "from-emerald-500 to-teal-600",
   },
   {
-    level: "C1",
-    duration: "5 meses",
-    title: "Avanzado",
-    description: "Dominio avanzado para contextos académicos y profesionales",
+    level: "Professional",
+    duration: "Especializado",
+    title: "Inglés Profesional",
+    description:
+      "Cursos orientados a ingeniería, medicina, azafatas y otras áreas profesionales específicas.",
+    color: "from-violet-500 to-purple-600",
+  },
+  {
+    level: "Cambridge",
+    duration: "Certificación",
+    title: "Exámenes Cambridge",
+    description:
+      "Preparación oficial para certificaciones Cambridge con evaluaciones realizadas en nuestra sede.",
+    color: "from-amber-500 to-orange-500",
   },
 ];
 
 export default function LevelsSection() {
   return (
-    <section className="bg-[#f7f8fa] py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section
+      className="
+        relative
+        overflow-hidden
+        bg-[#f7f9fc]
+        py-28
+      "
+    >
+      {/* Background */}
+      <div
+        className="
+          absolute
+          top-0
+          right-0
+          w-[500px]
+          h-[500px]
+          bg-blue-100
+          rounded-full
+          blur-3xl
+          opacity-30
+        "
+      />
+
+      <div
+        className="
+          max-w-7xl
+          mx-auto
+          px-6
+          relative
+          z-10
+        "
+      >
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-20">
+          <span
+            className="
+              inline-flex
+              items-center
+              px-4
+              py-2
+              rounded-full
+              bg-blue-100
+              text-blue-700
+              text-sm
+              font-semibold
+              mb-6
+            "
+          >
+            PROGRAMAS ACADÉMICOS
+          </span>
+
           <h2
             className="
               text-5xl
+              md:text-6xl
               font-semibold
               text-gray-900
               tracking-tight
+              leading-tight
             "
           >
-            Nuestros Niveles
+            Cursos para cada etapa
+            <br />
+            de tu aprendizaje
           </h2>
 
           <p
             className="
-              mt-5
+              mt-6
               text-xl
               text-gray-600
               max-w-3xl
@@ -58,7 +127,8 @@ export default function LevelsSection() {
               leading-relaxed
             "
           >
-            Desde principiante hasta avanzado, según el Marco Común Europeo
+            En I.N.K Instituto de Inglés ofrecemos programas modernos, dinámicos
+            y adaptados a todas las edades y objetivos.
           </p>
         </div>
 
@@ -74,46 +144,70 @@ export default function LevelsSection() {
         >
           {levels.map((item) => (
             <div
-              key={item.level}
+              key={item.title}
               className="
+                group
+                relative
+                overflow-hidden
                 bg-white
-                rounded-2xl
+                rounded-3xl
                 p-8
                 border
                 border-gray-100
                 shadow-sm
-                hover:shadow-xl
-                hover:-translate-y-1
+                hover:shadow-2xl
+                hover:-translate-y-2
                 transition-all
-                duration-300
+                duration-500
               "
             >
-              {/* Top */}
-              <div className="flex items-center gap-4">
+              {/* Gradient Glow */}
+              <div
+                className={`
+                  absolute
+                  top-0
+                  right-0
+                  w-40
+                  h-40
+                  rounded-full
+                  blur-3xl
+                  opacity-10
+                  bg-gradient-to-br
+                  ${item.color}
+                `}
+              />
+
+              {/* Badge */}
+              <div className="flex items-center justify-between">
                 <div
-                  className="
-                    bg-blue-100
-                    text-blue-700
+                  className={`
+                    bg-gradient-to-r
+                    ${item.color}
+                    text-white
                     font-semibold
                     px-5
                     py-3
-                    rounded-xl
-                    text-lg
-                  "
+                    rounded-2xl
+                    text-sm
+                    shadow-lg
+                  `}
                 >
                   {item.level}
                 </div>
 
-                <span className="text-gray-500 text-lg">{item.duration}</span>
+                <span className="text-gray-500 text-sm font-medium">
+                  {item.duration}
+                </span>
               </div>
 
               {/* Content */}
-              <div className="mt-8">
+              <div className="mt-10 relative z-10">
                 <h3
                   className="
                     text-3xl
                     font-semibold
                     text-gray-900
+                    tracking-tight
                   "
                 >
                   {item.title}
@@ -121,9 +215,9 @@ export default function LevelsSection() {
 
                 <p
                   className="
-                    mt-4
+                    mt-5
                     text-gray-600
-                    text-lg
+                    text-[17px]
                     leading-relaxed
                   "
                 >
@@ -131,26 +225,26 @@ export default function LevelsSection() {
                 </p>
               </div>
 
-              {/* Button */}
-              <button
-                className="
-                  mt-8
-                  w-full
-                  border
-                  border-blue-500
-                  text-blue-600
-                  py-4
-                  rounded-xl
-                  text-lg
-                  font-medium
-                  hover:bg-blue-600
-                  hover:text-white
-                  transition-all
-                  duration-300
-                "
-              >
-                Más información
-              </button>
+              {/* Bottom */}
+              <div className="mt-10">
+                <button
+                  className={`
+                    w-full
+                    py-4
+                    rounded-2xl
+                    text-white
+                    font-medium
+                    bg-gradient-to-r
+                    ${item.color}
+                    hover:scale-[1.02]
+                    transition-all
+                    duration-300
+                    shadow-lg
+                  `}
+                >
+                  Ver programa
+                </button>
+              </div>
             </div>
           ))}
         </div>
