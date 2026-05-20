@@ -52,6 +52,7 @@ const skills = [
 export default function MethodologySection() {
   return (
     <section
+      id="methodology"
       className="
         relative
         overflow-hidden

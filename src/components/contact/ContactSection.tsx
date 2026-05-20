@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail, Clock3 } from "lucide-react";
 
 export default function ContactSection() {
   return (
-    <section className="bg-white py-24">
+    <section id="contact" className="bg-white py-24">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -183,93 +183,50 @@ export default function ContactSection() {
                 </h3>
 
                 <div className="flex items-center gap-4 mt-5">
+                  {/* Instagram */}
                   <a
-                    href="#"
-                    className="
-                      flex
-                      items-center
-                      gap-3
-                      bg-white
-                      border
-                      border-gray-200
-                      px-5
-                      py-3
-                      rounded-2xl
-                      hover:border-blue-500
-                      hover:shadow-md
-                      transition-all
-                    "
+                    href="https://www.instagram.com/i.n.k2010/"
+                    className="text-white hover:text-pink-300 transition-colors"
                   >
-                    {/* Instagram */}
-                    <a
-                      href="https://www.instagram.com/i.n.k2010/"
-                      className="text-white hover:text-pink-300 transition-colors"
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                      >
-                        <rect
-                          width="20"
-                          height="20"
-                          x="2"
-                          y="2"
-                          rx="5"
-                          ry="5"
-                        />
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
 
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
-                        />
-                      </svg>
-                    </a>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
+                      />
+                    </svg>
 
                     <span className="font-medium text-gray-700">
                       @I.n.k2010
                     </span>
                   </a>
 
+                  {/* Facebook */}
                   <a
                     href="#"
-                    className="
-                      flex
-                      items-center
-                      gap-3
-                      bg-white
-                      border
-                      border-gray-200
-                      px-5
-                      py-3
-                      rounded-2xl
-                      hover:border-blue-500
-                      hover:shadow-md
-                      transition-all
-                    "
+                    className="text-white text-blue-300 hover:text-blue-300 transition-colors"
                   >
-                    {/* Facebook */}
-                    <a
-                      href="#"
-                      className="text-white text-blue-300 hover:text-blue-300 transition-colors"
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
-                        />
-                      </svg>
-                    </a>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                      />
+                    </svg>
 
                     <span className="font-medium text-gray-700">I.N.K</span>
                   </a>

@@ -26,6 +26,7 @@ const teachers = [
 export default function TeachersSection() {
   return (
     <section
+      id="teachers"
       className="
         relative
         overflow-hidden

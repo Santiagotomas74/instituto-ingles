@@ -125,12 +125,12 @@ export default function MobileNavbar() {
               <li className="relative group">
                 <button
                   className="
-                flex
-                items-center
-                gap-1
-                hover:text-blue-600
-                transition
-              "
+      flex
+      items-center
+      gap-1
+      hover:text-blue-600
+      transition
+    "
                 >
                   Instituto
                   <ChevronDown className="w-4 h-4" />
@@ -138,68 +138,86 @@ export default function MobileNavbar() {
 
                 <div
                   className="
-                absolute
-                top-10
-                left-0
-                w-72
-                rounded-2xl
-                border
-                border-gray-100
-                bg-white
-                shadow-2xl
-                p-3
-                opacity-0
-                invisible
-                translate-y-2
-                group-hover:opacity-100
-                group-hover:visible
-                group-hover:translate-y-0
-                transition-all
-                duration-300
-              "
+      absolute
+      top-10
+      left-0
+      w-80
+      rounded-2xl
+      border
+      border-gray-100
+      bg-white
+      shadow-2xl
+      p-3
+      opacity-0
+      invisible
+      translate-y-2
+      group-hover:opacity-100
+      group-hover:visible
+      group-hover:translate-y-0
+      transition-all
+      duration-300
+      z-50
+    "
                 >
                   <DropdownItem
-                    href="/history"
-                    title="Historia del instituto"
-                    description="Conoce nuestra trayectoria"
+                    href="#about"
+                    title="Sobre I.N.K"
+                    description="Nuestra historia, misión y visión"
                   />
 
                   <DropdownItem
-                    href="/methodology"
+                    href="#features"
+                    title="¿Por qué elegirnos?"
+                    description="Beneficios y ventajas del instituto"
+                  />
+
+                  <DropdownItem
+                    href="#methodology"
                     title="Metodología"
                     description="Cómo enseñamos inglés"
                   />
 
                   <DropdownItem
-                    href="/testimonials"
+                    href="#cambridge"
+                    title="Certificación Cambridge"
+                    description="Preparación y exámenes oficiales"
+                  />
+
+                  <DropdownItem
+                    href="#modalities"
+                    title="Modalidades"
+                    description="Presencial, online y personalizada"
+                  />
+
+                  <DropdownItem
+                    href="#teachers"
+                    title="Profesores"
+                    description="Conoce nuestro equipo docente"
+                  />
+
+                  <DropdownItem
+                    href="#stats"
+                    title="Logros y estadísticas"
+                    description="Años de experiencia y estudiantes"
+                  />
+
+                  <DropdownItem
+                    href="#testimonials"
                     title="Testimonios"
-                    description="Experiencias de estudiantes"
-                  />
-
-                  <DropdownItem
-                    href="/events"
-                    title="Actividades y eventos"
-                    description="Eventos y talleres"
-                  />
-
-                  <DropdownItem
-                    href="/schedule"
-                    title="Cronograma académico"
-                    description="Fechas y calendarios"
+                    description="Experiencias de nuestros alumnos"
                   />
                 </div>
               </li>
-
               {/* Cursos */}
               <li className="relative group">
                 <button
                   className="
-                flex
-                items-center
-                gap-1
-                hover:text-blue-600
-                transition
-              "
+      flex
+      items-center
+      gap-1
+      hover:text-blue-600
+      transition
+    "
                 >
                   Cursos
                   <ChevronDown className="w-4 h-4" />
@@ -207,54 +225,85 @@ export default function MobileNavbar() {
 
                 <div
                   className="
-                absolute
-                top-10
-                left-0
-                w-64
-                rounded-2xl
-                border
-                border-gray-100
-                bg-white
-                shadow-2xl
-                p-3
-                opacity-0
-                invisible
-                translate-y-2
-                group-hover:opacity-100
-                group-hover:visible
-                group-hover:translate-y-0
-                transition-all
-                duration-300
-              "
+      absolute
+      top-10
+      left-0
+      w-80
+      rounded-2xl
+      border
+      border-gray-100
+      bg-white
+      shadow-2xl
+      p-3
+      opacity-0
+      invisible
+      translate-y-2
+      group-hover:opacity-100
+      group-hover:visible
+      group-hover:translate-y-0
+      transition-all
+      duration-300
+      z-50
+    "
                 >
                   <DropdownItem
-                    href="/courses/a1"
-                    title="Nivel A1"
-                    description="Principiante"
+                    href="#levels"
+                    title="Kids"
+                    description="Inglés para niños desde los 4 años"
                   />
 
                   <DropdownItem
-                    href="/courses/a2"
-                    title="Nivel A2"
-                    description="Elemental"
+                    href="#levels"
+                    title="Teens"
+                    description="Cursos para adolescentes"
                   />
 
                   <DropdownItem
-                    href="/courses/b1"
-                    title="Nivel B1"
-                    description="Intermedio"
+                    href="#levels"
+                    title="Adults"
+                    description="Programas para adultos"
                   />
 
                   <DropdownItem
-                    href="/courses/b2"
-                    title="Nivel B2"
-                    description="Intermedio alto"
+                    href="#levels"
+                    title="Conversation"
+                    description="Práctica intensiva de conversación"
                   />
 
                   <DropdownItem
-                    href="/courses/c1"
-                    title="Nivel C1"
-                    description="Avanzado"
+                    href="#levels"
+                    title="Cambridge Preparation"
+                    description="Preparación para certificaciones oficiales"
+                  />
+
+                  <DropdownItem
+                    href="#levels"
+                    title="Intensive Courses"
+                    description="Cursos acelerados e intensivos"
+                  />
+
+                  <DropdownItem
+                    href="#levels"
+                    title="School Support"
+                    description="Apoyo escolar durante todo el año"
+                  />
+
+                  <DropdownItem
+                    href="#levels"
+                    title="Professional English"
+                    description="Inglés para ingeniería, medicina y más"
+                  />
+
+                  <DropdownItem
+                    href="#levels"
+                    title="Online Classes"
+                    description="Clases virtuales desde cualquier lugar"
+                  />
+
+                  <DropdownItem
+                    href="#levels"
+                    title="Private Lessons"
+                    description="Clases individuales y personalizadas"
                   />
                 </div>
               </li>

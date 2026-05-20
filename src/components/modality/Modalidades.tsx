@@ -40,6 +40,7 @@ const features = [
 export default function ModalitiesSection() {
   return (
     <section
+      id="modalities"
       className="
         relative
         overflow-hidden

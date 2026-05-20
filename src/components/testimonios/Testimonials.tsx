@@ -21,6 +21,7 @@ const testimonials = [
 export default function TestimonialsSection() {
   return (
     <section
+      id="testimonials"
       className="
         relative
         overflow-hidden

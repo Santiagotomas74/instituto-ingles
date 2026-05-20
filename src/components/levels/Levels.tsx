@@ -52,6 +52,7 @@ const levels = [
 export default function LevelsSection() {
   return (
     <section
+      id="levels"
       className="
         relative
         overflow-hidden

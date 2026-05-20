@@ -47,6 +47,7 @@ const achievements = [
 export default function StatsSection() {
   return (
     <section
+      id="stats"
       className="
         relative
         overflow-hidden

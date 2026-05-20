@@ -16,6 +16,7 @@ const benefits = [
 export default function CambridgeSection() {
   return (
     <section
+      id="cambridge"
       className="
         relative
         overflow-hidden
