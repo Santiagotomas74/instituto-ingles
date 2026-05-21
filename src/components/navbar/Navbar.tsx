@@ -466,24 +466,26 @@ export default function MobileNavbar() {
                 </Link>
               </li>
             </ul>
+          </nav>
+        </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              <Link
-                href="/login"
-                className="
+        {/* Actions */}
+        <div className="flex items-center gap-4 hidden lg:flex">
+          <Link
+            href="/login"
+            className="
               text-blue-600
               font-medium
               hover:text-blue-700
               transition
             "
-              >
-                Iniciar sesión
-              </Link>
+          >
+            Iniciar sesión
+          </Link>
 
-              <Link
-                href="/register"
-                className="
+          <Link
+            href="/register"
+            className="
               bg-blue-600
               hover:bg-blue-700
               text-white
@@ -495,11 +497,9 @@ export default function MobileNavbar() {
               shadow-lg
               hover:shadow-xl
             "
-              >
-                Inscribirse
-              </Link>
-            </div>
-          </nav>
+          >
+            Inscribirse
+          </Link>
         </div>
       </nav>
 
