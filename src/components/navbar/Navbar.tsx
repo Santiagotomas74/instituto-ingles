@@ -533,11 +533,16 @@ export default function MobileNavbar() {
             isOpen={openDropdown === "instituto"}
             onClick={() => toggleDropdown("instituto")}
           >
-            <MobileSubLink href="/history" label="Historia" />
+            <MobileSubLink href="#about" label="Sobre I.N.K" />
 
-            <MobileSubLink href="/methodology" label="Metodología" />
+            <MobileSubLink href="#features" label="¿Por qué elegirnos?" />
+            <MobileSubLink href="#methodology" label="Metodología" />
 
-            <MobileSubLink href="/testimonials" label="Testimonios" />
+            <MobileSubLink href="#cambridge" label="Certificación Cambridge" />
+            <MobileSubLink href="#modalities" label="Modalidades" />
+            <MobileSubLink href="#teachers" label="Profesores" />
+            <MobileSubLink href="#stats" label="Logros y estadísticas" />
+            <MobileSubLink href="#testimonials" label="Testimonios" />
 
             <MobileSubLink href="/events" label="Eventos" />
 
@@ -550,15 +555,15 @@ export default function MobileNavbar() {
             isOpen={openDropdown === "courses"}
             onClick={() => toggleDropdown("courses")}
           >
-            <MobileSubLink href="/courses/a1" label="Nivel A1" />
+            <MobileSubLink href="#levels" label="Kids" />
 
-            <MobileSubLink href="/courses/a2" label="Nivel A2" />
+            <MobileSubLink href="#levels" label="Teens" />
 
-            <MobileSubLink href="/courses/b1" label="Nivel B1" />
+            <MobileSubLink href="#levels" label="Adults" />
 
-            <MobileSubLink href="/courses/b2" label="Nivel B2" />
+            <MobileSubLink href="#levels" label="Conversation" />
 
-            <MobileSubLink href="/courses/c1" label="Nivel C1" />
+            <MobileSubLink href="#levels" label="Cambridge Preparation" />
           </MobileDropdown>
 
           {/* Estudiantes */}
