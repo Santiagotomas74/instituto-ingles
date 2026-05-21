@@ -430,36 +430,41 @@ export default function CambridgeSection() {
               </div>
             </div>
 
-            {/* Bottom */}
             <div
               className="
-                mt-10
-                pt-8
-                border-t
-                border-white/10
-                relative
-                z-10
-                flex
-                items-center
-                justify-between
-              "
+              mt-12
+              md:mb-12
+    flex
+    flex-col
+    sm:flex-row
+    gap-6
+    sm:gap-10
+    items-center
+    sm:items-start
+    text-center
+    sm:text-left
+  "
             >
               <div>
                 <h4
                   className="
-                    text-3xl
-                    font-bold
-                    text-white
-                  "
+        text-2xl
+        sm:text-3xl
+        font-bold
+        text-white
+        leading-tight
+      "
                 >
                   Cambridge
                 </h4>
 
                 <p
                   className="
-                    text-white/70
-                    text-sm
-                  "
+        mt-1
+        text-white/70
+        text-sm
+        sm:text-base
+      "
                 >
                   Programa oficial
                 </p>
@@ -468,19 +473,23 @@ export default function CambridgeSection() {
               <div>
                 <h4
                   className="
-                    text-3xl
-                    font-bold
-                    text-white
-                  "
+        text-2xl
+        sm:text-3xl
+        font-bold
+        text-white
+        leading-tight
+      "
                 >
                   Internacional
                 </h4>
 
                 <p
                   className="
-                    text-white/70
-                    text-sm
-                  "
+        mt-1
+        text-white/70
+        text-sm
+        sm:text-base
+      "
                 >
                   Reconocimiento global
                 </p>
@@ -488,54 +497,90 @@ export default function CambridgeSection() {
             </div>
           </div>
 
-          {/* Floating Badge */}
+          {/* Floating Badge 
           <div
             className="
-              hidden
-              md:flex
-              absolute
-              -bottom-8
-              -left-10
-              bg-white
-              rounded-3xl
-              shadow-2xl
-              p-6
-              items-center
-              gap-4
-              border
-              border-gray-100
-            "
+    relative
+    mt-8
+    md:mt-0
+    md:absolute
+    md:-bottom-10
+    md:-left-8
+    lg:-left-12
+    w-full
+    md:w-auto
+    flex
+    justify-center
+    md:justify-start
+    z-20
+  "
           >
             <div
               className="
-                w-14
-                h-14
-                rounded-2xl
-                bg-yellow-100
-                flex
-                items-center
-                justify-center
-              "
+      bg-white
+      rounded-3xl
+      shadow-2xl
+      px-5
+      py-5
+      sm:px-6
+      sm:py-6
+      flex
+      items-center
+      gap-4
+      border
+      border-gray-100
+      max-w-[320px]
+      w-full
+    "
             >
-              <Award
+          
+              <div
                 className="
-                  w-7
-                  h-7
-                  text-yellow-600
-                "
-              />
-            </div>
+        shrink-0
+        w-14
+        h-14
+        rounded-2xl
+        bg-yellow-100
+        flex
+        items-center
+        justify-center
+      "
+              >
+                <Award
+                  className="
+          w-7
+          h-7
+          text-yellow-600
+        "
+                />
+              </div>
 
-            <div>
-              <h4 className="font-semibold text-gray-900">
-                Certificación oficial
-              </h4>
+              
+              <div className="min-w-0">
+                <h4
+                  className="
+          font-semibold
+          text-gray-900
+          text-lg
+          leading-tight
+        "
+                >
+                  Certificación oficial
+                </h4>
 
-              <p className="text-gray-500 text-sm">
-                Aval internacional Cambridge
-              </p>
+                <p
+                  className="
+          mt-1
+          text-gray-500
+          text-sm
+          leading-relaxed
+        "
+                >
+                  Aval internacional Cambridge
+                </p>
+              </div>
             </div>
-          </div>
+          </div>*/}
         </div>
       </div>
     </section>

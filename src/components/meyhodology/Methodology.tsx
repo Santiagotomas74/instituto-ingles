@@ -341,33 +341,100 @@ export default function MethodologySection() {
             {/* Bottom Stats */}
             <div
               className="
-                mt-10
-                pt-8
-                border-t
-                border-white/10
-                flex
-                items-center
-                justify-between
-                relative
-                z-10
-              "
+    mt-10
+    pt-8
+    border-t
+    border-white/10
+    relative
+    z-10
+  "
             >
-              <div>
-                <h4 className="text-3xl font-bold text-white">+15</h4>
+              <div
+                className="
+      grid
+      grid-cols-1
+      sm:grid-cols-3
+      gap-8
+      text-center
+      sm:text-left
+    "
+              >
+                <div>
+                  <h4
+                    className="
+          text-2xl
+          sm:text-2xl
+          font-bold
+          text-white
+          leading-tight
+        "
+                  >
+                    +15
+                  </h4>
 
-                <p className="text-white/70 text-sm">años enseñando</p>
-              </div>
+                  <p
+                    className="
+          mt-1
+          text-white/70
+          text-sm
+          sm:text-base
+        "
+                  >
+                    años enseñando
+                  </p>
+                </div>
 
-              <div>
-                <h4 className="text-3xl font-bold text-white">Cambridge</h4>
+                <div>
+                  <h4
+                    className="
+          text-2xl
+          sm:text-2xl
+          font-bold
+          text-white
+          leading-tight
+          break-words
+        "
+                  >
+                    Cambridge
+                  </h4>
 
-                <p className="text-white/70 text-sm">programas oficiales</p>
-              </div>
+                  <p
+                    className="
+          mt-1
+          text-white/70
+          text-sm
+          sm:text-base
+        "
+                  >
+                    programas oficiales
+                  </p>
+                </div>
 
-              <div>
-                <h4 className="text-3xl font-bold text-white">Online</h4>
+                <div>
+                  <h4
+                    className="
+          text-2xl
+          sm:text-2xl
+          font-bold
+          text-white
+          leading-tight
+          break-words
+        "
+                  >
+                    Online
+                  </h4>
 
-                <p className="text-white/70 text-sm">y presencial</p>
+                  <p
+                    className="
+          mt-1
+          text-white/70
+          text-sm
+          sm:text-base
+        "
+                  >
+                    y presencial
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -177,59 +177,166 @@ export default function ContactSection() {
               </div>
 
               {/* Socials */}
-              <div className="pt-6 border-t border-gray-200">
-                <h3 className="text-2xl font-semibold text-gray-900">
-                  Redes Sociales
-                </h3>
-
-                <div className="flex items-center gap-4 mt-5">
-                  {/* Instagram */}
-                  <a
-                    href="https://www.instagram.com/i.n.k2010/"
-                    className="text-white hover:text-pink-300 transition-colors"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
+              <div className="pt-8 border-t border-gray-200">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div>
+                    <h3
+                      className="
+          text-2xl
+          font-semibold
+          text-gray-900
+        "
                     >
-                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                      Redes Sociales
+                    </h3>
 
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
-                      />
-                    </svg>
-
-                    <span className="font-medium text-gray-700">
-                      @I.n.k2010
-                    </span>
-                  </a>
-
-                  {/* Facebook */}
-                  <a
-                    href="#"
-                    className="text-white text-blue-300 hover:text-blue-300 transition-colors"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
+                    <p
+                      className="
+          mt-2
+          text-gray-500
+          text-[15px]
+        "
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
-                      />
-                    </svg>
+                      Seguinos para conocer novedades, eventos y actividades.
+                    </p>
+                  </div>
 
-                    <span className="font-medium text-gray-700">I.N.K</span>
-                  </a>
+                  <div
+                    className="
+        flex
+        flex-col
+        sm:flex-row
+        gap-4
+        w-full
+        sm:w-auto
+      "
+                  >
+                    {/* Instagram */}
+                    <a
+                      href="https://www.instagram.com/i.n.k2010/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+          group
+          flex
+          items-center
+          gap-4
+          bg-gradient-to-br
+          from-pink-500
+          via-fuchsia-500
+          to-orange-400
+          text-white
+          px-5
+          py-4
+          rounded-2xl
+          shadow-lg
+          hover:scale-[1.02]
+          transition-all
+          duration-300
+          w-full
+          sm:w-auto
+        "
+                    >
+                      <div
+                        className="
+            w-12
+            h-12
+            rounded-xl
+            bg-white/20
+            flex
+            items-center
+            justify-center
+            backdrop-blur-sm
+          "
+                      >
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          viewBox="0 0 24 24"
+                        >
+                          <rect
+                            width="20"
+                            height="20"
+                            x="2"
+                            y="2"
+                            rx="5"
+                            ry="5"
+                          />
+
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"
+                          />
+                        </svg>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-white/80">Instagram</p>
+
+                        <span className="font-semibold text-lg">
+                          @I.n.k2010
+                        </span>
+                      </div>
+                    </a>
+
+                    {/* Facebook */}
+                    <a
+                      href="https://www.facebook.com/institutoNK"
+                      className="
+          group
+          flex
+          items-center
+          gap-4
+          bg-blue-600
+          hover:bg-blue-700
+          text-white
+          px-5
+          py-4
+          rounded-2xl
+          shadow-lg
+          hover:scale-[1.02]
+          transition-all
+          duration-300
+          w-full
+          sm:w-auto
+        "
+                    >
+                      <div
+                        className="
+            w-12
+            h-12
+            rounded-xl
+            bg-white/15
+            flex
+            items-center
+            justify-center
+          "
+                      >
+                        <svg
+                          className="w-6 h-6"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                          />
+                        </svg>
+                      </div>
+
+                      <div>
+                        <p className="text-sm text-blue-100">Facebook</p>
+
+                        <span className="font-semibold text-lg">I.N.K</span>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -247,7 +354,7 @@ export default function ContactSection() {
             "
           >
             <iframe
-              src="https://www.google.com/maps?q=Marcos+Sastre+4756+San+Miguel+Buenos+Aires&output=embed"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3285.6149704455106!2d-58.753302387921046!3d-34.56330285525341!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bc9632ce631f6b%3A0xf6206d3c20f731f9!2sInstituto%20New%20Knowledge!5e0!3m2!1ses-419!2sar!4v1779404183099!5m2!1ses-419!2sar"
               width="100%"
               height="100%"
               loading="lazy"
