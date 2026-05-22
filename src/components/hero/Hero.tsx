@@ -9,8 +9,8 @@ export default function Hero() {
         from-blue-950
         via-blue-800
         to-blue-600
-        py-28
-        lg:py-36
+        py-8
+   
       "
     >
       {/* Background Effects */}
@@ -83,18 +83,19 @@ export default function Hero() {
               text-white/90
               text-sm
               font-medium
-              mb-8
+              mb-1
             "
           >
-            ✨ Instituto de Inglés en San Miguel desde 2010
+            Instituto de Inglés en San Miguel desde 2010
           </div>
 
           {/* Title */}
           <h1
             className="
+              mt-4
               text-white
               text-5xl
-              md:text-7xl
+              md:text-5xl
               font-light
               leading-tight
               tracking-tight
@@ -110,10 +111,10 @@ export default function Hero() {
           {/* Description */}
           <p
             className="
-              mt-8
+              mt-4
               text-white/80
               text-lg
-              md:text-xl
+              md:text-lg
               leading-relaxed
               max-w-2xl
             "

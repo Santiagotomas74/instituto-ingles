@@ -19,26 +19,33 @@ export default function Footer() {
         >
           {/* Logo */}
           <div>
-            <div className="flex items-center gap-3">
-              <div
+            <div
+              className="
+    w-65
+    lg:w-65
+    h-24
+    mx-auto
+    rounded-3xl
+    bg-white/90
+    border
+    border-white/10
+    backdrop-blur-sm
+    flex
+    items-center
+    justify-center
+    overflow-hidden
+    p-2
+  "
+            >
+              <img
+                src="/logo3.png"
+                alt="I.N.K Logo"
                 className="
-                  w-12
-                  h-12
-                  rounded-2xl
-                  bg-blue-600
-                  flex
-                  items-center
-                  justify-center
-                "
-              >
-                <BookOpen className="w-6 h-6 text-white" />
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-semibold">I.N.K</h3>
-
-                <p className="text-sm text-gray-400">Instituto de Inglés</p>
-              </div>
+      w-full
+      h-full
+      object-contain
+    "
+              />
             </div>
 
             <p
@@ -57,7 +64,29 @@ export default function Footer() {
               {/* Instagram */}
               <a
                 href="https://www.instagram.com/i.n.k2010/"
-                className="text-white hover:text-gray-300 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+      w-12
+      h-12
+      rounded-2xl
+      bg-white/10
+      border
+      border-white/10
+      backdrop-blur-sm
+      flex
+      items-center
+      justify-center
+      text-white
+      transition-all
+      duration-300
+      hover:bg-gradient-to-br
+      hover:from-pink-500
+      hover:via-red-500
+      hover:to-yellow-500
+      hover:scale-110
+      hover:shadow-lg
+    "
               >
                 <svg
                   className="w-6 h-6"
@@ -79,7 +108,26 @@ export default function Footer() {
               {/* Facebook */}
               <a
                 href="https://www.facebook.com/institutoNK"
-                className="text-white hover:text-gray-300 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+      w-12
+      h-12
+      rounded-2xl
+      bg-white/10
+      border
+      border-white/10
+      backdrop-blur-sm
+      flex
+      items-center
+      justify-center
+      text-white
+      transition-all
+      duration-300
+      hover:bg-blue-600
+      hover:scale-110
+      hover:shadow-lg
+    "
               >
                 <svg
                   className="w-6 h-6"

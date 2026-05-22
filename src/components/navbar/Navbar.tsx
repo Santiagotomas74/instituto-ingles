@@ -41,33 +41,20 @@ export default function MobileNavbar() {
         "
       >
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div
+        <Link href="#">
+          <img
+            src="/logo-ink.png"
+            alt="I.N.K Logo"
             className="
-              w-11
-              h-11
-              rounded-xl
-              bg-blue-50
-              flex
-              items-center
-              justify-center
-            "
-          >
-            <BookOpen className="w-6 h-6 text-blue-600" />
-          </div>
-
-          <h1
-            className="
-              text-xl
-              font-semibold
-              tracking-tight
-              text-gray-900
-            "
-          >
-            English Institute
-          </h1>
-        </div>
-
+      h-20
+      md:h-28
+      lg:h-28
+      w-auto
+      object-contain
+      cursor-pointer
+    "
+          />
+        </Link>
         {/* Mobile Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -459,7 +446,7 @@ export default function MobileNavbar() {
               {/* Contacto */}
               <li>
                 <Link
-                  href="/contact"
+                  href="#contact"
                   className="hover:text-blue-600 transition"
                 >
                   Contacto
@@ -484,7 +471,7 @@ export default function MobileNavbar() {
           </Link>
 
           <Link
-            href="/register"
+            href="/inscriptions"
             className="
               bg-blue-600
               hover:bg-blue-700
@@ -641,7 +628,7 @@ export default function MobileNavbar() {
           </MobileDropdown>
 
           {/* Contacto */}
-          <MobileLink href="/contact" label="Contacto" />
+          <MobileLink href="#contact" label="Contacto" />
 
           {/* Buttons */}
           <div className="pt-5 space-y-3">

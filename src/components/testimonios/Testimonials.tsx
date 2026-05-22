@@ -341,7 +341,7 @@ export default function TestimonialsSection() {
                   text-white
                 "
               >
-                5★
+                4,8★
               </h4>
 
               <p

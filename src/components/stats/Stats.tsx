@@ -258,24 +258,28 @@ export default function StatsSection() {
             <div className="relative z-10">
               <div
                 className="
-                  w-24
-                  h-24
-                  rounded-3xl
-                  bg-white/10
-                  border
-                  border-white/10
-                  backdrop-blur-sm
-                  flex
-                  items-center
-                  justify-center
-                "
+    w-30
+    h-30
+    rounded-3xl
+    bg-white/15
+    border
+    border-white/30
+    backdrop-blur-sm
+    flex
+    items-center
+    justify-center
+    overflow-hidden
+    p-2
+  "
               >
-                <BookOpen
+                <img
+                  src="/logo2.png"
+                  alt="I.N.K Logo"
                   className="
-                    w-12
-                    h-12
-                    text-cyan-300
-                  "
+      w-full
+      h-full
+      object-contain
+    "
                 />
               </div>
 
