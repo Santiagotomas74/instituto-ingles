@@ -333,6 +333,12 @@ export default function MobileNavbar() {
               "
                 >
                   <DropdownIconItem
+                    href="/boletin"
+                    icon={<GraduationCap className="w-5 h-5" />}
+                    title="Boletín de notas"
+                    description="Accede a tus calificaciones y progreso académico"
+                  />
+                  <DropdownIconItem
                     href="/student/campus"
                     icon={<GraduationCap className="w-5 h-5" />}
                     title="Campus virtual"
