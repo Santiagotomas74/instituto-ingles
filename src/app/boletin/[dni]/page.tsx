@@ -17,7 +17,7 @@ type Props = {
 
 export default async function StudentBoletinPage({ params }: Props) {
   const { dni } = await params;
-  const res = await fetch(`http://localhost:3000/api/boletines/${dni}`, {
+  const res = await fetch(`${process.env.BACKEND_URL}/api/boletines/${dni}`, {
     cache: "no-store",
   });
   const data = await res.json();
