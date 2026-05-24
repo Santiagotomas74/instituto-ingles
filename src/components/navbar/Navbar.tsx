@@ -147,49 +147,49 @@ export default function MobileNavbar() {
     "
                 >
                   <DropdownItem
-                    href="#about"
+                    href="/#about"
                     title="Sobre I.N.K"
                     description="Nuestra historia, misión y visión"
                   />
 
                   <DropdownItem
-                    href="#features"
+                    href="/#features"
                     title="¿Por qué elegirnos?"
                     description="Beneficios y ventajas del instituto"
                   />
 
                   <DropdownItem
-                    href="#methodology"
+                    href="/#methodology"
                     title="Metodología"
                     description="Cómo enseñamos inglés"
                   />
 
                   <DropdownItem
-                    href="#cambridge"
+                    href="/#cambridge"
                     title="Certificación Cambridge"
                     description="Preparación y exámenes oficiales"
                   />
 
                   <DropdownItem
-                    href="#modalities"
+                    href="/#modalities"
                     title="Modalidades"
                     description="Presencial, online y personalizada"
                   />
 
                   <DropdownItem
-                    href="#teachers"
+                    href="/#teachers"
                     title="Profesores"
                     description="Conoce nuestro equipo docente"
                   />
 
                   <DropdownItem
-                    href="#stats"
+                    href="/#stats"
                     title="Logros y estadísticas"
                     description="Años de experiencia y estudiantes"
                   />
 
                   <DropdownItem
-                    href="#testimonials"
+                    href="/#testimonials"
                     title="Testimonios"
                     description="Experiencias de nuestros alumnos"
                   />
@@ -234,61 +234,61 @@ export default function MobileNavbar() {
     "
                 >
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Kids"
                     description="Inglés para niños desde los 4 años"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Teens"
                     description="Cursos para adolescentes"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Adults"
                     description="Programas para adultos"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Conversation"
                     description="Práctica intensiva de conversación"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Cambridge Preparation"
                     description="Preparación para certificaciones oficiales"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Intensive Courses"
                     description="Cursos acelerados e intensivos"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="School Support"
                     description="Apoyo escolar durante todo el año"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Professional English"
                     description="Inglés para ingeniería, medicina y más"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Online Classes"
                     description="Clases virtuales desde cualquier lugar"
                   />
 
                   <DropdownItem
-                    href="#levels"
+                    href="/#levels"
                     title="Private Lessons"
                     description="Clases individuales y personalizadas"
                   />
@@ -452,7 +452,7 @@ export default function MobileNavbar() {
               {/* Contacto */}
               <li>
                 <Link
-                  href="#contact"
+                  href="/#contact"
                   className="hover:text-blue-600 transition"
                 >
                   Contacto
@@ -527,44 +527,44 @@ export default function MobileNavbar() {
             onClick={() => toggleDropdown("instituto")}
           >
             <MobileSubLink
-              href="#about"
+              href="/#about"
               label="Sobre I.N.K"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#features"
+              href="/#features"
               label="¿Por qué elegirnos?"
               onClick={() => setMenuOpen(false)}
             />
             <MobileSubLink
-              href="#methodology"
+              href="/#methodology"
               label="Metodología"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#cambridge"
+              href="/#cambridge"
               label="Certificación Cambridge"
               onClick={() => setMenuOpen(false)}
             />
             <MobileSubLink
-              href="#modalities"
+              href="/#modalities"
               label="Modalidades"
               onClick={() => setMenuOpen(false)}
             />
             <MobileSubLink
-              href="#teachers"
+              href="/#teachers"
               label="Profesores"
               onClick={() => setMenuOpen(false)}
             />
             <MobileSubLink
-              href="#stats"
+              href="/#stats"
               label="Logros y estadísticas"
               onClick={() => setMenuOpen(false)}
             />
             <MobileSubLink
-              href="#testimonials"
+              href="/#testimonials"
               label="Testimonios"
               onClick={() => setMenuOpen(false)}
             />
@@ -589,31 +589,31 @@ export default function MobileNavbar() {
             onClick={() => toggleDropdown("courses")}
           >
             <MobileSubLink
-              href="#levels"
+              href="/#levels"
               label="Kids"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#levels"
+              href="/#levels"
               label="Teens"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#levels"
+              href="/#levels"
               label="Adults"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#levels"
+              href="/#levels"
               label="Conversation"
               onClick={() => setMenuOpen(false)}
             />
 
             <MobileSubLink
-              href="#levels"
+              href="/#levels"
               label="Cambridge Preparation"
               onClick={() => setMenuOpen(false)}
             />
@@ -699,7 +699,7 @@ export default function MobileNavbar() {
           </MobileDropdown>
 
           {/* Contacto */}
-          <MobileLink href="#contact" label="Contacto" />
+          <MobileLink href="/#contact" label="Contacto" />
 
           {/* Buttons */}
           <div className="pt-5 space-y-3">
