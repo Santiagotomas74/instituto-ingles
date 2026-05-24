@@ -526,20 +526,60 @@ export default function MobileNavbar() {
             isOpen={openDropdown === "instituto"}
             onClick={() => toggleDropdown("instituto")}
           >
-            <MobileSubLink href="#about" label="Sobre I.N.K" />
+            <MobileSubLink
+              href="#about"
+              label="Sobre I.N.K"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#features" label="¿Por qué elegirnos?" />
-            <MobileSubLink href="#methodology" label="Metodología" />
+            <MobileSubLink
+              href="#features"
+              label="¿Por qué elegirnos?"
+              onClick={() => setMenuOpen(false)}
+            />
+            <MobileSubLink
+              href="#methodology"
+              label="Metodología"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#cambridge" label="Certificación Cambridge" />
-            <MobileSubLink href="#modalities" label="Modalidades" />
-            <MobileSubLink href="#teachers" label="Profesores" />
-            <MobileSubLink href="#stats" label="Logros y estadísticas" />
-            <MobileSubLink href="#testimonials" label="Testimonios" />
+            <MobileSubLink
+              href="#cambridge"
+              label="Certificación Cambridge"
+              onClick={() => setMenuOpen(false)}
+            />
+            <MobileSubLink
+              href="#modalities"
+              label="Modalidades"
+              onClick={() => setMenuOpen(false)}
+            />
+            <MobileSubLink
+              href="#teachers"
+              label="Profesores"
+              onClick={() => setMenuOpen(false)}
+            />
+            <MobileSubLink
+              href="#stats"
+              label="Logros y estadísticas"
+              onClick={() => setMenuOpen(false)}
+            />
+            <MobileSubLink
+              href="#testimonials"
+              label="Testimonios"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="/events" label="Eventos" />
+            <MobileSubLink
+              href="/events"
+              label="Eventos"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="/schedule" label="Cronograma" />
+            <MobileSubLink
+              href="/schedule"
+              label="Cronograma"
+              onClick={() => setMenuOpen(false)}
+            />
           </MobileDropdown>
 
           {/* Cursos */}
@@ -548,15 +588,35 @@ export default function MobileNavbar() {
             isOpen={openDropdown === "courses"}
             onClick={() => toggleDropdown("courses")}
           >
-            <MobileSubLink href="#levels" label="Kids" />
+            <MobileSubLink
+              href="#levels"
+              label="Kids"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#levels" label="Teens" />
+            <MobileSubLink
+              href="#levels"
+              label="Teens"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#levels" label="Adults" />
+            <MobileSubLink
+              href="#levels"
+              label="Adults"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#levels" label="Conversation" />
+            <MobileSubLink
+              href="#levels"
+              label="Conversation"
+              onClick={() => setMenuOpen(false)}
+            />
 
-            <MobileSubLink href="#levels" label="Cambridge Preparation" />
+            <MobileSubLink
+              href="#levels"
+              label="Cambridge Preparation"
+              onClick={() => setMenuOpen(false)}
+            />
           </MobileDropdown>
 
           {/* Estudiantes */}
@@ -565,6 +625,11 @@ export default function MobileNavbar() {
             isOpen={openDropdown === "students"}
             onClick={() => toggleDropdown("students")}
           >
+            <MobileIconLink
+              href="/boletin"
+              icon={<FileText className="w-4 h-4" />}
+              label="Boletín de notas"
+            />
             <MobileIconLink
               href="/student/campus"
               icon={<GraduationCap className="w-4 h-4" />}
@@ -837,9 +902,10 @@ function MobileDropdown({
 type MobileSubLinkProps = {
   href: string;
   label: string;
+  onClick: () => void;
 };
 
-function MobileSubLink({ href, label }: MobileSubLinkProps) {
+function MobileSubLink({ href, label, onClick }: MobileSubLinkProps) {
   return (
     <Link
       href={href}
@@ -849,6 +915,7 @@ function MobileSubLink({ href, label }: MobileSubLinkProps) {
         text-gray-600
         text-[15px]
       "
+      onClick={onClick}
     >
       {label}
     </Link>
