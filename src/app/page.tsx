@@ -12,10 +12,12 @@ import TestimonialsSection from "@/components/testimonios/Testimonials";
 import StatsSection from "@/components/stats/Stats";
 import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/footer/Footer";
+import Navbar from "@/components/navbar/Navbar";
 
 export default function Home() {
   return (
     <>
+      <Navbar />
       <Hero />
       <About />
       <FeaturesSection />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Mail, Phone, MapPin, Clock3, MessageCircle } from "lucide-react";
+import Navbar from "@/components/navbar/Navbar";
 
 export default function InscriptionsPage() {
   const [formData, setFormData] = useState({
@@ -32,8 +33,11 @@ export default function InscriptionsPage() {
   };
 
   return (
-    <main
-      className="
+    <>
+      <Navbar />
+
+      <main
+        className="
         min-h-screen
         bg-gradient-to-br
         from-slate-950
@@ -44,10 +48,10 @@ export default function InscriptionsPage() {
         relative
         overflow-hidden
       "
-    >
-      {/* Glow effects */}
-      <div
-        className="
+      >
+        {/* Glow effects */}
+        <div
+          className="
           absolute
           top-0
           left-0
@@ -57,10 +61,10 @@ export default function InscriptionsPage() {
           blur-[120px]
           rounded-full
         "
-      />
+        />
 
-      <div
-        className="
+        <div
+          className="
           absolute
           bottom-0
           right-0
@@ -70,20 +74,20 @@ export default function InscriptionsPage() {
           blur-[120px]
           rounded-full
         "
-      />
+        />
 
-      <div
-        className="
+        <div
+          className="
           max-w-7xl
           mx-auto
           relative
           z-10
         "
-      >
-        {/* Header */}
-        <div className="text-center mb-16">
-          <p
-            className="
+        >
+          {/* Header */}
+          <div className="text-center mb-16">
+            <p
+              className="
               inline-flex
               items-center
               gap-2
@@ -97,13 +101,13 @@ export default function InscriptionsPage() {
               text-sm
               backdrop-blur-md
             "
-          >
-            <MessageCircle className="w-4 h-4" />
-            Inscripciones abiertas
-          </p>
+            >
+              <MessageCircle className="w-4 h-4" />
+              Inscripciones abiertas
+            </p>
 
-          <h1
-            className="
+            <h1
+              className="
               mt-6
               text-4xl
               md:text-6xl
@@ -111,67 +115,67 @@ export default function InscriptionsPage() {
               text-white
               leading-tight
             "
-          >
-            Comenzá tu camino
-            <br />
-            en inglés con I.N.K
-          </h1>
+            >
+              Comenzá tu camino
+              <br />
+              en inglés con I.N.K
+            </h1>
 
-          <p
-            className="
+            <p
+              className="
               mt-6
               text-gray-300
               text-lg
               max-w-2xl
               mx-auto
             "
-          >
-            Completá el formulario y nuestro equipo se pondrá en contacto para
-            ayudarte a encontrar el curso ideal según tu nivel y objetivos.
-          </p>
-        </div>
+            >
+              Completá el formulario y nuestro equipo se pondrá en contacto para
+              ayudarte a encontrar el curso ideal según tu nivel y objetivos.
+            </p>
+          </div>
 
-        {/* Content */}
-        <div
-          className="
+          {/* Content */}
+          <div
+            className="
             grid
             lg:grid-cols-2
             gap-10
             items-start
           "
-        >
-          {/* Form */}
-          <div
-            className="
+          >
+            {/* Form */}
+            <div
+              className="
               bg-white
               rounded-[32px]
               shadow-2xl
               p-8
               md:p-10
             "
-          >
-            <h2 className="text-3xl font-bold text-gray-900">
-              Formulario de inscripción
-            </h2>
+            >
+              <h2 className="text-3xl font-bold text-gray-900">
+                Formulario de inscripción
+              </h2>
 
-            <p className="text-gray-500 mt-2 mb-8">
-              Respondemos consultas dentro de las próximas 24 horas.
-            </p>
+              <p className="text-gray-500 mt-2 mb-8">
+                Respondemos consultas dentro de las próximas 24 horas.
+              </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Nombre */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nombre completo
-                </label>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Nombre */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre completo
+                  </label>
 
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Tu nombre"
-                  className="
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Tu nombre"
+                    className="
                     w-full
                     h-14
                     px-5
@@ -183,23 +187,23 @@ export default function InscriptionsPage() {
                     focus:ring-blue-500
                     transition
                   "
-                  required
-                />
-              </div>
+                    required
+                  />
+                </div>
 
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
-                </label>
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                  </label>
 
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="email@gmail.com"
-                  className="
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="email@gmail.com"
+                    className="
                     w-full
                     h-14
                     px-5
@@ -211,23 +215,23 @@ export default function InscriptionsPage() {
                     focus:ring-blue-500
                     transition
                   "
-                  required
-                />
-              </div>
+                    required
+                  />
+                </div>
 
-              {/* Teléfono */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Teléfono
-                </label>
+                {/* Teléfono */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Teléfono
+                  </label>
 
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+54 11 1234-5678"
-                  className="
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+54 11 1234-5678"
+                    className="
                     w-full
                     h-14
                     px-5
@@ -239,20 +243,20 @@ export default function InscriptionsPage() {
                     focus:ring-blue-500
                     transition
                   "
-                />
-              </div>
+                  />
+                </div>
 
-              {/* Curso */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Curso de interés
-                </label>
+                {/* Curso */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Curso de interés
+                  </label>
 
-                <select
-                  name="course"
-                  value={formData.course}
-                  onChange={handleChange}
-                  className="
+                  <select
+                    name="course"
+                    value={formData.course}
+                    onChange={handleChange}
+                    className="
                     w-full
                     h-14
                     px-5
@@ -265,29 +269,29 @@ export default function InscriptionsPage() {
                     transition
                     bg-white
                   "
-                >
-                  <option value="">Seleccionar</option>
-                  <option value="Kids">Kids</option>
-                  <option value="Teens">Teens</option>
-                  <option value="Adults">Adults</option>
-                  <option value="Conversation">Conversation</option>
-                  <option value="Cambridge">Cambridge Preparation</option>
-                </select>
-              </div>
+                  >
+                    <option value="">Seleccionar</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Teens">Teens</option>
+                    <option value="Adults">Adults</option>
+                    <option value="Conversation">Conversation</option>
+                    <option value="Cambridge">Cambridge Preparation</option>
+                  </select>
+                </div>
 
-              {/* Mensaje */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Mensaje
-                </label>
+                {/* Mensaje */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mensaje
+                  </label>
 
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Contanos qué estás buscando..."
-                  rows={5}
-                  className="
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Contanos qué estás buscando..."
+                    rows={5}
+                    className="
                     w-full
                     px-5
                     py-4
@@ -300,13 +304,13 @@ export default function InscriptionsPage() {
                     transition
                     resize-none
                   "
-                />
-              </div>
+                  />
+                </div>
 
-              {/* Button */}
-              <button
-                type="submit"
-                className="
+                {/* Button */}
+                <button
+                  type="submit"
+                  className="
                   w-full
                   h-14
                   rounded-2xl
@@ -320,15 +324,15 @@ export default function InscriptionsPage() {
                   hover:shadow-2xl
                   hover:-translate-y-0.5
                 "
-              >
-                Enviar solicitud
-              </button>
-            </form>
-          </div>
+                >
+                  Enviar solicitud
+                </button>
+              </form>
+            </div>
 
-          {/* Contact Card */}
-          <div
-            className="
+            {/* Contact Card */}
+            <div
+              className="
               sticky
               top-24
               rounded-[32px]
@@ -340,43 +344,43 @@ export default function InscriptionsPage() {
               text-white
               overflow-hidden
             "
-          >
-            <div
-              className="
+            >
+              <div
+                className="
                 absolute
                 inset-0
                 bg-gradient-to-br
                 from-cyan-400/10
                 to-blue-500/10
               "
-            />
+              />
 
-            <div className="relative z-10">
-              <img
-                src="/logo3.png"
-                alt="I.N.K Logo"
-                className="
+              <div className="relative z-10">
+                <img
+                  src="/logo3.png"
+                  alt="I.N.K Logo"
+                  className="
                   h-24
                   w-auto
                   object-contain
                   mb-8
                 "
-              />
+                />
 
-              <h2 className="text-3xl font-bold leading-tight">
-                Estamos para ayudarte
-              </h2>
+                <h2 className="text-3xl font-bold leading-tight">
+                  Estamos para ayudarte
+                </h2>
 
-              <p className="text-gray-300 mt-4 leading-relaxed">
-                Nuestro equipo puede asesorarte sobre niveles, modalidades,
-                horarios y certificaciones Cambridge.
-              </p>
+                <p className="text-gray-300 mt-4 leading-relaxed">
+                  Nuestro equipo puede asesorarte sobre niveles, modalidades,
+                  horarios y certificaciones Cambridge.
+                </p>
 
-              {/* Info */}
-              <div className="mt-10 space-y-6">
-                <div className="flex items-start gap-4">
-                  <div
-                    className="
+                {/* Info */}
+                <div className="mt-10 space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="
                       w-12
                       h-12
                       rounded-2xl
@@ -386,19 +390,19 @@ export default function InscriptionsPage() {
                       justify-center
                       shrink-0
                     "
-                  >
-                    <Phone className="w-5 h-5 text-cyan-300" />
+                    >
+                      <Phone className="w-5 h-5 text-cyan-300" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-gray-400">Teléfono</p>
+                      <p className="font-medium">+54 11 1234-5678</p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm text-gray-400">Teléfono</p>
-                    <p className="font-medium">+54 11 1234-5678</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div
-                    className="
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="
                       w-12
                       h-12
                       rounded-2xl
@@ -408,19 +412,19 @@ export default function InscriptionsPage() {
                       justify-center
                       shrink-0
                     "
-                  >
-                    <Mail className="w-5 h-5 text-cyan-300" />
+                    >
+                      <Mail className="w-5 h-5 text-cyan-300" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-gray-400">Email</p>
+                      <p className="font-medium">contacto@institutoink.com</p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm text-gray-400">Email</p>
-                    <p className="font-medium">contacto@institutoink.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div
-                    className="
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="
                       w-12
                       h-12
                       rounded-2xl
@@ -430,19 +434,19 @@ export default function InscriptionsPage() {
                       justify-center
                       shrink-0
                     "
-                  >
-                    <MapPin className="w-5 h-5 text-cyan-300" />
+                    >
+                      <MapPin className="w-5 h-5 text-cyan-300" />
+                    </div>
+
+                    <div>
+                      <p className="text-sm text-gray-400">Ubicación</p>
+                      <p className="font-medium">San Miguel, Buenos Aires</p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm text-gray-400">Ubicación</p>
-                    <p className="font-medium">San Miguel, Buenos Aires</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div
-                    className="
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="
                       w-12
                       h-12
                       rounded-2xl
@@ -452,20 +456,20 @@ export default function InscriptionsPage() {
                       justify-center
                       shrink-0
                     "
-                  >
-                    <Clock3 className="w-5 h-5 text-cyan-300" />
-                  </div>
+                    >
+                      <Clock3 className="w-5 h-5 text-cyan-300" />
+                    </div>
 
-                  <div>
-                    <p className="text-sm text-gray-400">Horarios</p>
-                    <p className="font-medium">Lun a Vie · 09:00 a 20:00</p>
+                    <div>
+                      <p className="text-sm text-gray-400">Horarios</p>
+                      <p className="font-medium">Lun a Vie · 09:00 a 20:00</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Bottom box */}
-              <div
-                className="
+                {/* Bottom box */}
+                <div
+                  className="
                   mt-10
                   rounded-3xl
                   bg-white/10
@@ -473,23 +477,24 @@ export default function InscriptionsPage() {
                   border-white/10
                   p-6
                 "
-              >
-                <p className="text-sm text-gray-300">
-                  ✔ Clases presenciales y online
-                </p>
+                >
+                  <p className="text-sm text-gray-300">
+                    ✔ Clases presenciales y online
+                  </p>
 
-                <p className="text-sm text-gray-300 mt-3">
-                  ✔ Cursos para niños, teens y adultos
-                </p>
+                  <p className="text-sm text-gray-300 mt-3">
+                    ✔ Cursos para niños, teens y adultos
+                  </p>
 
-                <p className="text-sm text-gray-300 mt-3">
-                  ✔ Certificaciones Cambridge
-                </p>
+                  <p className="text-sm text-gray-300 mt-3">
+                    ✔ Certificaciones Cambridge
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

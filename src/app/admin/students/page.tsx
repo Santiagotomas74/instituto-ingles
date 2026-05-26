@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 import {
@@ -12,30 +10,26 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-const students = [
-  {
-    id: 1,
-    nombre: "Santiago",
-    apellido: "Taher",
-    email: "santiago@gmail.com",
-    dni: "40123456",
-    nivel: "B2 First",
-    classroom: "Room 4",
-    estado: "Activo",
-  },
-  {
-    id: 2,
-    nombre: "Lucía",
-    apellido: "Fernandez",
-    email: "lucia@gmail.com",
-    dni: "42345678",
-    nivel: "A2",
-    classroom: "Room 2",
-    estado: "Activo",
-  },
-];
+type Student = {
+  id: string;
+  dni: number;
+  nombre: string;
+  apellido: string;
+  email: string;
+  nivel: string;
+  classroom: string | null;
+};
 
-export default function StudentsPage() {
+export default async function StudentsPage() {
+  const res = await fetch("http://localhost:3000/api/admin/students", {
+    cache: "no-store",
+  });
+
+  const data = await res.json();
+  console.log(data);
+
+  const students: Student[] = data.students || [];
+
   return (
     <main
       className="
@@ -157,6 +151,7 @@ export default function StudentsPage() {
               focus:outline-none
               focus:ring-2
               focus:ring-blue-500
+              text-gray-700
             "
           />
         </div>
@@ -279,7 +274,9 @@ export default function StudentsPage() {
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-4 h-4 text-gray-400" />
 
-                <span className="text-gray-700">{student.classroom}</span>
+                <span className="text-gray-700">
+                  {student.classroom || "Sin asignar"}
+                </span>
               </div>
 
               {/* STATUS */}
@@ -295,7 +292,7 @@ export default function StudentsPage() {
                     font-medium
                   "
                 >
-                  {student.estado}
+                  Activo
                 </span>
               </div>
 

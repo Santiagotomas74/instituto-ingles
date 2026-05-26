@@ -8,6 +8,7 @@ import {
 
 import ConfirmacionBoletin from "./ConfirmacionBoletin";
 import Footer from "../../../components/footer/Footer";
+import Navbar from "@/components/navbar/Navbar";
 
 type Props = {
   params: Promise<{
@@ -43,6 +44,7 @@ export default async function StudentBoletinPage({ params }: Props) {
 
   return (
     <>
+      <Navbar />
       <main
         className="
     min-h-screen
@@ -50,7 +52,7 @@ export default async function StudentBoletinPage({ params }: Props) {
     from-slate-100
     via-white
     to-blue-50
-    py-6
+    
     px-0
   "
       >

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Search, FileText, User, GraduationCap } from "lucide-react";
+import Navbar from "@/components/navbar/Navbar";
 
 export default function BulletinSearchPage() {
   const [dni, setDni] = useState("");
@@ -20,8 +21,11 @@ export default function BulletinSearchPage() {
   };
 
   return (
-    <main
-      className="
+    <>
+      <Navbar />
+
+      <main
+        className="
         min-h-screen
         bg-gradient-to-br
         from-slate-950
@@ -35,10 +39,10 @@ export default function BulletinSearchPage() {
         relative
         overflow-hidden
       "
-    >
-      {/* Glow */}
-      <div
-        className="
+      >
+        {/* Glow */}
+        <div
+          className="
           absolute
           top-0
           left-0
@@ -48,10 +52,10 @@ export default function BulletinSearchPage() {
           blur-[120px]
           rounded-full
         "
-      />
+        />
 
-      <div
-        className="
+        <div
+          className="
           absolute
           bottom-0
           right-0
@@ -61,10 +65,10 @@ export default function BulletinSearchPage() {
           blur-[120px]
           rounded-full
         "
-      />
+        />
 
-      <div
-        className="
+        <div
+          className="
           relative
           z-10
           w-full
@@ -74,11 +78,11 @@ export default function BulletinSearchPage() {
           gap-10
           items-center
         "
-      >
-        {/* LEFT */}
-        <div className="text-white">
-          <div
-            className="
+        >
+          {/* LEFT */}
+          <div className="text-white">
+            <div
+              className="
               inline-flex
               items-center
               gap-2
@@ -92,109 +96,111 @@ export default function BulletinSearchPage() {
               text-cyan-300
               text-sm
             "
-          >
-            <FileText className="w-4 h-4" />
-            Sistema académico
-          </div>
+            >
+              <FileText className="w-4 h-4" />
+              Sistema académico
+            </div>
 
-          <h1
-            className="
+            <h1
+              className="
               mt-6
               text-4xl
               md:text-6xl
               font-bold
               leading-tight
             "
-          >
-            Consultá tu
-            <br />
-            boletín académico
-          </h1>
+            >
+              Consultá tu
+              <br />
+              boletín académico
+            </h1>
 
-          <p
-            className="
+            <p
+              className="
               mt-6
               text-gray-300
               text-lg
               leading-relaxed
               max-w-xl
             "
-          >
-            Ingresá el DNI del estudiante para acceder al boletín,
-            calificaciones, observaciones y asistencia.
-          </p>
+            >
+              Ingresá el DNI del estudiante para acceder al boletín,
+              calificaciones, observaciones y asistencia.
+            </p>
 
-          <div className="mt-10 space-y-5">
-            <FeatureItem
-              icon={<User className="w-5 h-5 text-cyan-300" />}
-              title="Acceso rápido"
-              description="Buscá boletines por DNI"
-            />
+            <div className="mt-10 space-y-5">
+              <FeatureItem
+                icon={<User className="w-5 h-5 text-cyan-300" />}
+                title="Acceso rápido"
+                description="Buscá boletines por DNI"
+              />
 
-            <FeatureItem
-              icon={<GraduationCap className="w-5 h-5 text-cyan-300" />}
-              title="Seguimiento académico"
-              description="Consultá notas y observaciones"
-            />
+              <FeatureItem
+                icon={<GraduationCap className="w-5 h-5 text-cyan-300" />}
+                title="Seguimiento académico"
+                description="Consultá notas y observaciones"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* RIGHT */}
-        <div
-          className="
+          {/* RIGHT */}
+          <div
+            className="
             bg-white
             rounded-[32px]
             shadow-2xl
             p-8
             md:p-10
           "
-        >
-          <div className="text-center">
-            <img
-              src="/logo3.png"
-              alt="I.N.K Logo"
-              className="
+          >
+            <div className="text-center">
+              <img
+                src="/logo3.png"
+                alt="I.N.K Logo"
+                className="
                 h-24
                 w-auto
                 object-contain
                 mx-auto
               "
-            />
+              />
 
-            <h2
-              className="
+              <h2
+                className="
                 mt-6
                 text-3xl
                 font-bold
                 text-gray-900
               "
-            >
-              Buscar boletín
-            </h2>
+              >
+                Buscar boletín
+              </h2>
 
-            <p className="text-gray-500 mt-3">Ingresá el DNI del estudiante</p>
-          </div>
+              <p className="text-gray-500 mt-3">
+                Ingresá el DNI del estudiante
+              </p>
+            </div>
 
-          <form onSubmit={handleSearch} className="mt-10 space-y-6">
-            <div>
-              <label
-                className="
+            <form onSubmit={handleSearch} className="mt-10 space-y-6">
+              <div>
+                <label
+                  className="
                   block
                   text-sm
                   font-medium
                   text-gray-700
                   mb-2
                 "
-              >
-                DNI
-              </label>
+                >
+                  DNI
+                </label>
 
-              <input
-                type="number"
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-                placeholder="Ej: 40123456"
-                className="
+                <input
+                  type="number"
+                  value={dni}
+                  onChange={(e) => setDni(e.target.value)}
+                  placeholder="Ej: 40123456"
+                  className="
                   w-full
                   h-14
                   px-5
@@ -206,13 +212,13 @@ export default function BulletinSearchPage() {
                   focus:ring-2
                   focus:ring-blue-500
                 "
-                required
-              />
-            </div>
+                  required
+                />
+              </div>
 
-            <button
-              type="submit"
-              className="
+              <button
+                type="submit"
+                className="
                 w-full
                 h-14
                 rounded-2xl
@@ -230,14 +236,15 @@ export default function BulletinSearchPage() {
                 justify-center
                 gap-2
               "
-            >
-              <Search className="w-5 h-5" />
-              Buscar boletín
-            </button>
-          </form>
+              >
+                <Search className="w-5 h-5" />
+                Buscar boletín
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 
