@@ -1,7 +1,7 @@
 import CreateClassroomForm from "./CreateClassroomForm";
 
 export default async function CreateClassroomPage() {
-  const res = await fetch("http://localhost:3000/api/admin/teachers", {
+  const res = await fetch(`${process.env.BACKEND_URL}/api/admin/teachers`, {
     cache: "no-store",
   });
 

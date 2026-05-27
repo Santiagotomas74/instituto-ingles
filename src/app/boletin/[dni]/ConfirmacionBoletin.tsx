@@ -59,7 +59,7 @@ export default function ConfirmacionBoletin({ boletinId, esMayorEdad }: Props) {
       setLoading(true);
 
       const res = await fetch(
-        "http://localhost:3000/api/boletines/confirmar-boletin",
+        `${process.env.BACKEND_URL}/api/boletines/confirmar-boletin`,
         {
           method: "POST",
           headers: {

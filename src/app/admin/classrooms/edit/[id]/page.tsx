@@ -12,7 +12,7 @@ export default async function EditClassroomPage({ params }: Props) {
   /* CLASSROOM */
 
   const classroomRes = await fetch(
-    `http://localhost:3000/api/admin/classrooms/${id}`,
+    `${process.env.BACKEND_URL}/api/admin/classrooms/${id}`,
     {
       cache: "no-store",
     },
@@ -22,9 +22,12 @@ export default async function EditClassroomPage({ params }: Props) {
 
   /* TEACHERS */
 
-  const teachersRes = await fetch("http://localhost:3000/api/admin/teachers", {
-    cache: "no-store",
-  });
+  const teachersRes = await fetch(
+    `${process.env.BACKEND_URL}/api/admin/teachers`,
+    {
+      cache: "no-store",
+    },
+  );
 
   const teachersData = await teachersRes.json();
 

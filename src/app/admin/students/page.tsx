@@ -21,7 +21,7 @@ type Student = {
 };
 
 export default async function StudentsPage() {
-  const res = await fetch("http://localhost:3000/api/admin/students", {
+  const res = await fetch(`${process.env.BACKEND_URL}/api/admin/students`, {
     cache: "no-store",
   });
 

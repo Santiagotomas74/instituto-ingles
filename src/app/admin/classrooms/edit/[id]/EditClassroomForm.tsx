@@ -43,7 +43,7 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
       setLoading(true);
 
       const res = await fetch(
-        `http://localhost:3000/api/admin/classrooms/${classroom.id}`,
+        `${process.env.BACKEND_URL}/api/admin/classrooms/${classroom.id}`,
         {
           method: "PUT",
           headers: {
