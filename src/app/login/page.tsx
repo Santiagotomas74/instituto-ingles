@@ -5,6 +5,9 @@ import { Eye, EyeOff, Laptop, Lock, Mail } from "lucide-react";
 
 export default function CampusLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,12 +24,34 @@ export default function CampusLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    try {
+      setLoading(true);
 
-    /*
-      ACA:
-      fetch("/api/auth/login")
-    */
+      setError("");
+
+      const res = await fetch(`/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.message);
+        return;
+      }
+
+      window.location.href = "/admin/dashboard";
+    } catch (error) {
+      console.error(error);
+
+      setError("Ocurrió un error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -259,6 +284,23 @@ export default function CampusLoginPage() {
                   </button>
                 </div>
               </div>
+              {error && (
+                <div
+                  className="
+        bg-red-100
+        border
+        border-red-200
+        text-red-700
+        rounded-2xl
+        px-4
+        py-3
+        text-sm
+        
+      "
+                >
+                  {error}
+                </div>
+              )}
 
               {/* Forgot */}
               <div className="flex justify-end">
@@ -295,7 +337,7 @@ export default function CampusLoginPage() {
                   hover:-translate-y-0.5
                 "
               >
-                Ingresar al campus
+                {loading ? "Ingresando..." : "Ingresar al campus"}
               </button>
             </form>
 

@@ -5,10 +5,16 @@ import { Mail, Phone, MapPin, Clock3, MessageCircle } from "lucide-react";
 import Navbar from "@/components/navbar/Navbar";
 
 export default function InscriptionsPage() {
+  const [loading, setLoading] = useState(false);
+
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    confirmPhone: "",
     course: "",
     message: "",
   });
@@ -23,15 +29,68 @@ export default function InscriptionsPage() {
       [e.target.name]: e.target.value,
     });
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const normalizePhone = (phone: string) => {
+    return phone.replace(/\D/g, "");
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    // conectar backend
+    const cleanPhone = normalizePhone(formData.phone);
+
+    const cleanConfirmPhone = normalizePhone(formData.confirmPhone);
+
+    if (cleanPhone !== cleanConfirmPhone) {
+      setErrorMessage("Los teléfonos no coinciden.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await fetch(`/api/inscriptions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: formData.name,
+          email: formData.email,
+          telefono: cleanPhone,
+          curso: formData.course,
+          mensaje: formData.message,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMessage(data.message || "Ocurrió un error.");
+        return;
+      }
+
+      setSuccessMessage(
+        "¡Solicitud enviada correctamente! Nuestro equipo se pondrá en contacto pronto.",
+      );
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        confirmPhone: "",
+        course: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error(error);
+
+      setErrorMessage("Error al enviar la solicitud.");
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <>
       <Navbar />
@@ -182,6 +241,7 @@ export default function InscriptionsPage() {
                     rounded-2xl
                     border
                     border-gray-200
+                    text-gray-900
                     focus:outline-none
                     focus:ring-2
                     focus:ring-blue-500
@@ -210,6 +270,7 @@ export default function InscriptionsPage() {
                     rounded-2xl
                     border
                     border-gray-200
+                    text-gray-900
                     focus:outline-none
                     focus:ring-2
                     focus:ring-blue-500
@@ -238,11 +299,40 @@ export default function InscriptionsPage() {
                     rounded-2xl
                     border
                     border-gray-200
+                    text-gray-900
                     focus:outline-none
                     focus:ring-2
                     focus:ring-blue-500
                     transition
                   "
+                  />
+                </div>
+                {/* Confirmar teléfono */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirmar teléfono
+                  </label>
+
+                  <input
+                    type="tel"
+                    name="confirmPhone"
+                    value={formData.confirmPhone}
+                    onChange={handleChange}
+                    placeholder="+54 11 1234-5678"
+                    className="
+      w-full
+      h-14
+      px-5
+      rounded-2xl
+      border
+      border-gray-200
+      text-gray-900
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      transition
+    "
+                    required
                   />
                 </div>
 
@@ -268,6 +358,7 @@ export default function InscriptionsPage() {
                     focus:ring-blue-500
                     transition
                     bg-white
+                    text-gray-900
                   "
                   >
                     <option value="">Seleccionar</option>
@@ -289,7 +380,7 @@ export default function InscriptionsPage() {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Contanos qué estás buscando..."
+                    placeholder="Contanos qué estás buscando y nos contactaremos contigo..."
                     rows={5}
                     className="
                     w-full
@@ -303,29 +394,69 @@ export default function InscriptionsPage() {
                     focus:ring-blue-500
                     transition
                     resize-none
+                    text-gray-900
                   "
                   />
                 </div>
+                {/* SUCCESS MESSAGE */}
+                {successMessage && (
+                  <div
+                    className="
+      rounded-2xl
+      border
+      border-emerald-200
+      bg-emerald-50
+      px-5
+      py-4
+      text-emerald-700
+      text-sm
+      font-medium
+    "
+                  >
+                    {successMessage}
+                  </div>
+                )}
 
-                {/* Button */}
+                {/* ERROR MESSAGE */}
+                {errorMessage && (
+                  <div
+                    className="
+      rounded-2xl
+      border
+      border-red-200
+      bg-red-50
+      px-5
+      py-4
+      text-red-700
+      text-sm
+      font-medium
+    "
+                  >
+                    {errorMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
-                  w-full
-                  h-14
-                  rounded-2xl
-                  bg-blue-600
-                  hover:bg-blue-700
-                  text-white
-                  font-semibold
-                  text-lg
-                  transition-all
-                  shadow-lg
-                  hover:shadow-2xl
-                  hover:-translate-y-0.5
-                "
+    w-full
+    h-14
+    rounded-2xl
+    bg-blue-600
+    hover:bg-blue-700
+    disabled:bg-blue-400
+    disabled:cursor-not-allowed
+    text-white
+    font-semibold
+    text-lg
+    transition-all
+    shadow-lg
+    hover:shadow-2xl
+    hover:-translate-y-0.5
+  "
                 >
-                  Enviar solicitud
+                  {loading ? "Enviando..." : "Enviar solicitud"}
                 </button>
               </form>
             </div>
@@ -483,7 +614,7 @@ export default function InscriptionsPage() {
                   </p>
 
                   <p className="text-sm text-gray-300 mt-3">
-                    ✔ Cursos para niños, teens y adultos
+                    ✔ Cursos para niños, adolescentes y adultos
                   </p>
 
                   <p className="text-sm text-gray-300 mt-3">

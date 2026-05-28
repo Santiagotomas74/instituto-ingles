@@ -211,7 +211,7 @@ export default function AdminDashboardPage() {
 
         {/* BODY */}
         <div className="p-6 md:p-10">
-          {/* STATS */}
+          {/* STATS
           <section
             className="
               grid
@@ -276,10 +276,10 @@ export default function AdminDashboardPage() {
                 </div>
               </Link>
             ))}
-          </section>
+          </section> */}
 
           {/* QUICK ACTIONS */}
-          <section className="mt-14">
+          <section className="mt-2">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900">
                 Gestión administrativa
