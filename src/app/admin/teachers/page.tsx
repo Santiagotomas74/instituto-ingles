@@ -14,6 +14,7 @@ import {
   BookOpen,
   User,
   Calendar,
+  ArrowLeft,
 } from "lucide-react";
 
 type Teacher = {
@@ -76,13 +77,7 @@ export default function AdminTeachersPage() {
       console.error(error);
     }
   };
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <p className="text-gray-500 text-lg">Cargando profesores...</p>
-      </main>
-    );
-  }
+
   return (
     <main className="min-h-screen bg-slate-100">
       {/* HEADER */}
@@ -123,13 +118,13 @@ export default function AdminTeachersPage() {
           </div>
 
           <Link
-            href="/admin/teachers/create"
+            href="/admin/dashboard"
             className="
               h-14
               px-7
               rounded-2xl
-              bg-cyan-500
-              hover:bg-cyan-400
+              bg-green-700
+    
               transition
               font-semibold
               flex
@@ -138,8 +133,8 @@ export default function AdminTeachersPage() {
               shadow-xl
             "
           >
-            <Plus className="w-5 h-5" />
-            Nuevo profesor
+            <ArrowLeft className="w-5 h-5" />
+            Volver al panel
           </Link>
         </div>
       </div>
@@ -203,7 +198,6 @@ export default function AdminTeachersPage() {
               />
             </div>
 
-            {/* STATS */}
             <div className="flex flex-wrap gap-4">
               <StatsCard
                 title="Profesores"
@@ -222,6 +216,29 @@ export default function AdminTeachersPage() {
                 value="31"
                 icon={<BookOpen className="w-5 h-5" />}
               />
+            </div>
+
+            {/* STATS */}
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/admin/teachers/create"
+                className="
+              h-14
+              px-7
+              rounded-2xl
+              bg-cyan-500
+              hover:bg-cyan-400
+              transition
+              font-semibold
+              flex
+              items-center
+              gap-3
+              shadow-xl
+            "
+              >
+                <Plus className="w-5 h-5" />
+                Nuevo profesor
+              </Link>
             </div>
           </div>
         </div>
@@ -261,115 +278,190 @@ function TeacherCard({
   return (
     <div
       className="
-        bg-white
-        rounded-[32px]
-        border
-        border-slate-200
-        shadow-lg
-        overflow-hidden
-      "
+bg-gradient-to-br
+      from-blue-700
+      via-cyan-600
+      to-cyan-500
+    rounded-[36px]
+    border
+    border-slate-200
+    shadow-xl
+    overflow-hidden
+    hover:shadow-2xl
+    transition-all
+    duration-300
+  "
     >
-      {/* TOP */}
+      {/* HEADER */}
       <div
         className="
-          bg-gradient-to-r
-          from-blue-700
-          to-cyan-600
-          p-6
-          text-white
-        "
+      relative
+      
+      px-7
+      pt-7
+      pb-20
+      text-white
+    "
       >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-cyan-100 text-sm">Profesor</p>
+        {/* Glow */}
+        <div
+          className="
+        absolute
+        top-0
+        right-0
+        w-40
+        h-40
+        bg-white/10
+        rounded-full
+        blur-3xl
+      "
+        />
 
-            <h2 className="text-2xl font-bold mt-2">
-              {teacher.nombre} {teacher.apellido}
-            </h2>
+        <div className="relative z-10 flex items-start justify-between gap-5">
+          <div className="flex items-center gap-5">
+            {/* Avatar */}
+            <div
+              className="
+            w-20
+            h-20
+            rounded-3xl
+            bg-white/15
+            backdrop-blur-md
+            border
+            border-white/20
+            flex
+            items-center
+            justify-center
+            shrink-0
+          "
+            >
+              <User className="w-10 h-10" />
+            </div>
 
-            <p className="text-cyan-200 mt-1">DNI: {teacher.dni}</p>
-          </div>
+            <div>
+              <p className="text-cyan-100 text-sm tracking-wide uppercase">
+                Profesor
+              </p>
 
-          <div
-            className="
-              w-16
-              h-16
-              rounded-2xl
-              bg-white/15
-              backdrop-blur-md
-              flex
-              items-center
-              justify-center
-            "
-          >
-            <User className="w-8 h-8" />
+              <h2 className="text-3xl font-bold mt-1 leading-tight">
+                {teacher.nombre} {teacher.apellido}
+              </h2>
+
+              <div className="flex flex-wrap gap-2 mt-4">
+                <span
+                  className="
+                px-3
+                py-1
+                rounded-full
+                bg-white/15
+                backdrop-blur-md
+                text-sm
+                font-medium
+              "
+                >
+                  DNI {teacher.dni}
+                </span>
+
+                <span
+                  className="
+                px-3
+                py-1
+                rounded-full
+                bg-emerald-400/20
+                text-emerald-100
+                text-sm
+                font-medium
+              "
+                >
+                  Activo
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* BODY */}
-      <div className="p-6 space-y-5">
-        <InfoItem
-          icon={<Mail className="w-5 h-5" />}
-          label="Email"
-          value={teacher.email}
-        />
+      {/* CONTENT */}
+      <div className="px-7 pb-7 -mt-10 relative z-20">
+        <div
+          className="
+        bg-white
+        rounded-[28px]
+        border
+        border-slate-100
+        shadow-lg
+        p-6
+        space-y-5
+      "
+        >
+          {/* INFO */}
+          <div className="space-y-4">
+            <InfoItem
+              icon={<Mail className="w-5 h-5" />}
+              label="Email"
+              value={teacher.email}
+            />
 
-        <InfoItem
-          icon={<Calendar className="w-5 h-5" />}
-          label="Fecha de nacimiento"
-          value={new Date(teacher.fecha_nacimiento).toLocaleDateString(
-            "es-AR",
-            {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            },
-          )}
-        />
+            <InfoItem
+              icon={<Calendar className="w-5 h-5" />}
+              label="Fecha de nacimiento"
+              value={new Date(teacher.fecha_nacimiento).toLocaleDateString(
+                "es-AR",
+                {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                },
+              )}
+            />
+          </div>
 
-        {/* ACTIONS */}
-        <div className="pt-5 flex gap-4">
-          <Link
-            href={`/admin/teachers/edit/${teacher.id}`}
-            className="
-              flex-1
-              h-12
-              rounded-2xl
-              bg-blue-600
-              hover:bg-blue-700
-              transition
-              text-white
-              font-semibold
-              flex
-              items-center
-              justify-center
-              gap-2
-            "
-          >
-            <Pencil className="w-4 h-4" />
-            Editar
-          </Link>
-          <button
-            onClick={() => onDelete(teacher.id)}
-            className="
-    flex-1
-    h-12
-    rounded-2xl
-    bg-red-500
-    hover:bg-red-600
-    transition
-    text-white
-    font-semibold
-    flex
-    items-center
-    justify-center
-    gap-2
-  "
-          >
-            <Trash2 className="w-4 h-4" />
-            Eliminar
-          </button>
+          {/* ACTIONS */}
+          <div className="flex gap-3 pt-3">
+            <Link
+              href={`/admin/teachers/edit/${teacher.id}`}
+              className="
+            flex-1
+            h-12
+            rounded-2xl
+            bg-blue-600
+            hover:bg-blue-700
+            transition-all
+            text-white
+            font-semibold
+            flex
+            items-center
+            justify-center
+            gap-2
+            shadow-lg
+          "
+            >
+              <Pencil className="w-4 h-4" />
+              Editar
+            </Link>
+
+            <button
+              onClick={() => onDelete(teacher.id)}
+              className="
+            flex-1
+            h-12
+            rounded-2xl
+            bg-red-500
+            hover:bg-red-600
+            transition-all
+            text-white
+            font-semibold
+            flex
+            items-center
+            justify-center
+            gap-2
+            shadow-lg
+          "
+            >
+              <Trash2 className="w-4 h-4" />
+              Eliminar
+            </button>
+          </div>
         </div>
       </div>
     </div>

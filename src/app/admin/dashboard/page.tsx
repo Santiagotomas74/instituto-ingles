@@ -110,18 +110,32 @@ export default function AdminDashboardPage() {
             border-slate-800
           "
         >
-          <div className="flex items-center gap-4">
+          <div
+            className="
+    w-50
+    h-24
+    mx-auto
+    rounded-3xl
+    bg-white/60
+    border
+    border-white/10
+    backdrop-blur-sm
+    flex
+    items-center
+    justify-center
+    overflow-hidden
+    p-2
+  "
+          >
             <img
               src="/logo3.png"
-              alt="INK"
-              className="h-14 w-auto object-contain"
+              alt="I.N.K Logo"
+              className="
+      w-full
+      h-full
+      object-contain
+    "
             />
-
-            <div>
-              <h2 className="font-bold text-xl">I.N.K</h2>
-
-              <p className="text-sm text-slate-400">Admin Dashboard</p>
-            </div>
           </div>
         </div>
 

@@ -11,6 +11,7 @@ import {
   Clock3,
   Pencil,
   Trash2,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function ClassroomsClient({
@@ -54,7 +55,7 @@ export default function ClassroomsClient({
           </div>
 
           <Link
-            href="/admin/classrooms/create"
+            href="/admin/dashboard"
             className="
               h-14
               px-7
@@ -68,8 +69,8 @@ export default function ClassroomsClient({
               gap-3
             "
           >
-            <Plus className="w-5 h-5" />
-            Nuevo classroom
+            <ArrowLeft className="w-5 h-5" />
+            Volver al panel
           </Link>
         </div>
       </div>
@@ -115,6 +116,25 @@ export default function ClassroomsClient({
 
         {/* GRID */}
 
+        <Link
+          href="/admin/classrooms/create"
+          className="
+              h-14
+              px-7
+              rounded-2xl
+              bg-cyan-500
+              hover:bg-cyan-400
+              transition
+              font-semibold
+              flex
+              items-center
+              gap-3
+              mb-6
+            "
+        >
+          <Plus className="w-5 h-5" />
+          Nuevo classroom
+        </Link>
         <div
           className="
             grid
