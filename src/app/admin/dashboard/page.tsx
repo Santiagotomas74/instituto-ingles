@@ -147,8 +147,6 @@ export default function AdminDashboardPage() {
 
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <SidebarItem href="/admin/dashboard" label="Dashboard" />
-
           <SidebarItem href="/admin/students" label="Students" />
 
           <SidebarItem href="/admin/teachers" label="Teachers" />
