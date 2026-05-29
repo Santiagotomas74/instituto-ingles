@@ -171,7 +171,7 @@ export default function ClassroomsClient({
       "
             >
               Todavía no se creó ninguna classroom. Podés comenzar creando tu
-              primer curso para asignar estudiantes y profesores.
+              primer curso y asignarle un profesor.
             </p>
 
             <Link

@@ -279,7 +279,7 @@ export default function AdminTeachersPage() {
       "
             >
               Todavía no se registró ningún profesor en el sistema. Podés
-              agregar docentes para luego asignarlos a classrooms.
+              agregar docentes y editar su información en cualquier momento.
             </p>
 
             <Link
