@@ -10,6 +10,7 @@ import {
   Inbox,
   School,
   ArrowRight,
+  House,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -215,6 +216,36 @@ export default function AdminDashboardPage() {
 
         {/* BODY */}
         <div className="p-6 md:p-10">
+          <Link
+            href="/"
+            className="
+    md:hidden
+    fixed
+    bottom-5
+    right-5
+    z-50
+
+    flex
+    items-center
+    gap-2
+
+    px-5
+    h-14
+
+    rounded-2xl
+    bg-cyan-500
+    hover:bg-cyan-400
+
+    text-white
+    font-semibold
+
+    shadow-2xl
+    transition-all
+  "
+          >
+            <House className="w-5 h-5" />
+            Inicio
+          </Link>
           {/* QUICK ACTIONS   <Stats /> */}
           <section className="mt-2">
             <div className="mb-8">
