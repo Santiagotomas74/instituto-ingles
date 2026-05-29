@@ -59,6 +59,7 @@ export async function GET() {
         students.nombre,
         students.apellido,
         students.email,
+        students.status,
         students.nivel,
         classrooms.nombre AS classroom
       FROM students

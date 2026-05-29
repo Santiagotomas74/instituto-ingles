@@ -3,7 +3,8 @@
 import { useState } from "react";
 
 import { useRouter } from "next/navigation";
-
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import {
   User,
   Mail,
@@ -68,23 +69,61 @@ export default function CreateStudentForm() {
 
       <div
         className="
-          bg-gradient-to-r
-          from-slate-950
-          via-blue-950
-          to-cyan-900
-          text-white
-          px-6
-          md:px-10
-          py-8
-        "
+    bg-gradient-to-r
+    from-slate-950
+    via-blue-950
+    to-cyan-900
+    text-white
+    px-6
+    md:px-10
+    py-8
+  "
       >
-        <p className="text-cyan-300 uppercase tracking-[4px] text-sm">
-          Admin Panel
-        </p>
+        <div
+          className="
+      max-w-7xl
+      mx-auto
+      flex
+      items-start
+      justify-between
+      gap-6
+      flex-wrap
+    "
+        >
+          <div>
+            <p className="text-cyan-300 uppercase tracking-[4px] text-sm">
+              Admin Panel
+            </p>
 
-        <h1 className="text-4xl font-bold mt-3">Nuevo estudiante</h1>
+            <h1 className="text-4xl font-bold mt-3">Nuevo estudiante</h1>
 
-        <p className="text-slate-300 mt-4">Creá una nueva cuenta de alumno.</p>
+            <p className="text-slate-300 mt-4">
+              Creá una nueva cuenta de alumno.
+            </p>
+          </div>
+
+          <Link
+            href="/admin/students"
+            className="
+        h-14
+        px-6
+        rounded-2xl
+        bg-white/10
+        hover:bg-white/20
+        border
+        border-white/10
+        backdrop-blur-md
+        transition
+        font-medium
+        flex
+        items-center
+        gap-3
+      "
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Volver
+          </Link>
+        </div>
       </div>
 
       {/* FORM */}

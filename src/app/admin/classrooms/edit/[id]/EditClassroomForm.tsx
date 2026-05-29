@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 type Teacher = {
   id: string;
@@ -42,16 +44,13 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${process.env.BACKEND_URL}/api/admin/classrooms/${classroom.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+      const res = await fetch(`/api/admin/classrooms/${classroom.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(formData),
+      });
 
       const data = await res.json();
 
@@ -68,180 +67,207 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
 
   return (
     <main className="min-h-screen bg-slate-100 p-6 md:p-10">
-      <div
-        className="
-          max-w-3xl
-          mx-auto
-          bg-white
-          rounded-[32px]
-          shadow-xl
-          border
-          border-slate-200
-          p-8
-        "
-      >
-        <h1 className="text-4xl font-bold text-slate-900">Edit Classroom</h1>
-
-        <p className="text-slate-500 mt-3">
-          Modificá la información del classroom.
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-10 space-y-6">
-          {/* Nombre */}
-
+      <div className="max-w-3xl mx-auto">
+        {/* TOP */}
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Nombre
-            </label>
+            <p className="text-slate-500">Administración</p>
 
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              required
-              className="
-                w-full
-                h-14
-                px-5
-                rounded-2xl
-                border
-                border-slate-200
-                text-gray-700
-              "
-            />
+            <h1 className="text-4xl font-bold text-slate-900 mt-2">
+              Edit Classroom
+            </h1>
           </div>
 
-          {/* Nivel */}
-
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Nivel
-            </label>
-
-            <input
-              type="text"
-              name="nivel"
-              value={formData.nivel}
-              onChange={handleChange}
-              required
-              className="
-                w-full
-                h-14
-                px-5
-                rounded-2xl
-                border
-                border-slate-200
-                text-gray-700
-              "
-            />
-          </div>
-
-          {/* Modalidad */}
-
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Modalidad
-            </label>
-
-            <select
-              name="modalidad"
-              value={formData.modalidad}
-              onChange={handleChange}
-              className="
-                w-full
-                h-14
-                px-5
-                rounded-2xl
-                border
-                border-slate-200
-                text-gray-700
-              "
-            >
-              <option value="Presencial">Presencial</option>
-
-              <option value="Virtual">Virtual</option>
-
-              <option value="Híbrido">Híbrido</option>
-            </select>
-          </div>
-
-          {/* Horario */}
-
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Horario
-            </label>
-
-            <input
-              type="text"
-              name="horario"
-              value={formData.horario}
-              onChange={handleChange}
-              required
-              className="
-                w-full
-                h-14
-                px-5
-                rounded-2xl
-                border
-                border-slate-200
-                text-gray-700
-              "
-            />
-          </div>
-
-          {/* Profesor */}
-
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Profesor
-            </label>
-
-            <select
-              name="profesor_id"
-              value={formData.profesor_id}
-              onChange={handleChange}
-              required
-              className="
-                w-full
-                h-14
-                px-5
-                rounded-2xl
-                border
-                border-slate-200
-                text-gray-700
-              "
-            >
-              <option value="">Seleccionar profesor</option>
-
-              {teachers.map((teacher) => (
-                <option key={teacher.id} value={teacher.id}>
-                  {teacher.nombre} {teacher.apellido}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* BUTTON */}
-
-          <button
-            type="submit"
-            disabled={loading}
+          <Link
+            href="/admin/classrooms"
             className="
-              w-full
-              h-14
+              h-12
+              px-5
               rounded-2xl
-              bg-blue-600
-              hover:bg-blue-700
+              bg-blue-500
+              border
+              border-slate-200
+            
               transition
-              text-white
-              font-semibold
+              text-white-700
+              font-medium
+              flex
+              items-center
+              gap-2
+              shadow-sm
             "
           >
-            {loading ? "Guardando..." : "Guardar cambios"}
-          </button>
-        </form>
+            <ArrowLeft className="w-4 h-4" />
+            Volver
+          </Link>
+        </div>
+
+        {/* CARD */}
+        <div
+          className="
+            bg-white
+            rounded-[32px]
+            shadow-xl
+            border
+            border-slate-200
+            p-8
+          "
+        >
+          <p className="text-slate-500 mt-1">
+            Modificá la información del classroom.
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+            {/* Nombre */}
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Nombre
+              </label>
+
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  text-gray-700
+                "
+              />
+            </div>
+
+            {/* Nivel */}
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Nivel
+              </label>
+
+              <input
+                type="text"
+                name="nivel"
+                value={formData.nivel}
+                onChange={handleChange}
+                required
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  text-gray-700
+                "
+              />
+            </div>
+
+            {/* Modalidad */}
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Modalidad
+              </label>
+
+              <select
+                name="modalidad"
+                value={formData.modalidad}
+                onChange={handleChange}
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  text-gray-700
+                "
+              >
+                <option value="Presencial">Presencial</option>
+
+                <option value="Virtual">Virtual</option>
+
+                <option value="Híbrido">Híbrido</option>
+              </select>
+            </div>
+
+            {/* Horario */}
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Horario
+              </label>
+
+              <input
+                type="text"
+                name="horario"
+                value={formData.horario}
+                onChange={handleChange}
+                required
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  text-gray-700
+                "
+              />
+            </div>
+
+            {/* Profesor */}
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Profesor
+              </label>
+
+              <select
+                name="profesor_id"
+                value={formData.profesor_id}
+                onChange={handleChange}
+                required
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  text-gray-700
+                "
+              >
+                <option value="">Seleccionar profesor</option>
+
+                {teachers.map((teacher) => (
+                  <option key={teacher.id} value={teacher.id}>
+                    {teacher.nombre} {teacher.apellido}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="
+                w-full
+                h-14
+                rounded-2xl
+                bg-blue-600
+                hover:bg-blue-700
+                transition
+                text-white
+                font-semibold
+              "
+            >
+              {loading ? "Guardando..." : "Guardar cambios"}
+            </button>
+          </form>
+        </div>
       </div>
     </main>
   );

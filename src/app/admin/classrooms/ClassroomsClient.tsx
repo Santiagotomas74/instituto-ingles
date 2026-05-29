@@ -57,17 +57,26 @@ export default function ClassroomsClient({
           <Link
             href="/admin/dashboard"
             className="
-              h-14
-              px-7
-              rounded-2xl
-              bg-cyan-500
-              hover:bg-cyan-400
-              transition
-              font-semibold
-              flex
-              items-center
-              gap-3
-            "
+          h-14
+          px-7
+          rounded-2xl
+          bg-white/10
+          border
+          border-white/10
+          backdrop-blur-md
+          hover:bg-white/20
+          text-white
+          transition-all
+          font-semibold
+          flex
+          items-center
+          justify-center
+          gap-3
+          shadow-lg
+          hover:-translate-y-0.5
+          w-full
+          md:w-auto
+        "
           >
             <ArrowLeft className="w-5 h-5" />
             Volver al panel
@@ -114,11 +123,85 @@ export default function ClassroomsClient({
           />
         </div>
 
-        {/* GRID */}
+        {filtered.length === 0 ? (
+          <div
+            className="
+      bg-white
+      rounded-[32px]
+      border
+      border-slate-200
+      shadow-sm
+      p-12
+      text-center
+    "
+          >
+            <div
+              className="
+        w-24
+        h-24
+        mx-auto
+        rounded-3xl
+        bg-blue-100
+        text-blue-600
+        flex
+        items-center
+        justify-center
+      "
+            >
+              <GraduationCap className="w-12 h-12" />
+            </div>
 
-        <Link
-          href="/admin/classrooms/create"
-          className="
+            <h2
+              className="
+        mt-8
+        text-3xl
+        font-bold
+        text-slate-900
+      "
+            >
+              No hay classrooms creados
+            </h2>
+
+            <p
+              className="
+        mt-4
+        text-slate-500
+        max-w-xl
+        mx-auto
+      "
+            >
+              Todavía no se creó ninguna classroom. Podés comenzar creando tu
+              primer curso para asignar estudiantes y profesores.
+            </p>
+
+            <Link
+              href="/admin/classrooms/create"
+              className="
+        mt-8
+        inline-flex
+        items-center
+        gap-3
+        h-14
+        px-7
+        rounded-2xl
+        bg-blue-600
+        hover:bg-blue-700
+        transition
+        text-white
+        font-semibold
+        shadow-lg
+        hover:-translate-y-0.5
+      "
+            >
+              <Plus className="w-5 h-5" />
+              Crear classroom
+            </Link>
+          </div>
+        ) : (
+          <>
+            <Link
+              href="/admin/classrooms/create"
+              className="
               h-14
               px-7
               rounded-2xl
@@ -131,23 +214,24 @@ export default function ClassroomsClient({
               gap-3
               mb-6
             "
-        >
-          <Plus className="w-5 h-5" />
-          Nuevo classroom
-        </Link>
-        <div
-          className="
-            grid
-            grid-cols-1
-            xl:grid-cols-2
-            2xl:grid-cols-3
-            gap-6
-          "
-        >
-          {filtered.map((classroom) => (
-            <ClassroomCard key={classroom.id} classroom={classroom} />
-          ))}
-        </div>
+            >
+              <Plus className="w-5 h-5" />
+              Nuevo classroom
+            </Link>
+            <div
+              className="
+      grid
+      grid-cols-1
+      xl:grid-cols-2
+      gap-8
+    "
+            >
+              {filtered.map((classroom) => (
+                <ClassroomCard key={classroom.id} classroom={classroom} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </main>
   );

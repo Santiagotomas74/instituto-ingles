@@ -120,18 +120,26 @@ export default function AdminTeachersPage() {
           <Link
             href="/admin/dashboard"
             className="
-              h-14
-              px-7
-              rounded-2xl
-              bg-green-700
-    
-              transition
-              font-semibold
-              flex
-              items-center
-              gap-3
-              shadow-xl
-            "
+          h-14
+          px-7
+          rounded-2xl
+          bg-white/10
+          border
+          border-white/10
+          backdrop-blur-md
+          hover:bg-white/20
+          text-white
+          transition-all
+          font-semibold
+          flex
+          items-center
+          justify-center
+          gap-3
+          shadow-lg
+          hover:-translate-y-0.5
+          w-full
+          md:w-auto
+        "
           >
             <ArrowLeft className="w-5 h-5" />
             Volver al panel
@@ -199,27 +207,6 @@ export default function AdminTeachersPage() {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <StatsCard
-                title="Profesores"
-                value={String(teachers.length)}
-                icon={<User className="w-5 h-5" />}
-              />
-
-              <StatsCard
-                title="Niveles"
-                value="8"
-                icon={<GraduationCap className="w-5 h-5" />}
-              />
-
-              <StatsCard
-                title="Clases"
-                value="31"
-                icon={<BookOpen className="w-5 h-5" />}
-              />
-            </div>
-
-            {/* STATS */}
-            <div className="flex flex-wrap gap-4">
               <Link
                 href="/admin/teachers/create"
                 className="
@@ -244,23 +231,98 @@ export default function AdminTeachersPage() {
         </div>
 
         {/* GRID */}
-        <div
-          className="
-            grid
-            grid-cols-1
-            xl:grid-cols-2
-            2xl:grid-cols-3
-            gap-6
-          "
-        >
-          {filteredTeachers.map((teacher) => (
-            <TeacherCard
-              key={teacher.id}
-              teacher={teacher}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
+        {filteredTeachers.length === 0 ? (
+          <div
+            className="
+      bg-white
+      rounded-[32px]
+      border
+      border-slate-200
+      shadow-sm
+      p-12
+      text-center
+    "
+          >
+            <div
+              className="
+        w-24
+        h-24
+        mx-auto
+        rounded-3xl
+        bg-cyan-100
+        text-cyan-700
+        flex
+        items-center
+        justify-center
+      "
+            >
+              <GraduationCap className="w-12 h-12" />
+            </div>
+
+            <h2
+              className="
+        mt-8
+        text-3xl
+        font-bold
+        text-slate-900
+      "
+            >
+              No hay profesores registrados
+            </h2>
+
+            <p
+              className="
+        mt-4
+        text-slate-500
+        max-w-xl
+        mx-auto
+      "
+            >
+              Todavía no se registró ningún profesor en el sistema. Podés
+              agregar docentes para luego asignarlos a classrooms.
+            </p>
+
+            <Link
+              href="/admin/teachers/create"
+              className="
+        mt-8
+        inline-flex
+        items-center
+        gap-3
+        h-14
+        px-7
+        rounded-2xl
+        bg-cyan-600
+        hover:bg-cyan-700
+        transition
+        text-white
+        font-semibold
+        shadow-lg
+        hover:-translate-y-0.5
+      "
+            >
+              <Plus className="w-5 h-5" />
+              Crear profesor
+            </Link>
+          </div>
+        ) : (
+          <div
+            className="
+      grid
+      grid-cols-1
+      xl:grid-cols-2
+      gap-8
+    "
+          >
+            {filteredTeachers.map((teacher) => (
+              <TeacherCard
+                key={teacher.id}
+                teacher={teacher}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
@@ -557,4 +619,28 @@ function StatsCard({
       </div>
     </div>
   );
+}
+{
+  /*/ STATS 
+            <div className="flex flex-wrap gap-4">
+              <StatsCard
+                title="Profesores"
+                value={String(teachers.length)}
+                icon={<User className="w-5 h-5" />}
+              />
+
+              <StatsCard
+                title="Niveles"
+                value="8"
+                icon={<GraduationCap className="w-5 h-5" />}
+              />
+
+              <StatsCard
+                title="Clases"
+                value="31"
+                icon={<BookOpen className="w-5 h-5" />}
+              />
+            </div>
+
+            {/* STATS */
 }

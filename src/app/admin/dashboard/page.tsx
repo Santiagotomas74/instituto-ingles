@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import Stats from "./stats";
 import {
   Users,
   GraduationCap,
@@ -104,39 +104,45 @@ export default function AdminDashboardPage() {
         {/* Logo */}
         <div
           className="
-            px-8
-            py-8
-            border-b
-            border-slate-800
-          "
-        >
-          <div
-            className="
-    w-50
-    h-24
-    mx-auto
-    rounded-3xl
-    bg-white/60
-    border
-    border-white/10
-    backdrop-blur-sm
-    flex
-    items-center
-    justify-center
-    overflow-hidden
-    p-2
+    px-8
+    py-8
+    border-b
+    border-slate-800
   "
-          >
-            <img
-              src="/logo3.png"
-              alt="I.N.K Logo"
+        >
+          <Link href="/">
+            <div
               className="
-      w-full
-      h-full
-      object-contain
-    "
-            />
-          </div>
+        w-50
+        h-24
+        mx-auto
+        rounded-3xl
+        bg-white/60
+        border
+        border-white/10
+        backdrop-blur-sm
+        flex
+        items-center
+        justify-center
+        overflow-hidden
+        p-2
+        transition-all
+        hover:bg-white/80
+        hover:scale-[1.02]
+        cursor-pointer
+      "
+            >
+              <img
+                src="/logo3.png"
+                alt="I.N.K Logo"
+                className="
+          w-full
+          h-full
+          object-contain
+        "
+              />
+            </div>
+          </Link>
         </div>
 
         {/* Navigation */}
@@ -149,9 +155,9 @@ export default function AdminDashboardPage() {
 
           <SidebarItem href="/admin/classrooms" label="Classrooms" />
 
-          <SidebarItem href="/admin/boletines" label="Boletines" />
-
           <SidebarItem href="/admin/inscripciones" label="Inscripciones" />
+
+          <SidebarItem href="/admin/boletines" label="Boletines" />
         </nav>
       </aside>
 
@@ -211,74 +217,7 @@ export default function AdminDashboardPage() {
 
         {/* BODY */}
         <div className="p-6 md:p-10">
-          {/* STATS
-          <section
-            className="
-              grid
-              grid-cols-1
-              md:grid-cols-2
-              xl:grid-cols-4
-              gap-6
-            "
-          >
-            {stats.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className="
-                  rounded-[32px]
-                  overflow-hidden
-                  shadow-xl
-                  bg-white
-                  border
-                  border-gray-100
-                  hover:-translate-y-1
-                  transition-all
-                "
-              >
-                <div
-                  className={`
-                    h-2
-                    bg-gradient-to-r
-                    ${item.color}
-                  `}
-                />
-
-                <div className="p-7">
-                  <div
-                    className={`
-                      w-16
-                      h-16
-                      rounded-3xl
-                      bg-gradient-to-br
-                      ${item.color}
-                      text-white
-                      flex
-                      items-center
-                      justify-center
-                    `}
-                  >
-                    {item.icon}
-                  </div>
-
-                  <p className="mt-6 text-gray-500">{item.title}</p>
-
-                  <h2
-                    className="
-                      text-4xl
-                      font-bold
-                      text-gray-900
-                      mt-2
-                    "
-                  >
-                    {item.value}
-                  </h2>
-                </div>
-              </Link>
-            ))}
-          </section> */}
-
-          {/* QUICK ACTIONS */}
+          {/* QUICK ACTIONS   <Stats /> */}
           <section className="mt-2">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900">

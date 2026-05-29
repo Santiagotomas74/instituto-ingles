@@ -11,6 +11,7 @@ type Student = {
   nombre: string;
   apellido: string;
   email: string;
+  status: string;
   nivel: string;
   classroom: string | null;
 };
@@ -30,6 +31,7 @@ export default async function StudentsPage() {
   );
 
   const studentsData = await studentsRes.json();
+  console.log("studentsData", studentsData);
 
   const students: Student[] = studentsData.students || [];
 
