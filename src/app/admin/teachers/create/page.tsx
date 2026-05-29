@@ -60,7 +60,7 @@ export default function CreateTeacherPage() {
           Crear Profesor
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
           <Input
             label="DNI"
             name="dni"
@@ -82,21 +82,10 @@ export default function CreateTeacherPage() {
             onChange={handleChange}
           />
 
-          <input
-            className="
-              w-full
-              h-12
-                px-4
-                rounded-xl
-                text-gray-700
-                border
-                border-gray-300
-                focus:outline-none
-                focus:ring-2
-                focus:ring-blue-500
-            "
-            type="date"
+          <Input
+            label="Fecha de Nacimiento"
             name="fecha_nacimiento"
+            type="date"
             value={formData.fecha_nacimiento}
             onChange={handleChange}
           />

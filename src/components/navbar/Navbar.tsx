@@ -721,7 +721,7 @@ export default function MobileNavbar() {
             </Link>
 
             <Link
-              href="/register"
+              href="/inscriptions"
               className="
                 w-full
                 flex
