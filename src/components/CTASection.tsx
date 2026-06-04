@@ -102,9 +102,9 @@ export default function CTASection() {
             mx-auto
           "
         >
-          En I.N.K Instituto de Inglés ayudamos a niños, adolescentes y adultos
-          a aprender inglés de forma dinámica, práctica y orientada al mundo
-          real.
+          En I.N.K Instituto de Inglés en San Miguel ayudamos a niños,
+          adolescentes y adultos a aprender inglés de forma dinámica, práctica y
+          orientada al mundo real.
         </p>
 
         {/* Buttons */}

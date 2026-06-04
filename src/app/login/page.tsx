@@ -10,7 +10,7 @@ export default function CampusLoginPage() {
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -26,10 +26,9 @@ export default function CampusLoginPage() {
 
     try {
       setLoading(true);
-
       setError("");
 
-      const res = await fetch(`/api/login`, {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,16 +37,24 @@ export default function CampusLoginPage() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       if (!data.success) {
         setError(data.message);
         return;
       }
 
-      window.location.href = "/admin/dashboard";
+      if (data.role === "admin") {
+        window.location.href = "/admin/dashboard";
+        return;
+      }
+
+      if (data.role === "teacher") {
+        window.location.href = "/teacher/dashboard";
+        return;
+      }
     } catch (error) {
       console.error(error);
-
       setError("Ocurrió un error");
     } finally {
       setLoading(false);
@@ -162,53 +169,53 @@ export default function CampusLoginPage() {
           {/* Form */}
           <div className="p-8 md:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email */}
+              {/* Usuario */}
               <div>
                 <label
                   className="
-                    text-sm
-                    font-medium
-                    text-gray-700
-                    mb-2
-                    block
-                  "
+      text-sm
+      font-medium
+      text-gray-700
+      mb-2
+      block
+    "
                 >
-                  Correo electrónico
+                  Usuario o correo electrónico
                 </label>
 
                 <div className="relative">
                   <Mail
                     className="
-                      absolute
-                      left-4
-                      top-1/2
-                      -translate-y-1/2
-                      w-5
-                      h-5
-                      text-gray-400
-                    "
+        absolute
+        left-4
+        top-1/2
+        -translate-y-1/2
+        w-5
+        h-5
+        text-gray-400
+      "
                   />
 
                   <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
+                    type="text"
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
-                    placeholder="ejemplo@email.com"
+                    placeholder="admin@email.com o Juan Pérez"
                     className="
-                      w-full
-                      h-14
-                      rounded-2xl
-                      border
-                      border-gray-200
-                      pl-12
-                      pr-4
-                      text-gray-900
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-blue-500
-                      transition
-                    "
+        w-full
+        h-14
+        rounded-2xl
+        border
+        border-gray-200
+        pl-12
+        pr-4
+        text-gray-900
+        focus:outline-none
+        focus:ring-2
+        focus:ring-blue-500
+        transition
+      "
                     required
                   />
                 </div>

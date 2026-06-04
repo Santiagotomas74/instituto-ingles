@@ -97,9 +97,9 @@ export default function CambridgeSection() {
               leading-relaxed
             "
           >
-            En I.N.K Instituto de Inglés trabajamos con programas oficiales
-            Cambridge y acompañamos a nuestros estudiantes en cada etapa de su
-            formación académica.
+            En I.N.K Instituto de Inglés en San Miguel trabajamos con programas
+            oficiales Cambridge y acompañamos a nuestros estudiantes en cada
+            etapa de su formación académica.
           </p>
 
           <p

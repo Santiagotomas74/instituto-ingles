@@ -13,7 +13,6 @@ export default function CreateTeacherPage() {
     nombre: "",
     apellido: "",
     fecha_nacimiento: "",
-    email: "",
     password: "",
   });
 
@@ -26,6 +25,21 @@ export default function CreateTeacherPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.nombre.trim()) {
+      alert("El nombre es obligatorio");
+      return;
+    }
+
+    if (!formData.apellido.trim()) {
+      alert("El apellido es obligatorio");
+      return;
+    }
+
+    if (!formData.password.trim()) {
+      alert("La contraseña es obligatoria");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -62,7 +76,7 @@ export default function CreateTeacherPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6 text-gray-700">
           <Input
-            label="DNI"
+            label="DNI (opcional)"
             name="dni"
             value={formData.dni}
             onChange={handleChange}
@@ -73,6 +87,7 @@ export default function CreateTeacherPage() {
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
+            required
           />
 
           <Input
@@ -80,20 +95,14 @@ export default function CreateTeacherPage() {
             name="apellido"
             value={formData.apellido}
             onChange={handleChange}
+            required
           />
 
           <Input
-            label="Fecha de Nacimiento"
+            label="Fecha de Nacimiento (opcional)"
             name="fecha_nacimiento"
             type="date"
             value={formData.fecha_nacimiento}
-            onChange={handleChange}
-          />
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
             onChange={handleChange}
           />
 
@@ -103,6 +112,7 @@ export default function CreateTeacherPage() {
             type="password"
             value={formData.password}
             onChange={handleChange}
+            required
           />
 
           <button

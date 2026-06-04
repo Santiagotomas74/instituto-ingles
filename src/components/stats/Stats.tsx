@@ -120,8 +120,8 @@ export default function StatsSection() {
               leading-relaxed
             "
           >
-            En I.N.K Instituto de Inglés acompañamos a cientos de estudiantes en
-            su crecimiento académico, personal y profesional.
+            En I.N.K Instituto de Inglés en San Miguel acompañamos a cientos de
+            estudiantes en su crecimiento académico, personal y profesional.
           </p>
         </div>
 
@@ -261,7 +261,7 @@ export default function StatsSection() {
     w-30
     h-30
     rounded-3xl
-    bg-white/15
+    bg-white/25
     border
     border-white/30
     backdrop-blur-sm

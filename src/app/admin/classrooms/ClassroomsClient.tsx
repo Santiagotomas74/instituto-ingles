@@ -334,13 +334,14 @@ function ClassroomCard({ classroom }: { classroom: any }) {
             Editar
           </Link>
 
-          <button
+          <Link
+            href={`/admin/classrooms/${classroom.id}`}
             className="
               flex-1
               h-12
               rounded-2xl
-              bg-red-500
-              hover:bg-red-600
+              bg-green-500
+              hover:bg-green-600
               transition
               text-white
               font-semibold
@@ -350,9 +351,8 @@ function ClassroomCard({ classroom }: { classroom: any }) {
               gap-2
             "
           >
-            <Trash2 className="w-4 h-4" />
-            Eliminar
-          </button>
+            Gestionar curso
+          </Link>
         </div>
       </div>
     </div>

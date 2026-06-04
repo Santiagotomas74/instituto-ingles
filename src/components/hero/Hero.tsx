@@ -1,18 +1,18 @@
+import LondonHeroSlider from "./LondonHeroSlider";
+
 export default function Hero() {
   return (
     <section
       className="
-        relative
-        overflow-hidden
-        w-full
-        bg-gradient-to-br
-        from-blue-950
-        via-blue-800
-        to-blue-600
-        py-8
-   
-      "
+    relative
+    overflow-hidden
+    w-full
+    min-h-[750px]
+    flex
+    items-center
+  "
     >
+      <LondonHeroSlider />
       {/* Background Effects */}
       <div
         className="
@@ -234,7 +234,7 @@ export default function Hero() {
             <div className="space-y-6">
               <div>
                 <p className="text-cyan-300 text-sm font-medium">
-                  I.N.K Instituto de Inglés
+                  I.N.K Instituto de Inglés en San Miguel
                 </p>
 
                 <h3

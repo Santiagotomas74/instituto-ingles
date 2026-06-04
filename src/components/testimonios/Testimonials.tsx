@@ -95,7 +95,7 @@ export default function TestimonialsSection() {
             "
           >
             Experiencias reales de estudiantes y familias que forman parte de
-            I.N.K Instituto de Inglés.
+            I.N.K Instituto de Inglés en San Miguel.
           </p>
         </div>
 

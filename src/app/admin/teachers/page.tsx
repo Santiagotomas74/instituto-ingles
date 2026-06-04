@@ -423,6 +423,27 @@ bg-gradient-to-br
                 >
                   DNI {teacher.dni}
                 </span>
+                <span
+                  className="
+                px-3
+                py-1
+                rounded-full
+                bg-white/15
+                backdrop-blur-md
+                text-sm
+                font-medium
+              "
+                >
+                  Fecha de nacimiento:{" "}
+                  {new Date(teacher.fecha_nacimiento).toLocaleDateString(
+                    "es-AR",
+                    {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    },
+                  )}
+                </span>
 
                 <span
                   className="
@@ -456,28 +477,6 @@ bg-gradient-to-br
         space-y-5
       "
         >
-          {/* INFO */}
-          <div className="space-y-4">
-            <InfoItem
-              icon={<Mail className="w-5 h-5" />}
-              label="Email"
-              value={teacher.email}
-            />
-
-            <InfoItem
-              icon={<Calendar className="w-5 h-5" />}
-              label="Fecha de nacimiento"
-              value={new Date(teacher.fecha_nacimiento).toLocaleDateString(
-                "es-AR",
-                {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                },
-              )}
-            />
-          </div>
-
           {/* ACTIONS */}
           <div className="flex gap-3 pt-3">
             <Link

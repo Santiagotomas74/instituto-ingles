@@ -30,7 +30,7 @@ export default function ConfirmacionBoletin({ boletinId, esMayorEdad }: Props) {
   const checkConfirmation = async () => {
     try {
       const res = await fetch(
-        `${process.env.BACKEND_URL}/api/boletines/confirmar-boletin?boletin_id=${boletinId}`,
+        `/api/boletines/confirmar-boletin?boletin_id=${boletinId}`,
       );
 
       const data = await res.json();
@@ -58,19 +58,16 @@ export default function ConfirmacionBoletin({ boletinId, esMayorEdad }: Props) {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${process.env.BACKEND_URL}/api/boletines/confirmar-boletin`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            boletin_id: boletinId,
-            ...formData,
-          }),
+      const res = await fetch(`/api/boletines/confirmar-boletin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          boletin_id: boletinId,
+          ...formData,
+        }),
+      });
 
       const data = await res.json();
 

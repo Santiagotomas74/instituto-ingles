@@ -30,62 +30,37 @@ export async function GET() {
     );
   }
 }
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { dni, nombre, apellido, fecha_nacimiento, email, password } = body;
+    const { nombre, apellido, fecha_nacimiento, password } = body;
 
-    // Validaciones
-    if (!dni || !nombre || !apellido || !email || !password) {
+    if (!nombre?.trim() || !apellido?.trim() || !password?.trim()) {
       return NextResponse.json(
         {
           success: false,
-          message: "Faltan campos",
+          message: "Nombre, apellido y contraseña son obligatorios",
         },
         { status: 400 },
       );
     }
 
-    // Verificar email existente
-    const existingTeacher = await query(
-      `
-        SELECT id
-        FROM teachers
-        WHERE email = $1
-        LIMIT 1
-      `,
-      [email],
-    );
-
-    if (existingTeacher.rows.length > 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "El email ya existe",
-        },
-        { status: 400 },
-      );
-    }
-
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert
+    const birthDate = fecha_nacimiento || null;
+
     await query(
       `
-    INSERT INTO teachers (
-      dni,
-      nombre,
-      apellido,
-      fecha_nacimiento,
-      email,
-      password
-    )
-    VALUES ($1, $2, $3, $4, $5, $6)
-  `,
-      [dni, nombre, apellido, fecha_nacimiento, email, hashedPassword],
+      INSERT INTO teachers (
+        nombre,
+        apellido,
+        fecha_nacimiento,
+        password
+      )
+      VALUES ($1, $2, $3, $4)
+      `,
+      [nombre.trim(), apellido.trim(), birthDate, hashedPassword],
     );
 
     return NextResponse.json({

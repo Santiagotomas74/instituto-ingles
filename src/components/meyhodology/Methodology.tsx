@@ -133,10 +133,10 @@ export default function MethodologySection() {
               leading-relaxed
             "
           >
-            En I.N.K Instituto de Inglés trabajamos con una metodología moderna,
-            práctica y enfocada en la comunicación real. Nuestro objetivo es que
-            cada estudiante pueda desenvolverse con seguridad en contextos
-            sociales, académicos y profesionales.
+            En I.N.K Instituto de Inglés en San Miguel trabajamos con una
+            metodología moderna, práctica y enfocada en la comunicación real.
+            Nuestro objetivo es que cada estudiante pueda desenvolverse con
+            seguridad en contextos sociales, académicos y profesionales.
           </p>
 
           {/* Items */}

@@ -115,8 +115,10 @@ export default function About() {
               "
             >
               En{" "}
-              <span className="font-semibold">I.N.K Instituto de Inglés</span>,
-              enseñamos inglés desde el año 2010 con una metodología moderna,
+              <span className="font-semibold">
+                I.N.K Instituto de Inglés en San Miguel
+              </span>
+              , enseñamos inglés desde el año 2010 con una metodología moderna,
               dinámica y enfocada en la comunicación real.
             </p>
 
