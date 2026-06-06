@@ -34,3 +34,7 @@ body {
     transform: scale(1.18);
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}

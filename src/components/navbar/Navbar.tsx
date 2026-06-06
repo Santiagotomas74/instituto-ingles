@@ -41,7 +41,7 @@ export default function MobileNavbar() {
         "
       >
         {/* Logo */}
-        <Link href="#">
+        <Link href="/">
           <img
             src="/logo-ink.png"
             alt="I.N.K Logo"

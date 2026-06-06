@@ -1,4 +1,5 @@
 import LondonHeroSlider from "./LondonHeroSlider";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -167,56 +168,68 @@ md:text-5xl
             ))}
           </div>
 
-          {/* Buttons */}
           <div
             className="
     flex
     flex-col
     sm:flex-row
-    gap-3
-    mt-8
-    w-full
-    sm:w-auto
+    items-start
+    sm:items-center
+    gap-4
+    mt-12
   "
           >
-            <button
+            <Link
+              href="/inscriptions"
               className="
-  w-full
-  sm:w-auto
-  bg-white
-  text-blue-800
-  px-6
-  py-3
-  md:px-8
-  md:py-4
-  rounded-xl
-  text-base
-  md:text-lg
-  font-semibold
-"
+      w-full
+      sm:w-auto
+      text-center
+      bg-white
+      text-blue-800
+      px-6
+      py-3
+      md:px-8
+      md:py-4
+      rounded-xl
+      text-base
+      md:text-lg
+      font-semibold
+      hover:bg-blue-50
+      transition
+      shadow-2xl
+      hover:scale-[1.02]
+    "
             >
               Inscribirme ahora
-            </button>
+            </Link>
 
-            <button
+            <Link
+              href="#levels"
               className="
-                border
-                border-white/30
-                bg-white/5
-                backdrop-blur-sm
-                text-white
-                px-8
-                py-4
-                rounded-xl
-                text-lg
-                font-medium
-                hover:bg-white
-                hover:text-blue-800
-                transition
-              "
+      w-full
+      sm:w-auto
+      text-center
+      border
+      border-white/30
+      bg-white/5
+      backdrop-blur-sm
+      text-white
+      px-6
+      py-3
+      md:px-8
+      md:py-4
+      rounded-xl
+      text-base
+      md:text-lg
+      font-medium
+      hover:bg-white
+      hover:text-blue-800
+      transition
+    "
             >
               Ver programas
-            </button>
+            </Link>
           </div>
         </div>
 
