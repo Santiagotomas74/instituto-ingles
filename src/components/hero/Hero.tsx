@@ -7,8 +7,7 @@ export default function Hero() {
     relative
     overflow-hidden
     w-full
-    min-h-[650px]
-    md:min-h-[750px]
+    min-h-screen md:min-h-[750px]
     flex
     items-center
     py-20
