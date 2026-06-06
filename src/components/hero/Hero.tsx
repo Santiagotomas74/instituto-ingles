@@ -7,9 +7,12 @@ export default function Hero() {
     relative
     overflow-hidden
     w-full
-    min-h-[750px]
+    min-h-[650px]
+    md:min-h-[750px]
     flex
     items-center
+    py-20
+    md:py-0
   "
     >
       <LondonHeroSlider />
@@ -54,16 +57,17 @@ export default function Hero() {
 
       <div
         className="
-          max-w-7xl
-          mx-auto
-          px-6
-          relative
-          z-10
-          grid
-          lg:grid-cols-2
-          gap-16
-          items-center
-        "
+    max-w-7xl
+    mx-auto
+    px-4
+    sm:px-6
+    relative
+    z-10
+    grid
+    lg:grid-cols-2
+    gap-16
+    items-center
+  "
       >
         {/* Left Content */}
         <div className="max-w-3xl">
@@ -94,8 +98,9 @@ export default function Hero() {
             className="
               mt-4
               text-white
-              text-5xl
-              md:text-5xl
+              text-3xl
+sm:text-4xl
+md:text-5xl
               font-light
               leading-tight
               tracking-tight
@@ -113,7 +118,8 @@ export default function Hero() {
             className="
               mt-4
               text-white/80
-              text-lg
+              text-base
+              sm:text-lg
               md:text-lg
               leading-relaxed
               max-w-2xl
@@ -127,11 +133,12 @@ export default function Hero() {
           {/* Features */}
           <div
             className="
-              mt-10
-              flex
-              flex-wrap
-              gap-4
-            "
+    mt-8
+    flex
+    flex-wrap
+    gap-2
+    md:gap-4
+  "
           >
             {[
               "Cursos para todas las edades",
@@ -142,16 +149,19 @@ export default function Hero() {
               <div
                 key={item}
                 className="
-                  px-4
-                  py-2
-                  rounded-full
-                  bg-white/10
-                  border
-                  border-white/10
-                  text-white/90
-                  text-sm
-                  backdrop-blur-sm
-                "
+  px-3
+  py-1.5
+  md:px-4
+  md:py-2
+  rounded-full
+  bg-white/10
+  border
+  border-white/10
+  text-white/90
+  text-xs
+  md:text-sm
+  backdrop-blur-sm
+"
               >
                 {item}
               </div>
@@ -161,29 +171,30 @@ export default function Hero() {
           {/* Buttons */}
           <div
             className="
-              flex
-              flex-col
-              sm:flex-row
-              items-start
-              sm:items-center
-              gap-4
-              mt-12
-            "
+    flex
+    flex-col
+    sm:flex-row
+    gap-3
+    mt-8
+    w-full
+    sm:w-auto
+  "
           >
             <button
               className="
-                bg-white
-                text-blue-800
-                px-8
-                py-4
-                rounded-xl
-                text-lg
-                font-semibold
-                hover:bg-blue-50
-                transition
-                shadow-2xl
-                hover:scale-[1.02]
-              "
+  w-full
+  sm:w-auto
+  bg-white
+  text-blue-800
+  px-6
+  py-3
+  md:px-8
+  md:py-4
+  rounded-xl
+  text-base
+  md:text-lg
+  font-semibold
+"
             >
               Inscribirme ahora
             </button>

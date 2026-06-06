@@ -15,10 +15,16 @@ export async function GET(req: Request, { params }: Params) {
 
     const result = await query(
       `
-        SELECT *
-        FROM classrooms
-        WHERE id = $1
-      `,
+  SELECT
+    c.*,
+    t.nombre AS profesor_nombre,
+    t.apellido AS profesor_apellido,
+    CONCAT(t.nombre, ' ', t.apellido) AS profesor
+  FROM classrooms c
+  LEFT JOIN teachers t
+    ON t.id = c.profesor_id
+  WHERE c.id = $1
+  `,
       [id],
     );
 

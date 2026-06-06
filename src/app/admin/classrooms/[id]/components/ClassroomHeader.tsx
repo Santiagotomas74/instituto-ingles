@@ -9,6 +9,8 @@ type Props = {
     modalidad: string;
     horario: string;
     profesor_id: string;
+    profesor_nombre: string;
+    profesor_apellido: string;
     studentsCount: number;
   };
 };
@@ -35,7 +37,10 @@ export default function ClassroomHeader({ classroom }: Props) {
               <p>Nivel: {classroom.nivel}</p>
               <p>Modalidad: {classroom.modalidad}</p>
               <p>Horario: {classroom.horario}</p>
-              <p>Profesor: {classroom.profesor_id}</p>
+              <p>
+                Profesor: {classroom.profesor_nombre}{" "}
+                {classroom.profesor_apellido}
+              </p>
             </div>
           </div>
 

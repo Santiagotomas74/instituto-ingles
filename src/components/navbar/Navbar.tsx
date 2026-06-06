@@ -568,18 +568,6 @@ export default function MobileNavbar() {
               label="Testimonios"
               onClick={() => setMenuOpen(false)}
             />
-
-            <MobileSubLink
-              href="/events"
-              label="Eventos"
-              onClick={() => setMenuOpen(false)}
-            />
-
-            <MobileSubLink
-              href="/schedule"
-              label="Cronograma"
-              onClick={() => setMenuOpen(false)}
-            />
           </MobileDropdown>
 
           {/* Cursos */}

@@ -21,12 +21,24 @@ export async function GET(req: Request, { params }: Props) {
       c.id,
       c.nombre,
       c.nivel,
-      COUNT(DISTINCT cs.student_id) AS alumnos
+      COUNT(DISTINCT cs.student_id) AS alumnos,
+      COUNT(DISTINCT cm.id) AS materiales
+
   FROM classrooms c
+
   LEFT JOIN classroom_students cs
       ON cs.classroom_id = c.id
+
+  LEFT JOIN classroom_materials cm
+      ON cm.classroom_id = c.id
+
   WHERE c.profesor_id = $1
-  GROUP BY c.id, c.nombre, c.nivel
+
+  GROUP BY
+      c.id,
+      c.nombre,
+      c.nivel
+
   ORDER BY c.nombre
   `,
       [teacherId],

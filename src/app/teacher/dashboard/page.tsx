@@ -17,13 +17,16 @@ export default async function TeacherDashboardPage() {
   console.log("Teacher ID:", teacherId);
 
   const [statsRes, classroomsRes] = await Promise.all([
-    fetch(`http://localhost:3000/api/teacher/stats/${teacherId}`),
+    fetch(`${process.env.BACKEND_URL}/api/teacher/stats/${teacherId}`),
 
-    fetch(`http://localhost:3000/api/teacher/classrooms/${teacherId}`),
+    fetch(`${process.env.BACKEND_URL}/api/teacher/classrooms/${teacherId}`),
   ]);
 
   const statsData = await statsRes.json();
+
   const classroomsData = await classroomsRes.json();
+
+  console.log("Classrooms Data:", classroomsData);
 
   const stats = statsData.stats;
 
@@ -165,6 +168,11 @@ export default async function TeacherDashboardPage() {
                       <Users size={18} />
 
                       <span>{classroom.alumnos} alumnos</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <FolderOpen size={18} />
+
+                      <span>{classroom.materiales} material subido</span>
                     </div>
 
                     <span

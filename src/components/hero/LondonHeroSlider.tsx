@@ -42,12 +42,13 @@ export default function LondonHeroSlider() {
             src={image}
             alt=""
             className="
-            w-full
-            h-full
-            object-cover
-            scale-110
-            animate-[kenburns_15s_linear_infinite]
-          "
+  w-full
+  h-full
+  object-cover
+  scale-100
+  md:scale-110
+  animate-[kenburns_15s_linear_infinite]
+"
           />
         </div>
       ))}
@@ -71,12 +72,14 @@ export default function LondonHeroSlider() {
       <div
         className="
         absolute
-        bottom-8
+        bottom-4
+        md:bottom-8
         left-1/2
         -translate-x-1/2
         flex
         items-center
-        gap-3
+        gap-2
+        md:gap-3
         z-30
       "
       >
