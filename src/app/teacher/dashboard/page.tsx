@@ -5,6 +5,7 @@ import {
   FolderOpen,
   Megaphone,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 import { cookies } from "next/headers";
 
@@ -35,6 +36,28 @@ export default async function TeacherDashboardPage() {
   return (
     <main className="p-8 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="
+      inline-flex
+      items-center
+      gap-2
+      px-4
+      py-2
+      rounded-xl
+      bg-white
+      border
+      shadow-sm
+      text-slate-700
+      hover:bg-slate-50
+      transition
+    "
+          >
+            <ArrowLeft size={18} />
+            Volver al inicio
+          </Link>
+        </div>
         <div className="mb-10">
           <h1 className="text-4xl font-bold text-slate-900">
             Panel del Profesor
@@ -47,7 +70,7 @@ export default async function TeacherDashboardPage() {
 
         {/* MÉTRICAS */}
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10 text-slate-900">
           <div className="bg-white rounded-3xl p-6 shadow-md">
             <div className="flex items-center gap-4">
               <div className="h-14 w-14 rounded-2xl bg-blue-100 flex items-center justify-center">
@@ -132,7 +155,7 @@ export default async function TeacherDashboardPage() {
                 "
               >
                 <div className="p-7">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start ">
                     <div>
                       <span
                         className="

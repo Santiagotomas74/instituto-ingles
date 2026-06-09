@@ -36,6 +36,7 @@ export default function AdminTeachersPage() {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
+        setLoading(true);
         const res = await fetch("/api/admin/teachers");
 
         const data = await res.json();
@@ -231,7 +232,63 @@ export default function AdminTeachersPage() {
         </div>
 
         {/* GRID */}
-        {filteredTeachers.length === 0 ? (
+        {loading ? (
+          <div
+            className="
+      bg-white
+      rounded-[32px]
+      border
+      border-slate-200
+      shadow-sm
+      p-16
+      flex
+      flex-col
+      items-center
+      justify-center
+    "
+          >
+            <div className="relative">
+              {/* Spinner */}
+              <div
+                className="
+          absolute
+          inset-0
+          rounded-full
+          border-4
+          border-cyan-200
+          border-t-cyan-600
+          animate-spin
+        "
+              />
+
+              {/* Logo */}
+              <div
+                className="
+          w-24
+          h-24
+          rounded-full
+          bg-white
+          flex
+          items-center
+          justify-center
+          p-2
+        "
+              >
+                <img
+                  src="/logo2.png"
+                  alt="Instituto"
+                  className="w-20 h-20 object-contain"
+                />
+              </div>
+            </div>
+
+            <h2 className="mt-8 text-2xl font-bold text-slate-900">
+              Cargando profesores...
+            </h2>
+
+            <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
+          </div>
+        ) : filteredTeachers.length === 0 ? (
           <div
             className="
       bg-white

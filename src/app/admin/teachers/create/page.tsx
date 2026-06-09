@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function CreateTeacherPage() {
   const router = useRouter();
@@ -70,6 +72,26 @@ export default function CreateTeacherPage() {
   return (
     <main className="min-h-screen bg-slate-100 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 shadow-xl">
+        <Link
+          href="/admin/teachers"
+          className="
+      inline-flex
+      items-center
+      gap-2
+      mb-6
+      px-4
+      py-2
+      rounded-xl
+      border
+      border-gray-200
+      text-gray-700
+      hover:bg-gray-50
+      transition
+    "
+        >
+          <ArrowLeft size={18} />
+          Volver a profesores
+        </Link>
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Crear Profesor
         </h1>

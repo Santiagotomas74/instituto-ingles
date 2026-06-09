@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Plus, Upload } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 
-import { Trash2, Eye } from "lucide-react";
+import { Trash2, Eye, ExternalLink, FileText } from "lucide-react";
 
 type Classroom = {
   id: string;
@@ -24,10 +26,13 @@ type Material = {
   id: string;
   titulo: string;
   descripcion: string;
-  archivo_url: string;
+  archivo_url: string | null;
+  url: string | null;
+  tipo: "file" | "link";
   material_category: string;
   created_at: string;
 };
+
 type Announcement = {
   id: string;
   titulo: string;
@@ -145,10 +150,32 @@ export default function ClassroomPage() {
       category: m.material_category,
     })),
   );
+
+  const getMaterialLink = (material: Material) => {
+    if (material.tipo === "link") {
+      return material.url || "#";
+    }
+
+    return material.archivo_url || "#";
+  };
+
   if (!classroom) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Cargando...
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Image
+            src="/logo2.png"
+            alt="Instituto"
+            width={140}
+            height={140}
+            priority
+            className="mb-8"
+          />
+
+          <Loader2 size={40} className="animate-spin text-blue-600" />
+
+          <p className="mt-4 text-slate-600 font-medium">Cargando aula...</p>
+        </div>
       </div>
     );
   }
@@ -339,11 +366,28 @@ export default function ClassroomPage() {
                     text-blue-600
                     text-xs
                     font-medium
+                    mr-2
                   "
                           >
                             {categoryLabels[material.material_category]}
                           </span>
-
+                          <span
+                            className={`
+    inline-flex
+    px-2
+    py-1
+    rounded-full
+    text-xs
+    font-medium
+    ${
+      material.tipo === "link"
+        ? "bg-green-50 text-green-700"
+        : "bg-purple-50 text-purple-700"
+    }
+  `}
+                          >
+                            {material.tipo === "link" ? "Enlace" : "Archivo"}
+                          </span>
                           <h3 className="mt-3 font-semibold text-lg text-gray-900">
                             {material.titulo}
                           </h3>
@@ -363,25 +407,34 @@ export default function ClassroomPage() {
                       {/* Actions */}
                       <div className="mt-6 flex gap-3">
                         <a
-                          href={material.archivo_url}
+                          href={getMaterialLink(material)}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="
-                  flex-1
-                  h-10
-                  rounded-xl
-                  bg-blue-600
-                  text-white
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                  text-sm
-                  font-medium
-                "
+    flex-1
+    h-10
+    rounded-xl
+    bg-blue-600
+    text-white
+    flex
+    items-center
+    justify-center
+    gap-2
+    text-sm
+    font-medium
+  "
                         >
-                          <Eye size={16} />
-                          Ver material
+                          {material.tipo === "link" ? (
+                            <>
+                              <ExternalLink size={16} />
+                              Abrir enlace
+                            </>
+                          ) : (
+                            <>
+                              <FileText size={16} />
+                              Ver archivo
+                            </>
+                          )}
                         </a>
 
                         <button
