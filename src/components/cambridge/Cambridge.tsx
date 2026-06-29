@@ -171,9 +171,9 @@ export default function CambridgeSection() {
               overflow-hidden
               rounded-[36px]
               bg-gradient-to-br
-              from-blue-700
-              via-blue-800
-              to-blue-950
+              from-red-600
+              via-red-800
+              to-red-900
               p-10
               shadow-2xl
             "
@@ -199,7 +199,7 @@ export default function CambridgeSection() {
                   w-24
                   h-24
                   rounded-3xl
-                  bg-white/10
+                  bg-white/20
                   border
                   border-white/10
                   backdrop-blur-sm
@@ -260,7 +260,7 @@ export default function CambridgeSection() {
               {/* Card */}
               <div
                 className="
-                  bg-white/10
+                  bg-white/20
                   border
                   border-white/10
                   backdrop-blur-sm
@@ -303,7 +303,7 @@ export default function CambridgeSection() {
               {/* Card */}
               <div
                 className="
-                  bg-white/10
+                  bg-white/20
                   border
                   border-white/10
                   backdrop-blur-sm
@@ -346,7 +346,7 @@ export default function CambridgeSection() {
               {/* Card */}
               <div
                 className="
-                  bg-white/10
+                  bg-white/20
                   border
                   border-white/10
                   backdrop-blur-sm
@@ -389,7 +389,7 @@ export default function CambridgeSection() {
               {/* Card */}
               <div
                 className="
-                  bg-white/10
+                  bg-white/20
                   border
                   border-white/10
                   backdrop-blur-sm

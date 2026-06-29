@@ -210,7 +210,7 @@ export default function FeaturesSection() {
                     h-[3px]
                     w-12
                     rounded-full
-                    bg-blue-600
+                    bg-red-600
                   "
                 />
               </div>

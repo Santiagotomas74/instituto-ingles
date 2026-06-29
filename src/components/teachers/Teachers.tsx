@@ -19,7 +19,7 @@ const teachers = [
   },
   {
     name: "Marcela Barberan",
-    role: "Directora & Profesora",
+    role: "Coordinadora & Profesora",
   },
 ];
 
@@ -138,8 +138,8 @@ export default function TeachersSection() {
                   h-24
                   rounded-3xl
                   bg-gradient-to-br
-                  from-blue-600
-                  to-blue-900
+                  from-yellow-300
+                  to-yellow-500
                   flex
                   items-center
                   justify-center

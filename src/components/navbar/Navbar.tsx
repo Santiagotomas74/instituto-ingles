@@ -467,9 +467,9 @@ export default function MobileNavbar() {
           <Link
             href="/login"
             className="
-              text-blue-600
+              text-yellow-500
               font-medium
-              hover:text-blue-700
+              hover:text-yellow-600
               transition
             "
           >
@@ -479,8 +479,8 @@ export default function MobileNavbar() {
           <Link
             href="/inscriptions"
             className="
-              bg-blue-600
-              hover:bg-blue-700
+              bg-yellow-500
+              hover:bg-yellow-600
               text-white
               px-6
               py-3

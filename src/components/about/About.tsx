@@ -161,7 +161,7 @@ export default function About() {
         text-3xl
         sm:text-4xl
         font-bold
-        text-blue-700
+        text-red-700
         break-words
       "
                 >
@@ -197,7 +197,7 @@ export default function About() {
         text-2xl
         sm:text-4xl
         font-bold
-        text-blue-700
+        text-red-700
         break-words
       "
                 >

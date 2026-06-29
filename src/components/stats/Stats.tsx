@@ -231,9 +231,9 @@ export default function StatsSection() {
           <div
             className="
               bg-gradient-to-br
-              from-blue-700
-              via-blue-800
-              to-blue-950
+              from-red-700
+              via-red-800
+              to-red-900
               rounded-[36px]
               p-12
               shadow-2xl
@@ -261,7 +261,7 @@ export default function StatsSection() {
     w-30
     h-30
     rounded-3xl
-    bg-white/25
+    bg-white/20
     border
     border-white/30
     backdrop-blur-sm
