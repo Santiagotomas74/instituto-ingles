@@ -25,7 +25,7 @@ export default function Hero() {
           w-full
           h-full
           opacity-20
-          bg-[radial-gradient(circle_at_top_right,white,transparent_35%)]
+         
         "
       />
 
@@ -37,7 +37,7 @@ export default function Hero() {
           w-[400px]
           h-[400px]
           rounded-full
-          bg-blue-400/20
+         
           blur-3xl
         "
       />
@@ -50,7 +50,7 @@ export default function Hero() {
           w-[280px]
           h-[280px]
           rounded-full
-          bg-cyan-300/10
+         
           blur-3xl
         "
       />
@@ -107,7 +107,7 @@ md:text-5xl
             "
           >
             Aprendé inglés con
-            <span className="font-semibold text-cyan-300">
+            <span className="font-semibold text-yellow-300">
               {" "}
               certificación Cambridge
             </span>
@@ -224,7 +224,7 @@ md:text-5xl
       md:text-lg
       font-medium
       hover:bg-white
-      hover:text-blue-800
+      hover:text-yellow-800
       transition
     "
             >
@@ -256,7 +256,7 @@ md:text-5xl
           >
             <div className="space-y-6">
               <div>
-                <p className="text-cyan-300 text-sm font-medium">
+                <p className="text-yellow-300 text-sm font-medium">
                   I.N.K Instituto de Inglés en San Miguel
                 </p>
 

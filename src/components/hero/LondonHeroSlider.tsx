@@ -54,19 +54,43 @@ export default function LondonHeroSlider() {
       ))}
 
       {/* Overlay oscuro */}
+      {/* Overlay institucional */}
+      <div
+        className="
+    absolute
+    inset-0
+    bg-yellow-700/50
+  "
+      />
+      {/* Overlay adicional */}
+      <div className="absolute inset-0 bg-black/20" />
+
+      {/* Golden light effect */}
       <div
         className="
         absolute
-        inset-0
-        bg-gradient-to-br
-        from-blue-950/90
-        via-blue-900/80
-        to-cyan-900/75
+        -top-32
+        -right-32
+        w-[500px]
+        h-[500px]
+        rounded-full
+        bg-yellow-400/20
+        blur-3xl
       "
       />
 
-      {/* Overlay adicional */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div
+        className="
+        absolute
+        bottom-[-200px]
+        left-[-150px]
+        w-[450px]
+        h-[450px]
+        rounded-full
+        bg-amber-300/20
+        blur-3xl
+      "
+      />
 
       {/* Indicadores estilo Netflix */}
       <div
@@ -96,7 +120,7 @@ export default function LondonHeroSlider() {
             backdrop-blur-md
             ${
               current === index
-                ? "w-12 bg-white shadow-lg"
+                ? "w-12 bg-yellow-400 shadow-lg shadow-yellow-400/40"
                 : "w-2 bg-white/40 hover:bg-white/70"
             }
           `}
