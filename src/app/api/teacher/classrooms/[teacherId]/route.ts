@@ -8,39 +8,40 @@ type Props = {
 };
 
 export async function GET(req: Request, { params }: Props) {
-  console.log(
-    "Received request for teacherId:",
-    await params.then((p) => p.teacherId),
-  );
   try {
     const { teacherId } = await params;
 
+    console.log("Received request for teacherId:", teacherId);
+
     const result = await query(
       `
-  SELECT
-      c.id,
-      c.nombre,
-      c.nivel,
-      COUNT(DISTINCT cs.student_id) AS alumnos,
-      COUNT(DISTINCT cm.id) AS materiales
+      SELECT
+          c.id,
+          c.nombre,
+          c.nivel,
+          c.horario,
 
-  FROM classrooms c
+          COUNT(DISTINCT cs.student_id) AS alumnos,
+          COUNT(DISTINCT cm.id) AS materiales
 
-  LEFT JOIN classroom_students cs
-      ON cs.classroom_id = c.id
+      FROM classrooms c
 
-  LEFT JOIN classroom_materials cm
-      ON cm.classroom_id = c.id
+      LEFT JOIN classroom_students cs
+          ON cs.classroom_id = c.id
 
-  WHERE c.profesor_id = $1
+      LEFT JOIN classroom_materials cm
+          ON cm.classroom_id = c.id
 
-  GROUP BY
-      c.id,
-      c.nombre,
-      c.nivel
+      WHERE c.profesor_id = $1
 
-  ORDER BY c.nombre
-  `,
+      GROUP BY
+          c.id,
+          c.nombre,
+          c.nivel,
+          c.horario
+
+      ORDER BY c.nombre
+      `,
       [teacherId],
     );
 
@@ -56,7 +57,9 @@ export async function GET(req: Request, { params }: Props) {
         success: false,
         message: "Error obteniendo aulas",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
   }
 }

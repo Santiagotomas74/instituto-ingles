@@ -7,7 +7,16 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
-import { Trash2, Eye, ExternalLink, FileText } from "lucide-react";
+import {
+  Trash2,
+  Eye,
+  ExternalLink,
+  FileText,
+  Pencil,
+  Megaphone,
+  AlertTriangle,
+  X,
+} from "lucide-react";
 
 type Classroom = {
   id: string;
@@ -38,19 +47,30 @@ type Announcement = {
   titulo: string;
   contenido: string;
   created_at: string;
+  is_important?: boolean;
 };
 
 export default function ClassroomPage() {
   const params = useParams();
 
   const classroomId = params.classroomId as string;
-
   const [tab, setTab] = useState("materiales");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [classroom, setClassroom] = useState<Classroom | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    is_important: false,
+  });
+
   const categoryLabels: Record<string, string> = {
     grammar: "Grammar",
     vocabulary: "Vocabulary",
@@ -150,6 +170,24 @@ export default function ClassroomPage() {
       category: m.material_category,
     })),
   );
+  const handleDeleteAnnouncement = async (id: string) => {
+    const confirmed = confirm("¿Eliminar anuncio?");
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/teacher/classrooms/announcements/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error();
+
+      setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+    } catch (error) {
+      console.error(error);
+      alert("Error eliminando anuncio");
+    }
+  };
 
   const getMaterialLink = (material: Material) => {
     if (material.tipo === "link") {
@@ -158,7 +196,68 @@ export default function ClassroomPage() {
 
     return material.archivo_url || "#";
   };
+  const handleEdit = (announcement: Announcement) => {
+    setEditingId(announcement.id);
 
+    setForm({
+      title: announcement.titulo,
+      content: announcement.contenido,
+      is_important: announcement.is_important ?? false,
+    });
+
+    setOpen(true);
+  };
+  const handleSubmit = async () => {
+    if (!form.title.trim() || !form.content.trim()) {
+      alert("Completa título y contenido");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const method = editingId ? "PUT" : "POST";
+
+      const url = editingId
+        ? `/api/teacher/classrooms/announcements/${editingId}`
+        : `/api/teacher/classrooms/announcements`;
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          classroom_id: classroomId,
+          titulo: form.title,
+          contenido: form.content,
+          is_important: form.is_important,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error();
+      }
+
+      setOpen(false);
+      setEditingId(null);
+
+      setForm({
+        title: "",
+        content: "",
+        is_important: false,
+      });
+
+      loadClassroom();
+    } catch (error) {
+      console.error(error);
+      alert("Error guardando anuncio");
+    } finally {
+      setLoading(false);
+    }
+  };
   if (!classroom) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
@@ -223,37 +322,52 @@ export default function ClassroomPage() {
 
           <div className="flex gap-4">
             <button
+              onClick={() => {
+                setEditingId(null);
+
+                setForm({
+                  title: "",
+                  content: "",
+                  is_important: false,
+                });
+
+                setOpen(true);
+              }}
               className="
-                h-11
-                px-5
-                rounded-xl
-                border
-                border-blue-200
-                text-blue-600
-                flex
-                items-center
-                gap-2
-              "
+    h-11
+    px-5
+    rounded-xl
+    border
+    border-blue-200
+    text-blue-600
+    flex
+    items-center
+    gap-2
+  "
             >
               <Plus size={18} />
               Nuevo anuncio
             </button>
 
-            <button
+            <Link
+              href={`/teacher/classrooms/${classroomId}/materials/new`}
               className="
-                h-11
-                px-5
-                rounded-xl
-                bg-blue-600
-                text-white
-                flex
-                items-center
-                gap-2
-              "
+            h-12
+            px-5
+            rounded-2xl
+            bg-cyan-500
+            hover:bg-cyan-400
+            transition
+            text-white
+            flex
+            items-center
+            gap-2
+            font-medium
+          "
             >
               <Upload size={18} />
               Subir material
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -497,41 +611,282 @@ export default function ClassroomPage() {
           )}
 
           {tab === "anuncios" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">
-                Anuncios
-              </h2>
-
-              <div className="space-y-4">
-                {announcements.length === 0 ? (
-                  <div className="bg-white rounded-2xl border p-6 text-gray-500">
-                    No hay anuncios publicados.
-                  </div>
-                ) : (
-                  announcements.map((announcement) => (
-                    <div
-                      key={announcement.id}
-                      className="bg-white rounded-2xl border p-6"
-                    >
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {announcement.titulo}
-                      </h3>
-
-                      <p className="mt-3 text-gray-600 whitespace-pre-wrap">
-                        {announcement.contenido}
-                      </p>
-
-                      <p className="mt-4 text-sm text-gray-400">
-                        {new Date(announcement.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))
-                )}
+            <section>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-900">Anuncios</h2>
               </div>
-            </div>
+
+              {announcements.length === 0 ? (
+                <div
+                  className="
+              bg-white
+              rounded-[28px]
+              p-10
+              shadow-lg
+              text-center
+            "
+                >
+                  <Megaphone size={48} className="mx-auto text-slate-300" />
+
+                  <h3 className="mt-4 text-xl font-semibold text-slate-800">
+                    No hay anuncios
+                  </h3>
+
+                  <p className="mt-2 text-slate-500">
+                    Todavía no se publicó ningún anuncio.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {announcements.map((announcement) => (
+                    <article
+                      key={announcement.id}
+                      className="
+        bg-white
+        rounded-[32px]
+        p-7
+        shadow-lg
+        border
+        border-slate-100
+      "
+                    >
+                      <div className="flex items-start justify-between gap-6">
+                        <div className="flex-1">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <h3 className="text-xl font-bold text-slate-900">
+                              {announcement.titulo}
+                            </h3>
+
+                            {announcement.is_important && (
+                              <span
+                                className="
+                  inline-flex
+                  items-center
+                  gap-1
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-red-100
+                  text-red-700
+                  text-xs
+                  font-semibold
+                "
+                              >
+                                <AlertTriangle size={14} />
+                                Importante
+                              </span>
+                            )}
+                          </div>
+
+                          <p className="mt-4 text-slate-600 leading-relaxed">
+                            {announcement.contenido}
+                          </p>
+
+                          <p className="mt-5 text-sm text-slate-400">
+                            {new Date(
+                              announcement.created_at,
+                            ).toLocaleDateString("es-AR")}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleEdit(announcement)}
+                            className="
+              h-10
+              w-10
+              rounded-xl
+              flex
+              items-center
+              justify-center
+            
+              transition
+              bg-blue-500
+            "
+                          >
+                            <Pencil size={18} />
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              handleDeleteAnnouncement(announcement.id)
+                            }
+                            className="
+              h-10
+              w-10
+              rounded-xl
+              flex
+              items-center
+              justify-center
+              text-red-500
+              hover:bg-red-50
+              transition
+            "
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
           )}
         </div>
       </div>
+      {open && (
+        <div
+          className="
+      fixed
+      inset-0
+      bg-black/40
+      flex
+      items-center
+      justify-center
+      z-50
+      p-4
+    "
+        >
+          <div
+            className="
+        bg-white
+        rounded-[28px]
+        w-full
+        max-w-2xl
+        p-6
+      "
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-slate-900">
+                {editingId ? "Editar anuncio" : "Crear anuncio"}
+              </h3>
+
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setEditingId(null);
+
+                  setForm({
+                    title: "",
+                    content: "",
+                    is_important: false,
+                  });
+                }}
+                className="
+          h-10
+          w-10
+          rounded-xl
+          flex
+          items-center
+          justify-center
+          text-gray-500
+          hover:bg-gray-100
+          transition
+        "
+              >
+                <X />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-gray-700">
+              <input
+                type="text"
+                placeholder="Título"
+                value={form.title}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    title: e.target.value,
+                  })
+                }
+                className="
+          w-full
+          h-14
+          px-5
+          rounded-2xl
+          border
+          "
+              />
+
+              <textarea
+                rows={6}
+                placeholder="Contenido"
+                value={form.content}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    content: e.target.value,
+                  })
+                }
+                className="
+          w-full
+          p-5
+          rounded-2xl
+          border
+          "
+              />
+
+              <label className="flex gap-3 items-center">
+                <input
+                  type="checkbox"
+                  checked={form.is_important}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      is_important: e.target.checked,
+                    })
+                  }
+                />
+                Importante
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-8">
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setEditingId(null);
+
+                  setForm({
+                    title: "",
+                    content: "",
+                    is_important: false,
+                  });
+                }}
+                className="
+          px-5
+          h-12
+          rounded-2xl
+          bg-red-500
+          text-white
+          "
+              >
+                Cancelar
+              </button>
+
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="
+          px-6
+          h-12
+          rounded-2xl
+          bg-cyan-500
+          text-white
+          font-semibold
+          "
+              >
+                {loading
+                  ? "Guardando..."
+                  : editingId
+                    ? "Guardar cambios"
+                    : "Publicar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

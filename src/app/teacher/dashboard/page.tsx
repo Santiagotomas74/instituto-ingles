@@ -137,72 +137,215 @@ export default async function TeacherDashboardPage() {
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-8">
             {classrooms.map((classroom: any) => (
               <Link
                 key={classroom.id}
                 href={`/teacher/classrooms/${classroom.id}`}
                 className="
-                  group
-                  bg-white
-                  rounded-[32px]
-                  shadow-md
-                  hover:shadow-2xl
-                  hover:-translate-y-1
-                  transition-all
-                  duration-300
-                  overflow-hidden
-                "
+        group
+        relative
+        bg-white
+        rounded-[32px]
+        border
+        border-slate-200
+        shadow-sm
+        hover:shadow-2xl
+        hover:-translate-y-1
+        transition-all
+        duration-300
+        overflow-hidden
+      "
               >
-                <div className="p-7">
-                  <div className="flex justify-between items-start ">
+                {/* Barra superior */}
+                <div
+                  className="
+          h-2
+          bg-gradient-to-r
+          from-cyan-500
+          to-blue-600
+        "
+                />
+
+                <div className="p-8">
+                  {/* Header */}
+                  <div className="flex justify-between items-start">
                     <div>
                       <span
                         className="
-                          inline-flex
-                          px-3
-                          py-1
-                          rounded-full
-                          bg-cyan-100
-                          text-cyan-700
-                          text-sm
-                          font-semibold
-                        "
+                inline-flex
+                items-center
+                px-4
+                py-1.5
+                rounded-full
+                bg-cyan-50
+                text-cyan-700
+                text-sm
+                font-semibold
+                border
+                border-cyan-100
+              "
                       >
                         {classroom.nivel}
                       </span>
 
-                      <h3 className="mt-4 text-2xl font-bold text-slate-900">
+                      <h3
+                        className="
+                mt-5
+                text-3xl
+                font-bold
+                text-slate-900
+                group-hover:text-cyan-600
+                transition
+              "
+                      >
                         {classroom.nombre}
                       </h3>
+
+                      <div
+                        className="
+                mt-3
+                flex
+                items-center
+                gap-2
+                text-slate-500
+              "
+                      >
+                        <span className="text-lg">🕒</span>
+
+                        <span>{classroom.horario}</span>
+                      </div>
                     </div>
 
-                    <ChevronRight
+                    <div
                       className="
-                        text-slate-400
-                        group-hover:text-cyan-500
-                        transition
-                      "
-                    />
+              w-12
+              h-12
+              rounded-2xl
+              bg-slate-100
+              flex
+              items-center
+              justify-center
+              group-hover:bg-cyan-100
+              transition
+            "
+                    >
+                      <ChevronRight
+                        className="
+                text-slate-400
+                group-hover:text-cyan-600
+                transition
+              "
+                      />
+                    </div>
                   </div>
 
-                  <div className="mt-8 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-slate-600">
-                      <Users size={18} />
+                  {/* Estadísticas */}
+                  <div
+                    className="
+            mt-8
+            grid
+            grid-cols-2
+            gap-4
+          "
+                  >
+                    <div
+                      className="
+              rounded-2xl
+              bg-blue-50
+              p-4
+              flex
+              items-center
+              gap-3
+            "
+                    >
+                      <div
+                        className="
+                w-10
+                h-10
+                rounded-xl
+                bg-blue-100
+                flex
+                items-center
+                justify-center
+              "
+                      >
+                        <Users size={20} className="text-blue-600" />
+                      </div>
 
-                      <span>{classroom.alumnos} alumnos</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-600">
-                      <FolderOpen size={18} />
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {classroom.alumnos}
+                        </p>
 
-                      <span>{classroom.materiales} material subido</span>
+                        <span className="text-sm text-slate-500">alumnos</span>
+                      </div>
                     </div>
+
+                    <div
+                      className="
+              rounded-2xl
+              bg-orange-50
+              p-4
+              flex
+              items-center
+              gap-3
+            "
+                    >
+                      <div
+                        className="
+                w-10
+                h-10
+                rounded-xl
+                bg-orange-100
+                flex
+                items-center
+                justify-center
+              "
+                      >
+                        <FolderOpen size={20} className="text-orange-600" />
+                      </div>
+
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {classroom.materiales}
+                        </p>
+
+                        <span className="text-sm text-slate-500">
+                          materiales
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div
+                    className="
+            mt-8
+            pt-5
+            border-t
+            border-slate-100
+            flex
+            justify-between
+            items-center
+          "
+                  >
+                    <span
+                      className="
+              text-sm
+              text-slate-400
+            "
+                    >
+                      Aula asignada
+                    </span>
 
                     <span
                       className="
-                        text-cyan-600
-                        font-semibold
-                      "
+              text-cyan-600
+              font-semibold
+              group-hover:translate-x-1
+              transition
+            "
                     >
                       Ver aula →
                     </span>
