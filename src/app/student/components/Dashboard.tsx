@@ -9,6 +9,15 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+type Classroom = {
+  id: string;
+  nombre: string;
+  nivel: string;
+  horario: string;
+  alumnos: number;
+  materiales: number;
+};
+
 export default async function Dashboard() {
   const cookieStore = await cookies();
 
@@ -42,7 +51,7 @@ export default async function Dashboard() {
 
   const classroomsData = await classroomsRes.json();
 
-  const classrooms = classroomsData.classrooms || [];
+  const classrooms: Classroom[] = classroomsData.classrooms || [];
 
   // mientras no exista el endpoint de estadísticas
   stats.aulas = classrooms.length;
