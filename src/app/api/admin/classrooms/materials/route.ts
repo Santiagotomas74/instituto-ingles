@@ -5,6 +5,16 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     console.log("Received material data:", body);
+    const adminId = req.cookies.get("user_id")?.value;
+    if (!adminId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Administrador no autenticado",
+        },
+        { status: 401 },
+      );
+    }
 
     const {
       classroom_id,
@@ -19,7 +29,6 @@ export async function POST(req: NextRequest) {
       archivo_size,
       is_published,
       orden,
-      created_by,
     } = body;
 
     if (!classroom_id || !titulo || !tipo) {
@@ -47,7 +56,7 @@ export async function POST(req: NextRequest) {
         archivo_size,
         is_published,
         orden,
-        created_by
+        created_by_admin
       )
       VALUES (
         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
@@ -67,7 +76,7 @@ export async function POST(req: NextRequest) {
         archivo_size || null,
         is_published ?? true,
         orden ?? 0,
-        created_by || null,
+        adminId || null,
       ],
     );
 

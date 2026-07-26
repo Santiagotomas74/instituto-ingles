@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     console.log("Received material data:", body);
 
     // Capturar cookie del profesor
-    const teacherId = req.cookies.get("teacher_id")?.value;
+    const teacherId = req.cookies.get("user_id")?.value;
 
     console.log("Teacher ID desde cookie:", teacherId);
 

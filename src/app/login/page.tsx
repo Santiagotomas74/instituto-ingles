@@ -53,6 +53,10 @@ export default function CampusLoginPage() {
         window.location.href = "/teacher/dashboard";
         return;
       }
+      if (data.role === "student") {
+        window.location.href = "/student/dashboard";
+        return;
+      }
     } catch (error) {
       console.error(error);
       setError("Ocurrió un error");

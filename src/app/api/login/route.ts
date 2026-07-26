@@ -18,7 +18,9 @@ export async function POST(req: Request) {
       );
     }
 
+    // =====================================================
     // ADMIN
+    // =====================================================
 
     if (
       username === process.env.ADMIN_EMAIL &&
@@ -37,10 +39,20 @@ export async function POST(req: Request) {
         maxAge: 60 * 60 * 24 * 7,
       });
 
+      response.cookies.set("user_id", "11f0517a-9766-411e-a990-3b4e6c917a35", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
       return response;
     }
 
-    // PROFESOR
+    // =====================================================
+    // TEACHER
+    // =====================================================
 
     const teacherResult = await query(
       `
@@ -52,73 +64,151 @@ export async function POST(req: Request) {
       [username],
     );
 
-    if (teacherResult.rows.length === 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Credenciales inválidas",
+    if (teacherResult.rows.length > 0) {
+      const teacher = teacherResult.rows[0];
+
+      const validPassword = await bcrypt.compare(password, teacher.password);
+
+      if (!validPassword) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Credenciales inválidas",
+          },
+          { status: 401 },
+        );
+      }
+
+      const response = NextResponse.json({
+        success: true,
+        role: "teacher",
+        teacher: {
+          id: teacher.id,
+          nombre: teacher.nombre,
+          apellido: teacher.apellido,
         },
-        { status: 401 },
-      );
+      });
+
+      response.cookies.set("user_id", teacher.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("teacher_name", teacher.nombre, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("teacher_lastname", teacher.apellido, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("role", "teacher", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      return response;
     }
 
-    const teacher = teacherResult.rows[0];
+    // =====================================================
+    // STUDENT
+    // =====================================================
 
-    const validPassword = await bcrypt.compare(password, teacher.password);
+    const studentResult = await query(
+      `
+      SELECT *
+      FROM students
+      WHERE LOWER(CONCAT(nombre, ' ', apellido)) = LOWER($1)
+      LIMIT 1
+      `,
+      [username],
+    );
 
-    if (!validPassword) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Credenciales inválidas",
+    if (studentResult.rows.length > 0) {
+      const student = studentResult.rows[0];
+
+      const validPassword = await bcrypt.compare(password, student.password);
+
+      if (!validPassword) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Credenciales inválidas",
+          },
+          { status: 401 },
+        );
+      }
+
+      const response = NextResponse.json({
+        success: true,
+        role: "student",
+        student: {
+          id: student.id,
+          nombre: student.nombre,
+          apellido: student.apellido,
         },
-        { status: 401 },
-      );
+      });
+
+      response.cookies.set("user_id", student.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("student_name", student.nombre, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("student_lastname", student.apellido, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      response.cookies.set("role", "student", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      return response;
     }
 
-    const response = NextResponse.json({
-      success: true,
-      role: "teacher",
-      teacher: {
-        id: teacher.id,
-        nombre: teacher.nombre,
-        apellido: teacher.apellido,
+    // =====================================================
+    // CREDENCIALES INVÁLIDAS
+    // =====================================================
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Credenciales inválidas",
       },
-    });
-
-    response.cookies.set("teacher_id", teacher.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    response.cookies.set("teacher_name", teacher.nombre, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    response.cookies.set("teacher_lastname", teacher.apellido, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    response.cookies.set("role", "teacher", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    return response;
+      { status: 401 },
+    );
   } catch (error) {
     console.error(error);
 

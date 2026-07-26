@@ -11,6 +11,7 @@ import {
   School,
   ArrowRight,
   House,
+  CalendarDays,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -43,6 +44,13 @@ export default function AdminDashboardPage() {
       color: "from-orange-500 to-amber-500",
       href: "/admin/boletines",
     },
+    {
+      title: "Calendario",
+      value: "320",
+      icon: <FileText className="w-7 h-7" />,
+      color: "from-orange-500 to-amber-500",
+      href: "/admin/calendar",
+    },
   ];
 
   const actions = [
@@ -69,6 +77,12 @@ export default function AdminDashboardPage() {
       description: "Administrar notas, observaciones y firmas.",
       icon: <BookOpen className="w-6 h-6" />,
       href: "/admin/boletines",
+    },
+    {
+      title: "Gestionar calendario",
+      description: "Administrar fechas importantes y eventos académicos.",
+      icon: <CalendarDays className="w-6 h-6" />,
+      href: "/admin/calendar",
     },
     {
       title: "Inscripciones",
@@ -157,6 +171,9 @@ export default function AdminDashboardPage() {
           <SidebarItem href="/admin/inscripciones" label="Inscripciones" />
 
           <SidebarItem href="/admin/boletines" label="Boletines" />
+
+          <SidebarItem href="/admin/calendar" label="Calendario" />
+          <SidebarItem href="/admin/chat" label="Chats" />
         </nav>
       </aside>
 
