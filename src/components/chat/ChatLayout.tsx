@@ -239,13 +239,13 @@ export default function ChatLayout() {
       return;
     }
 
+    const conversation = selectedConversation;
+
     async function loadMessages() {
       try {
         setMessages([]);
 
-        const res = await fetch(
-          `/api/chat/${selectedConversation.id}/messages`,
-        );
+        const res = await fetch(`/api/chat/${conversation.id}/messages`);
 
         const data = await res.json();
 
@@ -255,7 +255,7 @@ export default function ChatLayout() {
 
         setMessages(data.messages);
 
-        await fetch(`/api/chat/${selectedConversation.id}/read`, {
+        await fetch(`/api/chat/${conversation.id}/read`, {
           method: "PATCH",
         });
       } catch (err) {
@@ -265,7 +265,6 @@ export default function ChatLayout() {
 
     loadMessages();
   }, [selectedConversation]);
-
   /*
   ====================================================
   Nueva conversación
