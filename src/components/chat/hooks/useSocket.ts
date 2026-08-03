@@ -5,10 +5,27 @@ import { getSocket } from "@/lib/socket-client";
 
 export function useSocket(userId: string) {
   useEffect(() => {
+    if (!userId) return;
+
     const socket = getSocket();
 
-    socket.emit("register", userId);
+    if (!socket.connected) {
+      socket.connect();
+    }
 
-    return () => {};
+    function register() {
+      socket.emit("register", userId);
+      console.log("✅ Usuario registrado:", userId);
+    }
+
+    if (socket.connected) {
+      register();
+    } else {
+      socket.once("connect", register);
+    }
+
+    return () => {
+      socket.off("connect", register);
+    };
   }, [userId]);
 }

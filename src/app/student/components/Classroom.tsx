@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -8,8 +9,10 @@ import {
   MessageSquare,
   CalendarDays,
   GraduationCap,
+  ClipboardList,
 } from "lucide-react";
 
+import Tasks from "./Tasks";
 import Materials from "./Materials";
 import Announcements from "./Announcements";
 import Events from "./Events";
@@ -18,7 +21,7 @@ interface Props {
   classroomId: string;
 }
 
-type Tab = "materials" | "announcements" | "events";
+type Tab = "materials" | "tasks" | "announcements" | "events";
 
 type Classroom = {
   id: string;
@@ -29,7 +32,13 @@ type Classroom = {
 };
 
 export default function Classroom({ classroomId }: Props) {
-  const [activeTab, setActiveTab] = useState<Tab>("materials");
+  const searchParams = useSearchParams();
+
+  const selectedTaskId = searchParams.get("task");
+
+  const tab = searchParams.get("tab");
+
+  const [activeTab, setActiveTab] = useState<Tab>((tab as Tab) || "materials");
 
   const [classroom, setClassroom] = useState<Classroom | null>(null);
 
@@ -48,7 +57,11 @@ export default function Classroom({ classroomId }: Props) {
       console.error(error);
     }
   };
-
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(tab as Tab);
+    }
+  }, [tab]);
   useEffect(() => {
     if (classroomId) {
       loadClassroom();
@@ -108,6 +121,19 @@ export default function Classroom({ classroomId }: Props) {
               Materiales
             </div>
           </button>
+          <button
+            onClick={() => setActiveTab("tasks")}
+            className={`pb-4 transition font-medium ${
+              activeTab === "tasks"
+                ? "border-b-2 border-cyan-600 text-cyan-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <ClipboardList size={18} />
+              Tareas
+            </div>
+          </button>
 
           <button
             onClick={() => setActiveTab("announcements")}
@@ -141,6 +167,10 @@ export default function Classroom({ classroomId }: Props) {
 
       <div className="mt-8">
         {activeTab === "materials" && <Materials classroomId={classroomId} />}
+
+        {activeTab === "tasks" && (
+          <Tasks classroomId={classroomId} selectedTaskId={selectedTaskId} />
+        )}
 
         {activeTab === "announcements" && (
           <Announcements classroomId={classroomId} />

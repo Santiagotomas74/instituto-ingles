@@ -230,7 +230,76 @@ export async function POST(req: NextRequest, { params }: Params) {
     );
 
     const message = result.rows[0];
+    const participants = await query(
+      `
+  SELECT
+      user_id,
+      role
+  FROM conversation_participants
+  WHERE conversation_id=$1
+    AND NOT (
+      user_id=$2
+      AND role=$3
+    );
+  `,
+      [conversationId, senderId, senderRole],
+    );
+    for (const participant of participants.rows) {
+      const notificationResult = await query(
+        `
+  INSERT INTO notifications
+  (
+      user_id,
+      role,
+      type,
+      title,
+      description,
+      reference_id,
+      reference_type,
+      action_url
+  )
+  VALUES
+  (
+      $1,
+      $2,
+      'message',
+      'Nuevo mensaje',
+      $3,
+      $4,
+      'conversation',
+      $5
+  )
+  RETURNING *;
+  `,
+        [
+          participant.user_id,
+          participant.role,
 
+          `${message.name} ${message.lastname} envió un nuevo mensaje en la conversación.`,
+
+          conversationId,
+
+          `/${participant.role}/chat`,
+        ],
+      );
+
+      const notification = notificationResult.rows[0];
+
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: participant.user_id,
+            notification,
+          }),
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
     /*
     =========================================================
     Avisar al servidor Socket

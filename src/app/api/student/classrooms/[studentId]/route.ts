@@ -8,6 +8,8 @@ export async function GET(
   try {
     const { studentId } = await params;
 
+    console.log("studentId", studentId);
+
     const result = await query(
       `
       SELECT

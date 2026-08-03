@@ -44,6 +44,10 @@ export default function ClassroomTabs({ tab, setTab }: Props) {
       id: "fechas",
       label: "Fechas importantes",
     },
+    {
+      id: "tareas",
+      label: "Tareas",
+    },
   ];
 
   return (

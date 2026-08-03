@@ -8,11 +8,10 @@ export function getSocket() {
   if (!socket) {
     socket = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
       transports: ["websocket"],
-      autoConnect: false,
     });
 
     socket.on("connect", () => {
-      console.log("✅ Conectado al servidor Socket", socket?.id);
+      console.log("✅ Socket conectado:", socket.id);
     });
 
     socket.on("disconnect", () => {
@@ -20,7 +19,7 @@ export function getSocket() {
     });
 
     socket.on("connect_error", (err) => {
-      console.error("Error Socket:", err.message);
+      console.error(err);
     });
   }
 

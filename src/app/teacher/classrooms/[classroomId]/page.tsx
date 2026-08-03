@@ -19,6 +19,7 @@ import AnnouncementsTab from "./components/AnnouncementsTab";
 import ImportantDatesTab from "./components/ImportantDatesTab";
 
 import ClassroomHeader from "./components/ClassroomHeader";
+import TasksTab from "./components/TasksTab";
 
 export default function ClassroomPage() {
   const params = useParams();
@@ -26,7 +27,7 @@ export default function ClassroomPage() {
   const classroomId = params.classroomId as string;
 
   const [tab, setTab] = useState<
-    "materiales" | "estudiantes" | "anuncios" | "fechas"
+    "materiales" | "estudiantes" | "anuncios" | "fechas" | "tareas"
   >("materiales");
 
   return (
@@ -70,6 +71,8 @@ export default function ClassroomPage() {
           {tab === "anuncios" && <AnnouncementsTab classroomId={classroomId} />}
 
           {tab === "fechas" && <ImportantDatesTab classroomId={classroomId} />}
+
+          {tab === "tareas" && <TasksTab classroomId={classroomId} />}
         </div>
       </div>
     </main>

@@ -33,6 +33,66 @@ export async function POST(req: NextRequest) {
       [classroom_id, title, content, is_important ?? false],
     );
 
+    /*
+    =========================================
+    Buscar estudiantes del aula
+    =========================================
+    */
+
+    const students = await query(
+      `
+      SELECT student_id
+      FROM classroom_students
+      WHERE classroom_id=$1
+      `,
+      [classroom_id],
+    );
+
+    /*
+    =========================================
+    Crear notificación para cada alumno
+    =========================================
+    */
+    for (const student of students.rows) {
+      const notificationResult = await query(
+        `
+        INSERT INTO notifications
+        (
+          user_id,
+          role,
+          title,
+          description,
+          type
+        )
+        VALUES
+        (
+          $1,
+          'student',
+          'Nueva anuncio en tu aula',
+          $2,
+          'event'
+        )
+        RETURNING *
+        `,
+        [student.student_id, `${title} `],
+      );
+
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: student.student_id,
+            notification: notificationResult.rows[0],
+          }),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       announcement: result.rows[0],

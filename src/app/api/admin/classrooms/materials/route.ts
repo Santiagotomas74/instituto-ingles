@@ -80,6 +80,56 @@ export async function POST(req: NextRequest) {
       ],
     );
 
+    const students = await query(
+      `
+  SELECT
+      student_id
+  FROM classroom_students
+  WHERE classroom_id = $1
+  `,
+      [classroom_id],
+    );
+
+    for (const student of students.rows) {
+      const notification = await query(
+        `
+    INSERT INTO notifications
+    (
+      user_id,
+      role,
+      title,
+      description,
+      type
+    )
+    VALUES
+    (
+      $1,
+      'student',
+      'Nuevo material',
+      $2,
+      'material'
+    )
+    RETURNING *
+    `,
+        [student.student_id, `Se publicó el material "${titulo}".`],
+      );
+
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: student.student_id,
+            notification: notification.rows[0],
+          }),
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       material: result.rows[0],

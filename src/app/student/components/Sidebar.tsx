@@ -54,7 +54,7 @@ const menu = [
   },
   {
     name: "Mi Perfil",
-    href: "/student/dashboard/profile",
+    href: "/student/profile",
     icon: User,
   },
   {

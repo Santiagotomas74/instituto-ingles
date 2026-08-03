@@ -1,59 +1,121 @@
 "use client";
 
-import { Bell, LogOut, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import {
+  LayoutDashboard,
+  GraduationCap,
+  CalendarDays,
+  MessageCircle,
+  LogOut,
+} from "lucide-react";
+
+import NotificationBell from "@/components/notifications/NotificationBell";
+import { useSocket } from "@/components/chat/hooks/useSocket";
 
 export default function Navbar() {
-  const handleLogout = async () => {
+  const [userId, setUserId] = useState("");
+
+  /*
+  =====================================
+  Registrar usuario en Socket
+  =====================================
+  */
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+
+        if (!data.success) return;
+
+        setUserId(data.user.id);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadUser();
+  }, []);
+
+  // Este hook hace socket.emit("register", userId)
+  useSocket(userId);
+
+  async function handleLogout() {
     await fetch("/api/logout", {
       method: "POST",
     });
 
     window.location.href = "/login";
-  };
+  }
 
   return (
-    <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">
-          Panel del Estudiante
-        </h1>
+    <header
+      className="
+        h-20
+        bg-white
+        border-b
+        border-slate-200
+        px-8
+        flex
+        items-center
+        justify-between
+        shadow-sm
+      "
+    >
+      <div className="flex items-center gap-10">
+        <h1 className="text-2xl font-bold text-cyan-600">INK</h1>
 
-        <p className="text-slate-500 text-sm">Bienvenido al Campus Virtual</p>
+        <nav className="hidden lg:flex items-center gap-2">
+          <Link
+            href="/student/dashboard"
+            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
+          >
+            <LayoutDashboard size={19} />
+            Dashboard
+          </Link>
+
+          <Link
+            href="/student/classrooms"
+            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
+          >
+            <GraduationCap size={19} />
+            Mis aulas
+          </Link>
+
+          <Link
+            href="/student/calendar"
+            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
+          >
+            <CalendarDays size={19} />
+            Calendario
+          </Link>
+
+          <Link
+            href="/student/chat"
+            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
+          >
+            <MessageCircle size={19} />
+            Chat
+          </Link>
+        </nav>
       </div>
 
-      <div className="flex items-center gap-5">
-        {/* Buscador */}
-        <div className="hidden lg:flex items-center bg-slate-100 rounded-2xl px-4 h-11 w-80">
-          <Search size={18} className="text-slate-400" />
+      <div className="flex items-center gap-4">
+        <NotificationBell />
 
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className="bg-transparent outline-none ml-3 flex-1 text-sm text-slate-700"
-          />
-        </div>
-
-        {/* Notificaciones */}
-        <button className="relative w-11 h-11 rounded-2xl bg-slate-100 hover:bg-slate-200 transition flex items-center justify-center">
-          <Bell size={20} className="text-slate-600" />
-
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
-        </button>
-
-        {/* Usuario */}
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <div className="w-11 h-11 rounded-2xl bg-cyan-600 text-white flex items-center justify-center font-bold">
             S
           </div>
 
-          <div className="hidden md:block">
+          <div>
             <p className="font-semibold text-slate-800">Estudiante</p>
-
-            <span className="text-xs text-slate-500">Alumno</span>
+            <span className="text-xs text-slate-500">Campus Virtual</span>
           </div>
         </div>
 
-        {/* Salir */}
         <button
           onClick={handleLogout}
           className="w-11 h-11 rounded-2xl bg-red-50 hover:bg-red-100 transition flex items-center justify-center"
