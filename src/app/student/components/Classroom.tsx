@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -33,6 +33,7 @@ type Classroom = {
 
 export default function Classroom({ classroomId }: Props) {
   const searchParams = useSearchParams();
+  const params = useParams();
 
   const selectedTaskId = searchParams.get("task");
 

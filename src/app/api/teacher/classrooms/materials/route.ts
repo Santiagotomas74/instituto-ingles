@@ -87,28 +87,45 @@ export async function POST(req: NextRequest) {
   `,
       [classroom_id],
     );
+
     for (const student of students.rows) {
       const notification = await query(
         `
     INSERT INTO notifications
     (
-      user_id,
-      role,
-      title,
-      description,
-      type
+        user_id,
+        role,
+        title,
+        description,
+        type,
+        reference_id,
+        reference_type,
+        action_url
     )
     VALUES
     (
-      $1,
-      'student',
-      'Nuevo material',
-      $2,
-      'material'
+        $1,
+        'student',
+        '📚 Nuevo material disponible',
+        $2,
+        'material',
+        $3,
+        'classroom_material',
+        $4
     )
-    RETURNING *
+    RETURNING *;
     `,
-        [student.student_id, `Se publicó el material "${titulo}".`],
+        [
+          student.student_id,
+
+          descripcion
+            ? `El profesor publicó "${titulo}". ${descripcion}`
+            : `El profesor publicó el material "${titulo}".`,
+
+          result.rows[0].id,
+
+          `/student/classroom/${classroom_id}?tab=materials`,
+        ],
       );
 
       try {

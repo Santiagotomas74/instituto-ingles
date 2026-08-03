@@ -37,6 +37,7 @@ export default function NotificationBell() {
     try {
       const res = await fetch("/api/notifications");
       const data = await res.json();
+      console.log("📬 Notificaciones cargadas:", data.notifications);
       if (!res.ok || !data.success) return;
       setNotifications(data.notifications);
     } catch (error) {
@@ -99,15 +100,34 @@ export default function NotificationBell() {
   }
 
   async function openNotification(notification: Notification) {
-    if (!notification.is_read) {
-      await markAsRead(notification.id);
-    }
-    setOpen(false);
-    if (notification.action_url) {
-      router.push(notification.action_url);
-    }
-  }
+    console.log("================================");
+    console.log("📬 Notificación seleccionada");
+    console.log(notification);
 
+    if (!notification.is_read) {
+      console.log("🟡 Marcando notificación como leída...");
+      await markAsRead(notification.id);
+    } else {
+      console.log("🟢 La notificación ya estaba leída.");
+    }
+
+    setOpen(false);
+
+    if (!notification.action_url) {
+      console.warn("❌ La notificación no tiene action_url");
+      return;
+    }
+
+    console.log("➡️ Intentando redirigir a:");
+    console.log(notification.action_url);
+
+    console.log("📍 Ruta actual:");
+    console.log(window.location.pathname + window.location.search);
+
+    router.push(notification.action_url);
+
+    console.log("✅ router.push ejecutado");
+  }
   function timeAgo(date: string) {
     const diff = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
     if (diff < 60) return "Hace unos segundos";

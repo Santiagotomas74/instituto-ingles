@@ -53,28 +53,52 @@ export async function POST(req: NextRequest) {
     Crear notificación para cada alumno
     =========================================
     */
+    /*
+=========================================
+Crear notificación para cada alumno
+=========================================
+*/
+
     for (const student of students.rows) {
       const notificationResult = await query(
         `
-        INSERT INTO notifications
-        (
-          user_id,
-          role,
-          title,
-          description,
-          type
-        )
-        VALUES
-        (
-          $1,
-          'student',
-          'Nueva anuncio en tu aula',
-          $2,
-          'event'
-        )
-        RETURNING *
-        `,
-        [student.student_id, `${titulo} `],
+    INSERT INTO notifications
+    (
+        user_id,
+        role,
+        title,
+        description,
+        type,
+        reference_id,
+        reference_type,
+        action_url
+    )
+    VALUES
+    (
+        $1,
+        'student',
+        $2,
+        $3,
+        'announcement',
+        $4,
+        'classroom_announcement',
+        $5
+    )
+    RETURNING *;
+    `,
+        [
+          student.student_id,
+
+          is_important ? "📢 Anuncio importante" : "📣 Nuevo anuncio",
+
+          contenido
+            ? `El profesor publicó "${titulo}". ${contenido}`
+            : `El profesor publicó un nuevo anuncio: "${titulo}".`,
+
+          result.rows[0].id,
+
+          `/student/classroom/${classroom_id}?tab=announcements`,
+        ],
       );
 
       try {
@@ -92,7 +116,6 @@ export async function POST(req: NextRequest) {
         console.error(error);
       }
     }
-
     return NextResponse.json({
       success: true,
       announcement: result.rows[0],

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import Link from "next/link";
 
@@ -23,13 +23,22 @@ import TasksTab from "./components/TasksTab";
 
 export default function ClassroomPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
 
   const classroomId = params.classroomId as string;
 
-  const [tab, setTab] = useState<
-    "materiales" | "estudiantes" | "anuncios" | "fechas" | "tareas"
-  >("materiales");
+  const initialTab =
+    (searchParams.get("tab") as
+      | "materiales"
+      | "estudiantes"
+      | "anuncios"
+      | "fechas"
+      | "tareas") || "materiales";
 
+  const [tab, setTab] = useState(initialTab);
+  console.log("classroomId:", classroomId);
+  console.log("initialTab:", initialTab);
+  console.log("tab:sdasdaa");
   return (
     <main
       className="

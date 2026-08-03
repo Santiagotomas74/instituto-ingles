@@ -114,12 +114,18 @@ export default function TaskCard({ classroomId, task, highlighted }: Props) {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-8 text-sm">
           <div className="flex items-center gap-2 text-gray-700">
             <Calendar size={17} />
-            {task.due_date ?? "-"}
+            {task.due_date
+              ? new Date(task.due_date).toLocaleDateString("es-AR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              : "-"}
           </div>
 
           <div className="flex items-center gap-2 text-gray-700">
             <Clock size={17} />
-            {task.due_time ?? "-"}
+            {task.due_time ? task.due_time.substring(0, 5) : "-"}
           </div>
 
           <div className="flex items-center gap-2 text-gray-700">

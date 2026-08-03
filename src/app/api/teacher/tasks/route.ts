@@ -113,36 +113,51 @@ export async function POST(req: NextRequest) {
     ==========================================
     */
 
+    /*
+==========================================
+Crear notificaciones
+==========================================
+*/
+
     for (const student of students.rows) {
       const notificationResult = await query(
         `
-  INSERT INTO notifications
-  (
-      user_id,
-      role,
-      type,
-      title,
-      description,
-      reference_id,
-      reference_type
-  )
-  VALUES
-  (
-      $1,
-      'student',
-      'task',
-      $2,
-      $3,
-      $4,
-      'task'
-  )
-  RETURNING *;
-  `,
+    INSERT INTO notifications
+    (
+        user_id,
+        role,
+        type,
+        title,
+        description,
+        reference_id,
+        reference_type,
+        action_url
+    )
+    VALUES
+    (
+        $1,
+        'student',
+        'task',
+        $2,
+        $3,
+        $4,
+        'task',
+        $5
+    )
+    RETURNING *;
+    `,
         [
           student.student_id,
-          "Nueva tarea",
-          `El profesor publicó la tarea "${titulo}".`,
+
+          "📝 Nueva tarea disponible",
+
+          due_date
+            ? `El profesor publicó la tarea "${titulo}". Fecha límite: ${due_date}${due_time ? ` ${due_time}` : ""}.`
+            : `El profesor publicó una nueva tarea: "${titulo}".`,
+
           task.id,
+
+          `/student/classroom/${classroom_id}?tab=tasks&task=${task.id}`,
         ],
       );
 

@@ -32,7 +32,8 @@ export async function GET() {
         reference_id,
         reference_type,
         is_read,
-        created_at
+        created_at,
+        action_url
       FROM notifications
       WHERE
         user_id=$1

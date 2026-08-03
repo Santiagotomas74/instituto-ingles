@@ -64,28 +64,76 @@ export async function POST(req: Request) {
     =========================================
     */
 
+    /*
+=========================================
+Determinar nombre del tipo
+=========================================
+*/
+
+    let tipoNombre = "evento";
+
+    switch (tipo) {
+      case "clase":
+        tipoNombre = "clase";
+        break;
+
+      case "examen":
+        tipoNombre = "examen";
+        break;
+
+      case "reunion":
+        tipoNombre = "reunión";
+        break;
+
+      case "evento":
+        tipoNombre = "evento";
+        break;
+    }
+
+    /*
+=========================================
+Crear notificaciones
+=========================================
+*/
+
     for (const student of students.rows) {
       const notificationResult = await query(
         `
-        INSERT INTO notifications
-        (
-          user_id,
-          role,
-          title,
-          description,
-          type
-        )
-        VALUES
-        (
-          $1,
-          'student',
-          'Nueva fecha importante',
-          $2,
-          'event'
-        )
-        RETURNING *
-        `,
-        [student.student_id, `${titulo} - ${fecha} ${hora}`],
+    INSERT INTO notifications
+    (
+        user_id,
+        role,
+        title,
+        description,
+        type,
+        reference_id,
+        reference_type,
+        action_url
+    )
+    VALUES
+    (
+        $1,
+        'student',
+        '📅 Nueva fecha importante',
+        $2,
+        'calendar',
+        $3,
+        'classroom_event',
+        $4
+    )
+    RETURNING *;
+    `,
+        [
+          student.student_id,
+
+          descripcion
+            ? `Se programó un ${tipoNombre}: "${titulo}" para el ${fecha} a las ${hora}. ${descripcion}`
+            : `Se programó un ${tipoNombre}: "${titulo}" para el ${fecha} a las ${hora}.`,
+
+          result.rows[0].id,
+
+          `/student/classroom/${classroom_id}?tab=events`,
+        ],
       );
 
       try {
@@ -103,7 +151,6 @@ export async function POST(req: Request) {
         console.error(error);
       }
     }
-
     /*
     =========================================
     Respuesta
