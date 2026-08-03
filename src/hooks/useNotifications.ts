@@ -6,9 +6,14 @@ import { getSocket } from "@/lib/socket-client";
 type Notification = {
   id: string;
   title: string;
-  message: string;
+  description: string;
   type: string;
+  role: string;
+  is_read: boolean;
   created_at: string;
+  reference_id: string | null;
+  reference_type: string | null;
+  action_url: string | null;
 };
 
 type Props = {

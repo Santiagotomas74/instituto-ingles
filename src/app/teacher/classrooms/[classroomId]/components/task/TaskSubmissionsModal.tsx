@@ -155,11 +155,7 @@ export default function TaskSubmissionsModal({ open, onClose, taskId }: Props) {
           />
 
           {selected ? (
-            <SubmissionViewer
-              submission={selected}
-              taskId={taskId}
-              onUpdated={load}
-            />
+            <SubmissionViewer submission={selected} onUpdated={load} />
           ) : (
             <div
               className="

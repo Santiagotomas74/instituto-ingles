@@ -4,7 +4,12 @@ import { useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-type TabType = "materiales" | "estudiantes" | "anuncios" | "fechas";
+export type TabType =
+  | "materiales"
+  | "estudiantes"
+  | "anuncios"
+  | "fechas"
+  | "tareas";
 
 type Props = {
   tab: TabType;

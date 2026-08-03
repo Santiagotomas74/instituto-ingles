@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function SubmissionViewer({ submission, onUpdated }: Props) {
+  const maxScore = 100;
   if (!submission) {
     return (
       <div className="flex-1 flex items-center justify-center text-slate-500">
@@ -133,7 +134,7 @@ export default function SubmissionViewer({ submission, onUpdated }: Props) {
 
             <GradeSubmissionForm
               submissionId={submission.id}
-              maxScore={submission.max_score}
+              maxScore={maxScore}
               currentGrade={submission.grade}
               currentFeedback={submission.teacher_feedback}
               onSaved={onUpdated}

@@ -167,7 +167,7 @@ WHERE s.id=$1
         ...student,
 
         teacher:
-          teacherResult.rowCount > 0
+          teacherResult.rows.length > 0
             ? `${teacherResult.rows[0].nombre} ${teacherResult.rows[0].apellido}`
             : null,
 
