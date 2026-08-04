@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Navbar from "./components/AdminNavbar";
+import AdminSidebar from "./components/AdminSidebar";
 import Stats from "./stats";
 import {
   Users,
@@ -90,6 +92,18 @@ export default function AdminDashboardPage() {
       icon: <Inbox className="w-6 h-6" />,
       href: "/admin/inscripciones",
     },
+    {
+      title: "Chats",
+      description: "Administrar conversaciones con estudiantes y profesores.",
+      icon: <Inbox className="w-6 h-6" />,
+      href: "/admin/chat",
+    },
+    {
+      title: "Pagos",
+      description: "Administrar pagos de estudiantes.",
+      icon: <FileText className="w-6 h-6" />,
+      href: "/admin/payments",
+    },
   ];
 
   return (
@@ -104,132 +118,12 @@ export default function AdminDashboardPage() {
       "
     >
       {/* SIDEBAR */}
-      <aside
-        className="
-          hidden
-          lg:flex
-          w-72
-          bg-slate-950
-          text-white
-          flex-col
-          border-r
-          border-slate-800
-        "
-      >
-        {/* Logo */}
-        <div
-          className="
-    px-8
-    py-8
-    border-b
-    border-slate-800
-  "
-        >
-          <Link href="/">
-            <div
-              className="
-        w-50
-        h-24
-        mx-auto
-        rounded-3xl
-        bg-white/60
-        border
-        border-white/10
-        backdrop-blur-sm
-        flex
-        items-center
-        justify-center
-        overflow-hidden
-        p-2
-        transition-all
-        hover:bg-white/80
-        hover:scale-[1.02]
-        cursor-pointer
-      "
-            >
-              <img
-                src="/logo3.png"
-                alt="I.N.K Logo"
-                className="
-          w-full
-          h-full
-          object-contain
-        "
-              />
-            </div>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          <SidebarItem href="/admin/students" label="Students" />
-
-          <SidebarItem href="/admin/teachers" label="Teachers" />
-
-          <SidebarItem href="/admin/classrooms" label="Classrooms" />
-
-          <SidebarItem href="/admin/inscripciones" label="Inscripciones" />
-
-          <SidebarItem href="/admin/boletines" label="Boletines" />
-
-          <SidebarItem href="/admin/calendar" label="Calendario" />
-          <SidebarItem href="/admin/chat" label="Chats" />
-        </nav>
-      </aside>
+      <AdminSidebar />
 
       {/* CONTENT */}
       <div className="flex-1">
         {/* HEADER */}
-        <header
-          className="
-            h-24
-            bg-white/80
-            backdrop-blur-xl
-            border-b
-            border-gray-200
-            flex
-            items-center
-            justify-between
-            px-6
-            md:px-10
-          "
-        >
-          <div>
-            <p className="text-sm text-gray-500">Panel administrativo</p>
-
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          </div>
-
-          <div
-            className="
-              flex
-              items-center
-              gap-4
-            "
-          >
-            <div className="text-right">
-              <p className="font-semibold text-gray-900">Administrador</p>
-
-              <p className="text-sm text-gray-500">Instituto I.N.K</p>
-            </div>
-
-            <div
-              className="
-                w-12
-                h-12
-                rounded-2xl
-                bg-blue-600
-                text-white
-                flex
-                items-center
-                justify-center
-                font-bold
-              "
-            >
-              A
-            </div>
-          </div>
-        </header>
+        <Navbar />
 
         {/* BODY */}
         <div className="p-6 md:p-10">

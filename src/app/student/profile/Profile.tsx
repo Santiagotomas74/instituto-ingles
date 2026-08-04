@@ -5,6 +5,29 @@ import { useEffect, useState } from "react";
 import ProfileHeader from "./ProfileHeader";
 import ProfileStats from "./ProfileStats";
 import PersonalInfoCard from "./PersonalInfoCard";
+import PaymentReceiptsCard from "./PaymentReceiptsCard";
+export type StudentPayment = {
+  id: string;
+
+  month: number;
+
+  month_name: string;
+
+  year: number;
+
+  amount: number;
+
+  due_date: string;
+
+  paid_at: string | null;
+
+  status: "pending" | "paid" | "expired";
+
+  receipt_name: string | null;
+  receipt_url: string | null;
+
+  observations: string | null;
+};
 
 export type StudentProfile = {
   id: string;
@@ -37,8 +60,9 @@ export type StudentProfile = {
   average: number;
 
   attendance: number;
-};
 
+  payments: StudentPayment[];
+};
 export default function Profile() {
   const [loading, setLoading] = useState(true);
 
@@ -85,6 +109,8 @@ export default function Profile() {
       <ProfileStats profile={profile} />
 
       <PersonalInfoCard profile={profile} />
+
+      <PaymentReceiptsCard profile={profile} />
     </div>
   );
 }

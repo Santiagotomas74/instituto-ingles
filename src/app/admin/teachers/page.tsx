@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Navbar from "../dashboard/components/AdminNavbar";
+import AdminSidebar from "../dashboard/components/AdminSidebar";
 
 import {
   Search,
@@ -80,10 +82,15 @@ export default function AdminTeachersPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100">
-      {/* HEADER */}
-      <div
-        className="
+    <main className="min-h-screen bg-slate-100 flex">
+      <AdminSidebar />
+
+      <div className="flex-1 min-w-0">
+        <Navbar />
+
+        {/* HEADER */}
+        <div
+          className="
           bg-gradient-to-r
           from-slate-950
           via-blue-950
@@ -93,9 +100,9 @@ export default function AdminTeachersPage() {
           md:px-10
           py-8
         "
-      >
-        <div
-          className="
+        >
+          <div
+            className="
             flex
             flex-col
             lg:flex-row
@@ -104,55 +111,27 @@ export default function AdminTeachersPage() {
             justify-between
             gap-6
           "
-        >
-          <div>
-            <p className="text-cyan-300 uppercase tracking-[4px] text-sm">
-              Admin Panel
-            </p>
-
-            <h1 className="text-4xl md:text-5xl font-bold mt-3">Teachers</h1>
-
-            <p className="text-slate-300 mt-4 max-w-2xl">
-              Administrá los profesores del instituto, asignaciones, información
-              de contacto y niveles académicos.
-            </p>
-          </div>
-
-          <Link
-            href="/admin/dashboard"
-            className="
-          h-14
-          px-7
-          rounded-2xl
-          bg-white/10
-          border
-          border-white/10
-          backdrop-blur-md
-          hover:bg-white/20
-          text-white
-          transition-all
-          font-semibold
-          flex
-          items-center
-          justify-center
-          gap-3
-          shadow-lg
-          hover:-translate-y-0.5
-          w-full
-          md:w-auto
-        "
           >
-            <ArrowLeft className="w-5 h-5" />
-            Volver al panel
-          </Link>
-        </div>
-      </div>
+            <div>
+              <p className="text-cyan-300 uppercase tracking-[4px] text-sm">
+                Admin Panel
+              </p>
 
-      {/* CONTENT */}
-      <div className="p-6 md:p-10">
-        {/* TOP BAR */}
-        <div
-          className="
+              <h1 className="text-4xl md:text-5xl font-bold mt-3">Teachers</h1>
+
+              <p className="text-slate-300 mt-4 max-w-2xl">
+                Administrá los profesores del instituto, asignaciones,
+                información de contacto y niveles académicos.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CONTENT */}
+        <div className="p-6 md:p-10">
+          {/* TOP BAR */}
+          <div
+            className="
             bg-white
             rounded-[32px]
             shadow-lg
@@ -161,9 +140,9 @@ export default function AdminTeachersPage() {
             p-6
             mb-8
           "
-        >
-          <div
-            className="
+          >
+            <div
+              className="
               flex
               flex-col
               lg:flex-row
@@ -171,11 +150,10 @@ export default function AdminTeachersPage() {
               lg:items-center
               lg:justify-between
             "
-          >
-            {/* SEARCH */}
-            <div className="relative w-full lg:max-w-md">
-              <Search
-                className="
+            >
+              <div className="relative w-full lg:max-w-md">
+                <Search
+                  className="
                   absolute
                   left-4
                   top-1/2
@@ -184,15 +162,14 @@ export default function AdminTeachersPage() {
                   h-5
                   text-slate-400
                 "
-              />
+                />
 
-              <input
-                type="text"
-                placeholder="Buscar profesor..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="
-                text-gray-900
+                <input
+                  type="text"
+                  placeholder="Buscar profesor..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="
                   w-full
                   h-14
                   pl-12
@@ -203,183 +180,164 @@ export default function AdminTeachersPage() {
                   focus:outline-none
                   focus:ring-2
                   focus:ring-cyan-500
+                  text-gray-900
                 "
-              />
-            </div>
+                />
+              </div>
 
-            <div className="flex flex-wrap gap-4">
               <Link
                 href="/admin/teachers/create"
                 className="
-              h-14
-              px-7
-              rounded-2xl
-              bg-cyan-500
-              hover:bg-cyan-400
-              transition
-              font-semibold
-              flex
-              items-center
-              gap-3
-              shadow-xl
-            "
+                h-14
+                px-7
+                rounded-2xl
+                bg-cyan-500
+                hover:bg-cyan-400
+                transition
+                font-semibold
+                flex
+                items-center
+                gap-3
+                shadow-xl
+                text-white
+              "
               >
                 <Plus className="w-5 h-5" />
                 Nuevo profesor
               </Link>
             </div>
           </div>
-        </div>
 
-        {/* GRID */}
-        {loading ? (
-          <div
-            className="
-      bg-white
-      rounded-[32px]
-      border
-      border-slate-200
-      shadow-sm
-      p-16
-      flex
-      flex-col
-      items-center
-      justify-center
-    "
-          >
-            <div className="relative">
-              {/* Spinner */}
-              <div
-                className="
-          absolute
-          inset-0
-          rounded-full
-          border-4
-          border-cyan-200
-          border-t-cyan-600
-          animate-spin
-        "
-              />
-
-              {/* Logo */}
-              <div
-                className="
-          w-24
-          h-24
-          rounded-full
-          bg-white
-          flex
-          items-center
-          justify-center
-          p-2
-        "
-              >
-                <img
-                  src="/logo2.png"
-                  alt="Instituto"
-                  className="w-20 h-20 object-contain"
-                />
-              </div>
-            </div>
-
-            <h2 className="mt-8 text-2xl font-bold text-slate-900">
-              Cargando profesores...
-            </h2>
-
-            <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
-          </div>
-        ) : filteredTeachers.length === 0 ? (
-          <div
-            className="
-      bg-white
-      rounded-[32px]
-      border
-      border-slate-200
-      shadow-sm
-      p-12
-      text-center
-    "
-          >
+          {loading ? (
             <div
               className="
-        w-24
-        h-24
-        mx-auto
-        rounded-3xl
-        bg-cyan-100
-        text-cyan-700
-        flex
-        items-center
-        justify-center
-      "
+              bg-white
+              rounded-[32px]
+              border
+              border-slate-200
+              shadow-sm
+              p-16
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
             >
-              <GraduationCap className="w-12 h-12" />
+              <div className="relative">
+                <div
+                  className="
+                  absolute
+                  inset-0
+                  rounded-full
+                  border-4
+                  border-cyan-200
+                  border-t-cyan-600
+                  animate-spin
+                "
+                />
+
+                <div
+                  className="
+                  w-24
+                  h-24
+                  rounded-full
+                  bg-white
+                  flex
+                  items-center
+                  justify-center
+                  p-2
+                "
+                >
+                  <img
+                    src="/logo2.png"
+                    alt="Instituto"
+                    className="w-20 h-20 object-contain"
+                  />
+                </div>
+              </div>
+
+              <h2 className="mt-8 text-2xl font-bold text-slate-900">
+                Cargando profesores...
+              </h2>
+
+              <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
             </div>
-
-            <h2
+          ) : filteredTeachers.length === 0 ? (
+            <div
               className="
-        mt-8
-        text-3xl
-        font-bold
-        text-slate-900
-      "
+              bg-white
+              rounded-[32px]
+              border
+              border-slate-200
+              shadow-sm
+              p-12
+              text-center
+            "
             >
-              No hay profesores registrados
-            </h2>
+              <div
+                className="
+                w-24
+                h-24
+                mx-auto
+                rounded-3xl
+                bg-cyan-100
+                text-cyan-700
+                flex
+                items-center
+                justify-center
+              "
+              >
+                <GraduationCap className="w-12 h-12" />
+              </div>
 
-            <p
-              className="
-        mt-4
-        text-slate-500
-        max-w-xl
-        mx-auto
-      "
-            >
-              Todavía no se registró ningún profesor en el sistema. Podés
-              agregar docentes y editar su información en cualquier momento.
-            </p>
+              <h2 className="mt-8 text-3xl font-bold text-slate-900">
+                No hay profesores registrados
+              </h2>
 
-            <Link
-              href="/admin/teachers/create"
+              <p className="mt-4 text-slate-500 max-w-xl mx-auto">
+                Todavía no se registró ningún profesor en el sistema.
+              </p>
+
+              <Link
+                href="/admin/teachers/create"
+                className="
+                mt-8
+                inline-flex
+                items-center
+                gap-3
+                h-14
+                px-7
+                rounded-2xl
+                bg-cyan-600
+                hover:bg-cyan-700
+                transition
+                text-white
+                font-semibold
+              "
+              >
+                <Plus className="w-5 h-5" />
+                Crear profesor
+              </Link>
+            </div>
+          ) : (
+            <div
               className="
-        mt-8
-        inline-flex
-        items-center
-        gap-3
-        h-14
-        px-7
-        rounded-2xl
-        bg-cyan-600
-        hover:bg-cyan-700
-        transition
-        text-white
-        font-semibold
-        shadow-lg
-        hover:-translate-y-0.5
-      "
+              grid
+              grid-cols-1
+              xl:grid-cols-2
+              gap-8
+            "
             >
-              <Plus className="w-5 h-5" />
-              Crear profesor
-            </Link>
-          </div>
-        ) : (
-          <div
-            className="
-      grid
-      grid-cols-1
-      xl:grid-cols-2
-      gap-8
-    "
-          >
-            {filteredTeachers.map((teacher) => (
-              <TeacherCard
-                key={teacher.id}
-                teacher={teacher}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        )}
+              {filteredTeachers.map((teacher) => (
+                <TeacherCard
+                  key={teacher.id}
+                  teacher={teacher}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

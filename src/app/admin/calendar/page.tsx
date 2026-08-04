@@ -1,27 +1,28 @@
 import Calendar from "./components/Calendar";
 
+import Navbar from "../dashboard/components/AdminNavbar";
+import AdminSidebar from "../dashboard/components/AdminSidebar";
+
 export default function CalendarPage() {
   return (
-    <main
-      className="
-      min-h-screen
-      bg-gradient-to-br
-      from-slate-50
-      via-white
-      to-cyan-50
-      "
-    >
-      <div
-        className="
-        max-w-7xl
-        mx-auto
-        px-4
-        sm:px-6
-        lg:px-8
-        py-8
-        "
-      >
-        <Calendar />
+    <main className="min-h-screen bg-slate-100 flex">
+      <AdminSidebar />
+
+      <div className="flex-1 min-w-0">
+        <Navbar />
+
+        <div
+          className="
+            max-w-7xl
+            mx-auto
+            px-4
+            sm:px-6
+            lg:px-8
+            py-8
+          "
+        >
+          <Calendar />
+        </div>
       </div>
     </main>
   );

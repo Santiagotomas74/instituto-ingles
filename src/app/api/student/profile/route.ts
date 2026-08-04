@@ -158,6 +158,31 @@ WHERE s.id=$1
     (temporal)
     ===========================
     */
+    /*
+===========================
+Comprobantes de pago
+===========================
+*/
+
+    const paymentsResult = await query(
+      `
+  SELECT
+      id,
+      month,
+      year,
+      amount,
+      due_date,
+      paid_at,
+      status,
+      receipt_name,
+      receipt_url,
+      observations
+  FROM student_payments
+  WHERE student_id = $1
+  ORDER BY year DESC, month DESC
+  `,
+      [studentId],
+    );
 
     const attendance = 100;
 
@@ -178,6 +203,8 @@ WHERE s.id=$1
         average: Number(averageResult.rows[0].average),
 
         attendance,
+
+        payments: paymentsResult.rows,
       },
     });
   } catch (error) {

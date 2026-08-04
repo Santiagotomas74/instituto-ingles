@@ -1,8 +1,6 @@
-import Link from "next/link";
+import AdminSidebar from "../dashboard/components/AdminSidebar";
+import Navbar from "../dashboard/components/AdminNavbar";
 
-import { Plus, Search, Pencil, Trash2, Users, Mail } from "lucide-react";
-
-import AssignClassroom from "./AssignClassroom";
 import StudentsTable from "./StudentsTable";
 
 type Student = {
@@ -31,7 +29,6 @@ export default async function StudentsPage() {
   );
 
   const studentsData = await studentsRes.json();
-  console.log("studentsData", studentsData);
 
   const students: Student[] = studentsData.students || [];
 
@@ -47,5 +44,17 @@ export default async function StudentsPage() {
 
   const classrooms: Classroom[] = classroomsData.classrooms || [];
 
-  return <StudentsTable students={students} classrooms={classrooms} />;
+  return (
+    <main className="min-h-screen flex bg-slate-100">
+      <AdminSidebar />
+
+      <div className="flex-1 flex flex-col">
+        <Navbar />
+
+        <div className="flex-1  overflow-auto">
+          <StudentsTable students={students} classrooms={classrooms} />
+        </div>
+      </div>
+    </main>
+  );
 }

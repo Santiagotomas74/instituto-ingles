@@ -113,7 +113,7 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
             <div>
               <p className="text-xs text-slate-500">Entrega</p>
 
-              <p className="font-medium">{due ?? "-"}</p>
+              <p className="font-medium text-slate-500">{due ?? "-"}</p>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
             <div>
               <p className="text-xs text-slate-500">Respuesta</p>
 
-              <p className="font-medium">
+              <p className="font-medium text-slate-500">
                 {task.allow_submission ? "Sí" : "No"}
               </p>
             </div>
@@ -139,7 +139,9 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
             <div>
               <p className="text-xs text-slate-500">Tipo</p>
 
-              <p className="font-medium capitalize">{task.submission_type}</p>
+              <p className="font-medium capitalize text-slate-500 ">
+                {task.submission_type}
+              </p>
             </div>
           </div>
 
@@ -149,7 +151,7 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
             <div>
               <p className="text-xs text-slate-500">Entregas</p>
 
-              <p className="font-medium">{task.submissions}</p>
+              <p className="font-medium text-slate-500">{task.submissions}</p>
             </div>
           </div>
         </div>
@@ -188,6 +190,7 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
               border
               hover:bg-slate-100
               transition
+              text-slate-500
             "
           >
             <Pencil size={18} />

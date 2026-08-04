@@ -2,22 +2,16 @@ import { Pool } from "pg";
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+
   ssl: {
     rejectUnauthorized: false,
   },
+
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 });
 
-pool
-  .connect()
-  .then((client) => {
-    console.log("✅ Conectado correctamente a PostgreSQL");
-
-    client.release();
-  })
-  .catch((err) => {
-    console.error("❌ Error conectando a PostgreSQL", err);
-  });
-
-export const query = (text: string, params?: any[]) => {
+export async function query(text: string, params?: unknown[]) {
   return pool.query(text, params);
-};
+}

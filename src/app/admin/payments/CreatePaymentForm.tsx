@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import { Student } from "./Payments";
 
 type Props = {
@@ -11,18 +10,18 @@ type Props = {
 
 export default function CreatePaymentForm({ student, onCreated }: Props) {
   const today = new Date();
+
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
 
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [month, setMonth] = useState(today.getMonth() + 1);
-
   const [year, setYear] = useState(today.getFullYear());
 
   const [amount, setAmount] = useState("");
 
   const [dueDate, setDueDate] = useState("");
-
   const [paidAt, setPaidAt] = useState("");
 
   const [status, setStatus] = useState<"pending" | "paid" | "expired">(
@@ -31,9 +30,10 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
 
   const [observations, setObservations] = useState("");
 
-  const [loading, setLoading] = useState(false);
   async function uploadReceipt() {
     if (!receiptFile) {
+      console.log("No hay comprobante para subir");
+
       return {
         url: null,
         name: null,
@@ -47,6 +47,8 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
 
       formData.append("file", receiptFile);
 
+      console.log("Subiendo archivo:", receiptFile.name);
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -54,13 +56,22 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
 
       const data = await res.json();
 
+      console.log("Respuesta Cloudinary:", data);
+
       if (!data.success) {
         throw new Error(data.message);
       }
 
       return {
         url: data.url,
-        name: receiptFile.name,
+        name: data.original_filename ?? receiptFile.name,
+      };
+    } catch (error) {
+      console.error("Error subiendo comprobante:", error);
+
+      return {
+        url: null,
+        name: null,
       };
     } finally {
       setUploading(false);
@@ -78,33 +89,45 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
 
       const receipt = await uploadReceipt();
 
+      console.log("Receipt obtenido:", receipt);
+
+      const payload = {
+        month,
+        year,
+        amount: Number(amount),
+        due_date: dueDate || null,
+        paid_at: paidAt || null,
+        status,
+        observations,
+        receipt_url: receipt.url,
+        receipt_name: receipt.name,
+      };
+
+      console.log("Payload enviado:", payload);
+
       const res = await fetch(`/api/admin/students/${student.id}/payments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          month,
-          year,
-          amount: Number(amount),
-          due_date: dueDate || null,
-          paid_at: paidAt || null,
-          status,
-          observations,
-
-          receipt_url: receipt.url,
-          receipt_name: receipt.name,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
+
+      console.log("Respuesta backend:", data);
 
       if (!data.success) {
         alert(data.message);
         return;
       }
 
+      alert("Comprobante registrado correctamente.");
+
       onCreated();
+    } catch (error) {
+      console.error(error);
+      alert("Ocurrió un error.");
     } finally {
       setLoading(false);
     }
@@ -175,9 +198,7 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
             className="w-full mt-2 rounded-xl border h-11 px-3 text-gray-700"
           >
             <option value="pending">Pendiente</option>
-
             <option value="paid">Pagado</option>
-
             <option value="expired">Vencido</option>
           </select>
         </div>
@@ -204,6 +225,7 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
           />
         </div>
       </div>
+
       <div>
         <label className="font-medium text-gray-700">Comprobante de pago</label>
 
@@ -214,22 +236,16 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
             const file = e.target.files?.[0];
 
             if (file) {
+              console.log("Archivo seleccionado:", file);
+
               setReceiptFile(file);
             }
           }}
-          className="
-      mt-2
-      block
-      w-full
-      rounded-xl
-      border
-      p-3
-      text-gray-700
-    "
+          className="mt-2 block w-full rounded-xl border p-3 text-gray-700"
         />
 
         {receiptFile && (
-          <p className="text-sm text-cyan-600 mt-2">{receiptFile.name}</p>
+          <p className="mt-2 text-sm text-cyan-600">{receiptFile.name}</p>
         )}
       </div>
 
@@ -249,14 +265,14 @@ export default function CreatePaymentForm({ student, onCreated }: Props) {
           disabled={loading || uploading}
           onClick={submit}
           className="
-    h-11
-    px-6
-    rounded-xl
-    bg-cyan-600
-    hover:bg-cyan-700
-    text-white
-    disabled:opacity-50
-  "
+            h-11
+            px-6
+            rounded-xl
+            bg-cyan-600
+            hover:bg-cyan-700
+            text-white
+            disabled:opacity-50
+          "
         >
           {uploading
             ? "Subiendo comprobante..."

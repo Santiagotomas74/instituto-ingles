@@ -369,42 +369,6 @@ export default function CreateMaterialForm({ classroomId }: Props) {
 
           {/* CONFIG */}
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block mb-2 font-medium text-slate-700">
-                Orden
-              </label>
-
-              <input
-                type="number"
-                name="orden"
-                value={formData.orden}
-                onChange={handleChange}
-                className="
-                  w-full
-                  h-14
-                  px-5
-                  rounded-2xl
-                  border
-                  border-slate-200
-                "
-              />
-            </div>
-
-            <div className="flex items-center gap-3 pt-9">
-              <input
-                type="checkbox"
-                name="is_published"
-                checked={formData.is_published}
-                onChange={handleChange}
-              />
-
-              <label className="font-medium text-slate-700">
-                Publicado para alumnos
-              </label>
-            </div>
-          </div>
-
           {/* BUTTON */}
 
           <button
