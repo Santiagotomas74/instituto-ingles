@@ -153,12 +153,13 @@ export async function POST(req: NextRequest, { params }: Props) {
 
       const io = getIO();
 
-      io.to(question.student_id).emit("notification", {
-        title: "Nueva respuesta",
-        message: `${student.nombre} ${student.apellido} respondió tu consulta.`,
-        type: "question_answer",
-        questionId,
-      });
+      if (io) {
+        io.to(`user_${question.student_id}`).emit("notification", {
+          title: "Respuesta del profesor",
+          message: `${student.nombre} ${student.apellido} respondió tu consulta.`,
+          type: "question_answer",
+        });
+      }
     }
 
     return NextResponse.json({

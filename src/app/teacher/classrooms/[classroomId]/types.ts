@@ -36,7 +36,7 @@ export type Material = {
   archivo_url: string | null;
   url: string | null;
 
-  tipo: "file" | "link";
+  tipo: "file" | "link" | "text" | "video";
 
   material_category: string;
 

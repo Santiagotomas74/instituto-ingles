@@ -16,7 +16,7 @@ import {
   Dumbbell,
 } from "lucide-react";
 
-import { Material } from "../types";
+import type { Material } from "@/types/material";
 import EditMaterialModal from "./EditMaterialModal";
 
 type Props = {

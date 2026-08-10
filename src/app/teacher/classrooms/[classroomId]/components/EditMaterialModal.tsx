@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, Upload, Save } from "lucide-react";
 
-import { Material } from "../types";
+import type { Material } from "@/types/material";
 
 type Props = {
   material: Material;

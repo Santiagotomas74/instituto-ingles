@@ -191,12 +191,14 @@ export async function POST(req: NextRequest, { params }: Props) {
 
     const io = getIO();
 
-    io.to(question.student_id).emit("notification", {
-      title: "Respuesta del profesor",
-      message: `${teacher.nombre} ${teacher.apellido} respondió tu consulta.`,
-      type: "question_answer",
-      questionId,
-    });
+    if (io) {
+      io.to(`user_${question.student_id}`).emit("notification", {
+        title: "Respuesta del profesor",
+        message: `${teacher.nombre} ${teacher.apellido} respondió tu consulta.`,
+        type: "question_answer",
+        questionId,
+      });
+    }
 
     return NextResponse.json({
       success: true,

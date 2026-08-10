@@ -75,7 +75,7 @@ export default function Questions({ classroomId }: Props) {
     return (
       <QuestionThread
         questionId={selectedQuestionId}
-        onBack={() => router.push(`?tab=questions`)}
+        onClose={() => router.push(`?tab=questions`)}
       />
     );
   }

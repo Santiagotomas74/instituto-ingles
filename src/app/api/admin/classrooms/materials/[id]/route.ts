@@ -84,20 +84,19 @@ export async function PATCH(
 
     const result = await query(
       `
-      UPDATE classroom_materials
-      SET
-        titulo = $1,
-        descripcion = $2,
-        tipo = $3,
-        material_category = $4,
-        sub_category = $5,
-        contenido_texto = $6,
-        url = $7,
-        is_published = $8,
-        orden = $9
-        
-      WHERE id = $10
-      RETURNING *
+        UPDATE classroom_materials
+        SET
+          titulo = $1,
+          descripcion = $2,
+          tipo = $3,
+          material_category = $4,
+          sub_category = $5,
+          contenido_texto = $6,
+          url = $7,
+          is_published = $8,
+          orden = $9
+        WHERE id = $10
+        RETURNING *
       `,
       [
         titulo,

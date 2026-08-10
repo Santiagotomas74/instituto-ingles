@@ -51,7 +51,7 @@ export async function DELETE(
 
 type Props = {
   params: Promise<{
-    materialId: string;
+    id: string;
   }>;
 };
 

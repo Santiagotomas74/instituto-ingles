@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import ClassroomHeader from "./components/ClassroomHeader";
-import ClassroomTabs from "./components/ClassroomTabs";
+import ClassroomTabs, { TabType } from "./components/ClassroomTabs";
 
 import MaterialsTab from "./components/MaterialsTab";
 import StudentsTab from "./components/StudentsTab";
@@ -22,8 +22,7 @@ export default function ClassroomPage() {
   const classroomId = params.classroomId as string;
 
   const urlTab = searchParams.get("tab");
-
-  const initialTab =
+  const initialTab: TabType =
     urlTab === "materials"
       ? "materiales"
       : urlTab === "students"
@@ -38,7 +37,8 @@ export default function ClassroomPage() {
                 ? "consultas"
                 : "materiales";
 
-  const [tab, setTab] = useState(initialTab);
+  const [tab, setTab] = useState<TabType>(initialTab);
+
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-7xl mx-auto px-8 py-8">

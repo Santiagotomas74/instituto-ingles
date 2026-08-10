@@ -3,21 +3,7 @@
 import { useEffect, useState } from "react";
 import { X, Save } from "lucide-react";
 
-type Material = {
-  id: string;
-  titulo: string;
-  descripcion: string | null;
-  tipo: string;
-  material_category: string | null;
-  sub_category: string | null;
-  contenido_texto: string | null;
-  url: string | null;
-  archivo_url: string | null;
-  archivo_nombre: string | null;
-  archivo_size: number | null;
-  is_published: boolean;
-  orden: number;
-};
+import type { Material } from "@/types/material";
 
 type Props = {
   material: Material;
