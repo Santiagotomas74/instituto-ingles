@@ -22,6 +22,7 @@ export async function GET(req: Request, { params }: Props) {
     cm.contenido_texto,
     cm.url,
     cm.archivo_url,
+    cm.sub_category,
     cm.archivo_nombre,
     cm.archivo_size,
     cm.is_published,

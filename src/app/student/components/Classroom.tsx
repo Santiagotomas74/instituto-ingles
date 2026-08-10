@@ -10,18 +10,20 @@ import {
   CalendarDays,
   GraduationCap,
   ClipboardList,
+  CircleHelp,
 } from "lucide-react";
 
 import Tasks from "./Tasks";
 import Materials from "./Materials";
 import Announcements from "./Announcements";
 import Events from "./Events";
+import Questions from "./Questions";
 
 interface Props {
   classroomId: string;
 }
 
-type Tab = "materials" | "tasks" | "announcements" | "events";
+type Tab = "materials" | "tasks" | "announcements" | "questions" | "events";
 
 type Classroom = {
   id: string;
@@ -163,6 +165,20 @@ export default function Classroom({ classroomId }: Props) {
               Fechas importantes
             </div>
           </button>
+
+          <button
+            onClick={() => setActiveTab("questions")}
+            className={`pb-4 transition font-medium ${
+              activeTab === "questions"
+                ? "border-b-2 border-cyan-600 text-cyan-600"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <CircleHelp size={18} />
+              Preguntas
+            </div>
+          </button>
         </div>
       </div>
 
@@ -178,6 +194,8 @@ export default function Classroom({ classroomId }: Props) {
         )}
 
         {activeTab === "events" && <Events classroomId={classroomId} />}
+
+        {activeTab === "questions" && <Questions classroomId={classroomId} />}
       </div>
     </div>
   );

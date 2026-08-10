@@ -20,7 +20,13 @@ export default function CreateMaterialForm({ classroomId }: Props) {
     titulo: "",
     descripcion: "",
     tipo: "file",
+
+    // Categoría pedagógica
     material_category: "grammar",
+
+    // Subcategoría del recurso
+    sub_category: "documento",
+
     contenido_texto: "",
     url: "",
     is_published: true,
@@ -34,11 +40,11 @@ export default function CreateMaterialForm({ classroomId }: Props) {
   ) => {
     const { name, value, type } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    });
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,8 +73,8 @@ export default function CreateMaterialForm({ classroomId }: Props) {
 
         const uploadResult = await uploadRes.json();
 
-        if (!uploadResult.success) {
-          alert("Error subiendo archivo");
+        if (!uploadRes.ok || !uploadResult.success) {
+          alert(uploadResult.message || "Error subiendo archivo");
           return;
         }
 
@@ -78,23 +84,51 @@ export default function CreateMaterialForm({ classroomId }: Props) {
       }
 
       /*
+       * VALIDACIONES
+       */
+
+      if (formData.tipo === "file" && !file) {
+        alert("Seleccioná un archivo.");
+        return;
+      }
+
+      if (formData.tipo === "link" && !formData.url.trim()) {
+        alert("Ingresá una URL.");
+        return;
+      }
+
+      if (formData.tipo === "text" && !formData.contenido_texto.trim()) {
+        alert("Ingresá el contenido del material.");
+        return;
+      }
+
+      /*
        * GUARDAR MATERIAL EN DB
        */
+
       console.log("classroomId:", classroomId);
 
       const res = await fetch("/api/teacher/classrooms/materials", {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
           classroom_id: classroomId,
 
           titulo: formData.titulo,
           descripcion: formData.descripcion,
 
+          // Tipo técnico del material
           tipo: formData.tipo,
+
+          // Categoría pedagógica
           material_category: formData.material_category,
+
+          // Subcategoría del recurso
+          sub_category: formData.sub_category,
 
           contenido_texto: formData.contenido_texto,
           url: formData.url,
@@ -110,8 +144,8 @@ export default function CreateMaterialForm({ classroomId }: Props) {
 
       const result = await res.json();
 
-      if (!result.success) {
-        alert(result.message || "Error");
+      if (!res.ok || !result.success) {
+        alert(result.message || "Error guardando material");
         return;
       }
 
@@ -120,11 +154,13 @@ export default function CreateMaterialForm({ classroomId }: Props) {
       router.refresh();
     } catch (error) {
       console.error(error);
+
+      alert("Ocurrió un error al guardar el material.");
     } finally {
       setLoading(false);
     }
   };
-  // todo tu código actual...
+
   return (
     <main className="min-h-screen bg-slate-100">
       {/* HEADER */}
@@ -211,6 +247,7 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               value={formData.titulo}
               onChange={handleChange}
               required
+              placeholder="Ej: Present Perfect"
               className="
                 w-full
                 h-14
@@ -218,6 +255,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 rounded-2xl
                 border
                 border-slate-200
+                outline-none
+                focus:ring-2
+                focus:ring-cyan-500
               "
             />
           </div>
@@ -234,19 +274,25 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               value={formData.descripcion}
               onChange={handleChange}
               rows={4}
+              placeholder="Descripción del material..."
               className="
                 w-full
                 p-5
                 rounded-2xl
                 border
                 border-slate-200
+                outline-none
+                focus:ring-2
+                focus:ring-cyan-500
               "
             />
           </div>
 
           {/* SELECTS */}
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* CATEGORÍA */}
+
             <div>
               <label className="block mb-2 font-medium text-slate-700">
                 Categoría
@@ -263,6 +309,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                   rounded-2xl
                   border
                   border-slate-200
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
                 "
               >
                 <option value="grammar">Grammar</option>
@@ -276,9 +325,47 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               </select>
             </div>
 
+            {/* SUBCATEGORÍA */}
+
             <div>
               <label className="block mb-2 font-medium text-slate-700">
-                Tipo
+                Tipo de recurso
+              </label>
+
+              <select
+                name="sub_category"
+                value={formData.sub_category}
+                onChange={handleChange}
+                className="
+                  w-full
+                  h-14
+                  px-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
+                "
+              >
+                <option value="imagen">Imagen</option>
+                <option value="video">Video</option>
+                <option value="audio">Audio</option>
+                <option value="libro">Libro</option>
+                <option value="documento">Documento</option>
+                <option value="presentacion">Presentación</option>
+                <option value="ejercicio">Ejercicio</option>
+                <option value="enlace">Enlace</option>
+                <option value="guia">Guía</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            {/* TIPO */}
+
+            <div>
+              <label className="block mb-2 font-medium text-slate-700">
+                Formato
               </label>
 
               <select
@@ -292,12 +379,13 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                   rounded-2xl
                   border
                   border-slate-200
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
                 "
               >
                 <option value="file">Archivo</option>
-
                 <option value="link">Link</option>
-
                 <option value="text">Texto</option>
               </select>
             </div>
@@ -314,8 +402,23 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               <input
                 type="file"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="w-full"
+                className="
+                  w-full
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  p-4
+                "
               />
+
+              {file && (
+                <p className="mt-2 text-sm text-slate-500">
+                  Archivo seleccionado:{" "}
+                  <span className="font-medium text-slate-700">
+                    {file.name}
+                  </span>
+                </p>
+              )}
             </div>
           )}
 
@@ -332,6 +435,7 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 name="url"
                 value={formData.url}
                 onChange={handleChange}
+                placeholder="https://..."
                 className="
                   w-full
                   h-14
@@ -339,6 +443,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                   rounded-2xl
                   border
                   border-slate-200
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
                 "
               />
             </div>
@@ -357,18 +464,20 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 value={formData.contenido_texto}
                 onChange={handleChange}
                 rows={8}
+                placeholder="Escribí el contenido del material..."
                 className="
                   w-full
                   p-5
                   rounded-2xl
                   border
                   border-slate-200
+                  outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
                 "
               />
             </div>
           )}
-
-          {/* CONFIG */}
 
           {/* BUTTON */}
 
@@ -388,6 +497,8 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               items-center
               justify-center
               gap-3
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
           >
             <Upload size={20} />

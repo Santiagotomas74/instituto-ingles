@@ -41,6 +41,7 @@ export type Material = {
   material_category: string;
 
   created_at: string;
+  sub_category: string | null;
 };
 
 export type Announcement = {

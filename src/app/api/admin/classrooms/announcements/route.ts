@@ -56,25 +56,39 @@ export async function POST(req: NextRequest) {
     for (const student of students.rows) {
       const notificationResult = await query(
         `
-        INSERT INTO notifications
-        (
-          user_id,
-          role,
-          title,
-          description,
-          type
-        )
-        VALUES
-        (
-          $1,
-          'student',
-          'Nueva anuncio en tu aula',
-          $2,
-          'event'
-        )
-        RETURNING *
-        `,
-        [student.student_id, `${title} `],
+  INSERT INTO notifications
+  (
+      user_id,
+      role,
+      title,
+      description,
+      type,
+      reference_id,
+      reference_type,
+      action_url
+  )
+  VALUES
+  (
+      $1,
+      'student',
+      '📢 Nuevo anuncio',
+      $2,
+      'announcement',
+      $3,
+      'classroom_announcement',
+      $4
+  )
+  RETURNING *;
+  `,
+        [
+          student.student_id,
+
+          content ? `${title}. ${content}` : title,
+
+          result.rows[0].id,
+
+          `/student/classroom/${classroom_id}?tab=announcements`,
+        ],
       );
 
       try {

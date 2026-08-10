@@ -97,6 +97,7 @@ export async function POST(
       SELECT
 
           t.titulo,
+          t.classroom_id,
 
           s.nombre,
           s.apellido,
@@ -127,33 +128,38 @@ export async function POST(
 
       const notificationResult = await query(
         `
-        INSERT INTO notifications
-        (
-            user_id,
-            role,
-            type,
-            title,
-            description,
-            reference_id,
-            reference_type
-        )
-        VALUES
-        (
-            $1,
-            'teacher',
-            'task_submission',
-            'Nueva entrega de tarea',
-            $2,
-            $3,
-            'task_submission'
-        )
-
-        RETURNING *;
-        `,
+  INSERT INTO notifications
+  (
+      user_id,
+      role,
+      type,
+      title,
+      description,
+      reference_id,
+      reference_type,
+      action_url
+  )
+  VALUES
+  (
+      $1,
+      'teacher',
+      'task_submission',
+      'Nueva entrega de tarea',
+      $2,
+      $3,
+      'task_submission',
+      $4
+  )
+  RETURNING *;
+  `,
         [
           info.teacher_id,
+
           `${info.nombre} ${info.apellido} entregó la tarea "${info.titulo}".`,
+
           submission.id,
+
+          `/teacher/classrooms/${info.classroom_id}?tab=tasks`,
         ],
       );
 

@@ -18,20 +18,11 @@ import {
 
 const menu = [
   {
-    name: "Dashboard",
+    name: "Mis Aulas",
     href: "/student/dashboard",
     icon: LayoutDashboard,
   },
-  {
-    name: "Mis Aulas",
-    href: "/student/dashboard/classrooms",
-    icon: BookOpen,
-  },
-  {
-    name: "Materiales",
-    href: "/student/dashboard/materials",
-    icon: FolderOpen,
-  },
+
   {
     name: "Tareas",
     href: "/student/dashboard/homework",
@@ -42,11 +33,7 @@ const menu = [
     href: "/student/dashboard/grades",
     icon: GraduationCap,
   },
-  {
-    name: "Mensajes",
-    href: "/student/dashboard/messages",
-    icon: MessageSquare,
-  },
+
   {
     name: "Calendario",
     href: "/student/dashboard/calendar",

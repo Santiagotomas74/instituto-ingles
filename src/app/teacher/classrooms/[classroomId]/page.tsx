@@ -1,25 +1,19 @@
 "use client";
 
 import { useState } from "react";
-
 import { useParams, useSearchParams } from "next/navigation";
-
 import Link from "next/link";
-
 import { ArrowLeft } from "lucide-react";
 
+import ClassroomHeader from "./components/ClassroomHeader";
 import ClassroomTabs from "./components/ClassroomTabs";
 
 import MaterialsTab from "./components/MaterialsTab";
-
 import StudentsTab from "./components/StudentsTab";
-
 import AnnouncementsTab from "./components/AnnouncementsTab";
-
 import ImportantDatesTab from "./components/ImportantDatesTab";
-
-import ClassroomHeader from "./components/ClassroomHeader";
 import TasksTab from "./components/TasksTab";
+import QuestionsTab from "./components/questions/QuestionsTab";
 
 export default function ClassroomPage() {
   const params = useParams();
@@ -27,42 +21,30 @@ export default function ClassroomPage() {
 
   const classroomId = params.classroomId as string;
 
+  const urlTab = searchParams.get("tab");
+
   const initialTab =
-    (searchParams.get("tab") as
-      | "materiales"
-      | "estudiantes"
-      | "anuncios"
-      | "fechas"
-      | "tareas") || "materiales";
+    urlTab === "materials"
+      ? "materiales"
+      : urlTab === "students"
+        ? "estudiantes"
+        : urlTab === "announcements"
+          ? "anuncios"
+          : urlTab === "important-dates"
+            ? "fechas"
+            : urlTab === "tasks"
+              ? "tareas"
+              : urlTab === "questions"
+                ? "consultas"
+                : "materiales";
 
   const [tab, setTab] = useState(initialTab);
-  console.log("classroomId:", classroomId);
-  console.log("initialTab:", initialTab);
-  console.log("tab:sdasdaa");
   return (
-    <main
-      className="
-      min-h-screen
-      bg-slate-50
-      "
-    >
-      <div
-        className="
-        max-w-7xl
-        mx-auto
-        px-8
-        py-8
-        "
-      >
+    <main className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-8 py-8">
         <Link
           href="/teacher/dashboard"
-          className="
-          inline-flex
-          items-center
-          gap-2
-          text-blue-600
-          hover:text-blue-700
-          "
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8"
         >
           <ArrowLeft size={18} />
           Volver a mis aulas
@@ -82,6 +64,8 @@ export default function ClassroomPage() {
           {tab === "fechas" && <ImportantDatesTab classroomId={classroomId} />}
 
           {tab === "tareas" && <TasksTab classroomId={classroomId} />}
+
+          {tab === "consultas" && <QuestionsTab classroomId={classroomId} />}
         </div>
       </div>
     </main>

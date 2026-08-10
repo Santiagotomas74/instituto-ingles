@@ -9,7 +9,8 @@ export type TabType =
   | "estudiantes"
   | "anuncios"
   | "fechas"
-  | "tareas";
+  | "tareas"
+  | "consultas";
 
 type Props = {
   tab: TabType;
@@ -23,12 +24,33 @@ export default function ClassroomTabs({ tab, setTab }: Props) {
   useEffect(() => {
     const selectedTab = searchParams.get("tab");
 
-    if (selectedTab === "announcements") {
-      setTab("anuncios");
-    }
+    switch (selectedTab) {
+      case "materials":
+        setTab("materiales");
+        break;
 
-    if (selectedTab === "important-dates") {
-      setTab("fechas");
+      case "students":
+        setTab("estudiantes");
+        break;
+
+      case "announcements":
+        setTab("anuncios");
+        break;
+
+      case "important-dates":
+        setTab("fechas");
+        break;
+
+      case "tasks":
+        setTab("tareas");
+        break;
+
+      case "questions":
+        setTab("consultas");
+        break;
+
+      default:
+        break;
     }
   }, [searchParams, setTab]);
 
@@ -49,9 +71,14 @@ export default function ClassroomTabs({ tab, setTab }: Props) {
       id: "fechas",
       label: "Fechas importantes",
     },
+
     {
       id: "tareas",
       label: "Tareas",
+    },
+    {
+      id: "consultas",
+      label: "Consultas",
     },
   ];
 

@@ -7,10 +7,27 @@ export async function POST(req: NextRequest) {
 
     console.log("Received material data:", body);
 
+    // =====================================================
     // Capturar cookie del profesor
+    // =====================================================
+
     const teacherId = req.cookies.get("user_id")?.value;
 
     console.log("Teacher ID desde cookie:", teacherId);
+
+    if (!teacherId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Profesor no autenticado",
+        },
+        { status: 401 },
+      );
+    }
+
+    // =====================================================
+    // Datos
+    // =====================================================
 
     const {
       classroom_id,
@@ -18,6 +35,7 @@ export async function POST(req: NextRequest) {
       descripcion,
       tipo,
       material_category,
+      sub_category,
       contenido_texto,
       url,
       archivo_url,
@@ -26,6 +44,10 @@ export async function POST(req: NextRequest) {
       is_published,
       orden,
     } = body;
+
+    // =====================================================
+    // Validaciones
+    // =====================================================
 
     if (!classroom_id || !titulo || !tipo) {
       return NextResponse.json(
@@ -37,6 +59,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // =====================================================
+    // Crear material
+    // =====================================================
+
     const result = await query(
       `
       INSERT INTO classroom_materials (
@@ -45,6 +71,7 @@ export async function POST(req: NextRequest) {
         descripcion,
         tipo,
         material_category,
+        sub_category,
         contenido_texto,
         url,
         archivo_url,
@@ -55,7 +82,20 @@ export async function POST(req: NextRequest) {
         created_by
       )
       VALUES (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13
+        $1,
+        $2,
+        $3,
+        $4,
+        $5,
+        $6,
+        $7,
+        $8,
+        $9,
+        $10,
+        $11,
+        $12,
+        $13,
+        $14
       )
       RETURNING *
       `,
@@ -65,6 +105,7 @@ export async function POST(req: NextRequest) {
         descripcion || null,
         tipo,
         material_category || null,
+        sub_category || null,
         contenido_texto || null,
         url || null,
         archivo_url || null,
@@ -72,49 +113,57 @@ export async function POST(req: NextRequest) {
         archivo_size || null,
         is_published ?? true,
         orden ?? 0,
-
-        // acá queda guardado el profesor
-        teacherId || null,
+        teacherId,
       ],
     );
 
+    const material = result.rows[0];
+
+    // =====================================================
+    // Obtener alumnos del aula
+    // =====================================================
+
     const students = await query(
       `
-  SELECT
-      student_id
-  FROM classroom_students
-  WHERE classroom_id = $1
-  `,
+      SELECT
+        student_id
+      FROM classroom_students
+      WHERE classroom_id = $1
+      `,
       [classroom_id],
     );
+
+    // =====================================================
+    // Crear notificación para cada alumno
+    // =====================================================
 
     for (const student of students.rows) {
       const notification = await query(
         `
-    INSERT INTO notifications
-    (
-        user_id,
-        role,
-        title,
-        description,
-        type,
-        reference_id,
-        reference_type,
-        action_url
-    )
-    VALUES
-    (
-        $1,
-        'student',
-        '📚 Nuevo material disponible',
-        $2,
-        'material',
-        $3,
-        'classroom_material',
-        $4
-    )
-    RETURNING *;
-    `,
+        INSERT INTO notifications
+        (
+          user_id,
+          role,
+          title,
+          description,
+          type,
+          reference_id,
+          reference_type,
+          action_url
+        )
+        VALUES
+        (
+          $1,
+          'student',
+          '📚 Nuevo material disponible',
+          $2,
+          'material',
+          $3,
+          'classroom_material',
+          $4
+        )
+        RETURNING *;
+        `,
         [
           student.student_id,
 
@@ -122,11 +171,15 @@ export async function POST(req: NextRequest) {
             ? `El profesor publicó "${titulo}". ${descripcion}`
             : `El profesor publicó el material "${titulo}".`,
 
-          result.rows[0].id,
+          material.id,
 
           `/student/classroom/${classroom_id}?tab=materials`,
         ],
       );
+
+      // ===================================================
+      // Notificación en vivo
+      // ===================================================
 
       try {
         await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`, {
@@ -140,15 +193,20 @@ export async function POST(req: NextRequest) {
           }),
         });
       } catch (error) {
-        console.error(error);
+        console.error("Error enviando notificación por Socket:", error);
       }
     }
+
+    // =====================================================
+    // Respuesta
+    // =====================================================
+
     return NextResponse.json({
       success: true,
-      material: result.rows[0],
+      material,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error creando material:", error);
 
     return NextResponse.json(
       {

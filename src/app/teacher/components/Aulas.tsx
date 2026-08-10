@@ -36,28 +36,6 @@ export default async function Aulas() {
   return (
     <main className="p-8 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <Link
-            href="/"
-            className="
-      inline-flex
-      items-center
-      gap-2
-      px-4
-      py-2
-      rounded-xl
-      bg-white
-      border
-      shadow-sm
-      text-slate-700
-      hover:bg-slate-50
-      transition
-    "
-          >
-            <ArrowLeft size={18} />
-            Volver al inicio
-          </Link>
-        </div>
         <div className="mb-10">
           <p className="mt-2 text-slate-500">
             Gestioná tus aulas, alumnos y materiales.
