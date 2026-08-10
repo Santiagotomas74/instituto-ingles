@@ -64,7 +64,7 @@ export default function CreatePaymentModal({
 
           <button
             onClick={onClose}
-            className="w-11 h-11 rounded-xl hover:bg-slate-100"
+            className="w-11 h-11 rounded-xl hover:bg-slate-100 text-slate-700"
           >
             <X />
           </button>

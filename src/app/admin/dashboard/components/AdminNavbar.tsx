@@ -94,63 +94,6 @@ export default function AdminNavbar() {
 
       <div className="flex items-center gap-8">
         <h1 className="text-2xl font-bold text-blue-600">INK</h1>
-
-        <nav className="hidden xl:flex items-center gap-2">
-          <Link
-            href="/admin/dashboard"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            Dashboard
-          </Link>
-
-          <Link
-            href="/admin/students"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <Users size={18} />
-            Students
-          </Link>
-
-          <Link
-            href="/admin/teachers"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <GraduationCap size={18} />
-            Teachers
-          </Link>
-
-          <Link
-            href="/admin/classrooms"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <School size={18} />
-            Classrooms
-          </Link>
-
-          <Link
-            href="/admin/calendar"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <CalendarDays size={18} />
-            Calendario
-          </Link>
-
-          <Link
-            href="/admin/chat"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <MessageCircle size={18} />
-            Chat
-          </Link>
-
-          <Link
-            href="/admin/inscripciones"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl hover:bg-blue-50 transition"
-          >
-            <Inbox size={18} />
-            Inscripciones
-          </Link>
-        </nav>
       </div>
 
       {/* Derecha */}

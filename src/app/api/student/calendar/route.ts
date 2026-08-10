@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
 
-    const studentId = cookieStore.get("student_id")?.value;
+    const studentId = cookieStore.get("user_id")?.value;
 
     if (!studentId) {
       return NextResponse.json(

@@ -66,40 +66,6 @@ export default function Navbar() {
     >
       <div className="flex items-center gap-10">
         <h1 className="text-2xl font-bold text-cyan-600">INK</h1>
-
-        <nav className="hidden lg:flex items-center gap-2">
-          <Link
-            href="/student/dashboard"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
-          >
-            <LayoutDashboard size={19} />
-            Dashboard
-          </Link>
-
-          <Link
-            href="/student/classrooms"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
-          >
-            <GraduationCap size={19} />
-            Mis aulas
-          </Link>
-
-          <Link
-            href="/student/calendar"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
-          >
-            <CalendarDays size={19} />
-            Calendario
-          </Link>
-
-          <Link
-            href="/student/chat"
-            className="flex items-center gap-2 px-4 h-11 rounded-xl text-slate-600 hover:bg-cyan-50 hover:text-cyan-600 transition"
-          >
-            <MessageCircle size={19} />
-            Chat
-          </Link>
-        </nav>
       </div>
 
       <div className="flex items-center gap-4">

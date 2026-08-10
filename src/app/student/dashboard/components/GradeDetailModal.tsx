@@ -80,7 +80,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold">{grade.titulo}</h2>
+              <h2 className="text-3xl font-bold text-slate-600">
+                {grade.titulo}
+              </h2>
 
               <p className="text-slate-500">Detalle de la evaluación</p>
             </div>
@@ -96,6 +98,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
               flex
               items-center
               justify-center
+              text-slate-600
             "
           >
             <X />
@@ -108,7 +111,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
           {/* Información */}
 
           <section className="bg-white rounded-3xl border p-6">
-            <h3 className="font-bold text-xl mb-6">Información</h3>
+            <h3 className="font-bold text-xl mb-6 text-slate-600">
+              Información
+            </h3>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="flex gap-3">
@@ -117,7 +122,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 <div>
                   <p className="text-xs text-slate-500">Aula</p>
 
-                  <p className="font-semibold">{grade.classroom}</p>
+                  <p className="font-semibold text-slate-600">
+                    {grade.classroom}
+                  </p>
                 </div>
               </div>
 
@@ -127,7 +134,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 <div>
                   <p className="text-xs text-slate-500">Profesor</p>
 
-                  <p className="font-semibold">{grade.teacher}</p>
+                  <p className="font-semibold text-slate-600">
+                    {grade.teacher}
+                  </p>
                 </div>
               </div>
 
@@ -137,7 +146,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 <div>
                   <p className="text-xs text-slate-500">Entregada</p>
 
-                  <p className="font-semibold">
+                  <p className="font-semibold text-slate-600">
                     {grade.submitted_at
                       ? new Date(grade.submitted_at).toLocaleString()
                       : "-"}
@@ -151,7 +160,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 <div>
                   <p className="text-xs text-slate-500">Corregida</p>
 
-                  <p className="font-semibold">
+                  <p className="font-semibold text-slate-600">
                     {grade.graded_at
                       ? new Date(grade.graded_at).toLocaleString()
                       : "-"}
@@ -167,7 +176,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
             <div className="flex items-center gap-3 mb-5">
               <Star className="text-amber-500" size={24} />
 
-              <h3 className="text-xl font-bold">Calificación</h3>
+              <h3 className="text-xl font-bold text-slate-600">Calificación</h3>
             </div>
 
             <div
@@ -199,7 +208,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
             <div className="flex items-center gap-3 mb-5">
               <MessageSquare className="text-cyan-600" size={22} />
 
-              <h3 className="text-xl font-bold">Tu respuesta</h3>
+              <h3 className="text-xl font-bold text-slate-600">Tu respuesta</h3>
             </div>
 
             <div
@@ -211,6 +220,8 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 whitespace-pre-wrap
                 leading-7
                 min-h-[180px]
+                text-slate-600
+                
               "
             >
               {grade.comentario || "No agregaste ningún comentario."}
@@ -224,7 +235,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
               <div className="flex items-center gap-3 mb-5">
                 <FileText className="text-cyan-600" size={22} />
 
-                <h3 className="text-xl font-bold">Archivo entregado</h3>
+                <h3 className="text-xl font-bold text-slate-600">
+                  Archivo entregado
+                </h3>
               </div>
 
               <div
@@ -238,7 +251,9 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 "
               >
                 <div>
-                  <p className="font-semibold">{grade.archivo_nombre}</p>
+                  <p className="font-semiboldtext-slate-600">
+                    {grade.archivo_nombre}
+                  </p>
 
                   <p className="text-sm text-slate-500 mt-1">
                     {(grade.archivo_size ?? 0) > 0 &&
@@ -289,6 +304,7 @@ export default function GradeDetailModal({ open, grade, onClose }: Props) {
                 p-6
                 whitespace-pre-wrap
                 leading-7
+                text-slate-600
               "
             >
               {grade.teacher_feedback ||

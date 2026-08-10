@@ -35,7 +35,7 @@ export default function GradeCard({ grade, onClick }: Props) {
     >
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">{grade.titulo}</h2>
+          <h2 className="text-2xl font-bold text-slate-700">{grade.titulo}</h2>
 
           {grade.descripcion && (
             <p className="mt-2 text-slate-600">{grade.descripcion}</p>
@@ -48,6 +48,7 @@ export default function GradeCard({ grade, onClick }: Props) {
             py-2
             rounded-2xl
             font-bold
+            text-slate-600
             text-lg
             ${badgeColor}
           `}
@@ -63,7 +64,7 @@ export default function GradeCard({ grade, onClick }: Props) {
           <div>
             <p className="text-xs text-slate-500">Aula</p>
 
-            <p className="font-medium">{grade.classroom}</p>
+            <p className="font-medium text-slate-600">{grade.classroom}</p>
           </div>
         </div>
 
@@ -73,7 +74,7 @@ export default function GradeCard({ grade, onClick }: Props) {
           <div>
             <p className="text-xs text-slate-500">Profesor</p>
 
-            <p className="font-medium">{grade.teacher}</p>
+            <p className="font-medium text-slate-600">{grade.teacher}</p>
           </div>
         </div>
 
@@ -83,7 +84,7 @@ export default function GradeCard({ grade, onClick }: Props) {
           <div>
             <p className="text-xs text-slate-500">Fecha de corrección</p>
 
-            <p className="font-medium">
+            <p className="font-medium text-slate-600">
               {grade.graded_at
                 ? new Date(grade.graded_at).toLocaleDateString()
                 : "-"}
@@ -105,7 +106,9 @@ export default function GradeCard({ grade, onClick }: Props) {
           <div className="flex items-center gap-2 mb-2">
             <Star className="text-amber-500" size={18} />
 
-            <span className="font-semibold">Observación del profesor</span>
+            <span className="font-semibold text-slate-600">
+              Observación del profesor
+            </span>
           </div>
 
           <p className="text-slate-600 line-clamp-2">

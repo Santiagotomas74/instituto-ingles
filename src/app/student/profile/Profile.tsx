@@ -90,7 +90,9 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="py-16 text-center text-slate-500">Cargando perfil...</div>
+      <div className="py-16 text-center h-screen text-slate-500">
+        Cargando perfil...
+      </div>
     );
   }
 
@@ -103,7 +105,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 bg-amber-100">
+    <div className="max-w-7xl mx-auto space-y-8">
       <ProfileHeader profile={profile} />
 
       <ProfileStats profile={profile} />

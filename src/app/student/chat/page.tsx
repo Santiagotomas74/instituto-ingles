@@ -1,15 +1,18 @@
 import ChatLayout from "@/components/chat/ChatLayout";
-import ChatTopbar from "../components/ChatTopbar";
+
 import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 export default function StudentChatPage() {
   return (
-    <main className="h-screen flex flex-col bg-slate-100">
-      <Navbar />
+    <div className="flex h-screen bg-slate-100">
+      <Sidebar />
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar />
+
         <ChatLayout />
       </div>
-    </main>
+    </div>
   );
 }

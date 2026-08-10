@@ -20,11 +20,11 @@ export default function Payments() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 bg-amber-50">
+    <div className="max-w-7xl mx-auto space-y-8 ">
       {/* Header */}
 
       <div>
-        <h1 className="text-4xl font-bold text-slate-900">
+        <h1 className="text-4xl font-bold text-slate-900 mt-5">
           Comprobantes de pagos
         </h1>
 

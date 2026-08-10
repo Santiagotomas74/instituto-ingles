@@ -78,6 +78,7 @@ export default function ReplyBox({ questionId, onReplyCreated }: Props) {
           outline-none
           focus:ring-2
           focus:ring-cyan-500
+          text-slate-700
         "
       />
 

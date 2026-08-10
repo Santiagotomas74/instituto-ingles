@@ -47,6 +47,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
         border-slate-200
         shadow-sm
         p-6
+        mb-9
       "
     >
       {/* Header */}
@@ -86,7 +87,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
         <div>
           <p className="text-xs text-slate-500">Importe</p>
 
-          <p className="text-xl font-bold mt-2">
+          <p className="text-xl font-bold mt-2 text-slate-500">
             ${Number(payment.amount).toLocaleString("es-AR")}
           </p>
         </div>
@@ -97,7 +98,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
           <div>
             <p className="text-xs text-slate-500">Vencimiento</p>
 
-            <p className="font-medium mt-2">
+            <p className="font-medium mt-2 text-slate-500">
               {payment.due_date
                 ? new Date(payment.due_date).toLocaleDateString()
                 : "-"}
@@ -111,7 +112,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
           <div>
             <p className="text-xs text-slate-500">Fecha de pago</p>
 
-            <p className="font-medium mt-2">
+            <p className="font-medium mt-2 text-slate-500">
               {payment.paid_at
                 ? new Date(payment.paid_at).toLocaleDateString()
                 : "-"}
@@ -125,7 +126,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
           <div>
             <p className="text-xs text-slate-500">Comprobante</p>
 
-            <p className="font-medium mt-2 truncate">
+            <p className="font-medium mt-2 truncate text-slate-500">
               {payment.receipt_name ?? "Sin archivo"}
             </p>
           </div>
@@ -144,7 +145,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
             p-5
           "
         >
-          <h4 className="font-semibold mb-2">Observaciones</h4>
+          <h4 className="font-semibold mb-2 text-slate-500">Observaciones</h4>
 
           <p className="text-slate-600 whitespace-pre-wrap">
             {payment.observations}
@@ -187,6 +188,7 @@ export default function PaymentCard({ payment, monthName }: Props) {
             flex
             items-center
             gap-2
+            text-slate-500
           "
         >
           <Pencil size={18} />

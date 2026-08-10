@@ -78,6 +78,7 @@ export default function StudentSelector({ selectedStudent, onSelect }: Props) {
             outline-none
             focus:ring-2
             focus:ring-cyan-500
+            text-slate-700
           "
         />
       </div>

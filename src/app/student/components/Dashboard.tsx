@@ -164,7 +164,7 @@ export default async function Dashboard() {
                       {classroom.nivel}
                     </span>
 
-                    <h3 className="mt-5 text-3xl font-bold group-hover:text-cyan-600 transition">
+                    <h3 className="mt-5 text-3xl font-bold text-cyan-600 transition">
                       {classroom.nombre}
                     </h3>
 
@@ -173,8 +173,8 @@ export default async function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center group-hover:bg-cyan-100">
-                    <ChevronRight className="group-hover:text-cyan-600" />
+                  <div className="w-12 h-12 rounded-2xl  flex items-center justify-center bg-cyan-100">
+                    <ChevronRight className="text-cyan-600" />
                   </div>
                 </div>
 
@@ -185,7 +185,9 @@ export default async function Dashboard() {
                     </div>
 
                     <div>
-                      <p className="font-bold">{classroom.alumnos}</p>
+                      <p className="font-bold text-slate-900">
+                        {classroom.alumnos}
+                      </p>
                       <span className="text-sm text-slate-500">compañeros</span>
                     </div>
                   </div>
@@ -196,7 +198,9 @@ export default async function Dashboard() {
                     </div>
 
                     <div>
-                      <p className="font-bold">{classroom.materiales}</p>
+                      <p className="font-bold text-slate-900">
+                        {classroom.materiales}
+                      </p>
                       <span className="text-sm text-slate-500">materiales</span>
                     </div>
                   </div>

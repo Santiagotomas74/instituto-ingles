@@ -62,7 +62,7 @@ export default function QuestionThread({ questionId, onBack }: Props) {
       </button>
 
       <div className="bg-white rounded-3xl border p-6">
-        <h2 className="text-2xl font-bold">{question.titulo}</h2>
+        <h2 className="text-2xl font-bold text-slate-700">{question.titulo}</h2>
 
         <p className="mt-4 text-slate-600">{question.contenido}</p>
 
@@ -71,7 +71,7 @@ export default function QuestionThread({ questionId, onBack }: Props) {
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 text-slate-700">
         {answers.map((answer) => (
           <div key={answer.id} className="bg-white rounded-2xl border p-5">
             <div className="font-semibold">

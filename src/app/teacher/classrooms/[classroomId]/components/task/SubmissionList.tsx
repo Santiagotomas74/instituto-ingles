@@ -27,7 +27,7 @@ export default function SubmissionList({
       "
     >
       <div className="p-6 border-b">
-        <h2 className="text-xl font-bold">Entregas</h2>
+        <h2 className="text-xl font-bold text-slate-600">Entregas</h2>
 
         <p className="text-sm text-slate-500 mt-1">
           {submissions.length} entregas

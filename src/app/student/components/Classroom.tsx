@@ -78,7 +78,7 @@ export default function Classroom({ classroomId }: Props) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto mt-5">
       <Link
         href="/student/dashboard"
         className="inline-flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium"

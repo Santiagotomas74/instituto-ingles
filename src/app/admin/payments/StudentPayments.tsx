@@ -141,6 +141,7 @@ export default function StudentPayments({ student }: Props) {
                 flex
                 items-center
                 gap-2
+                
               "
             >
               <Plus size={18} />
@@ -152,9 +153,11 @@ export default function StudentPayments({ student }: Props) {
 
           <div className="grid md:grid-cols-4 gap-5 mt-8">
             <div className="rounded-2xl bg-slate-50 border p-5">
-              <p className="text-sm text-slate-500">Total cuotas</p>
+              <p className="text-sm text-slate-500 ">Total cuotas</p>
 
-              <h3 className="text-3xl font-bold mt-2">{payments.length}</h3>
+              <h3 className="text-3xl font-bold mt-2 text-slate-700">
+                {payments.length}
+              </h3>
             </div>
 
             <div className="rounded-2xl bg-green-50 border border-green-100 p-5">
@@ -208,7 +211,9 @@ export default function StudentPayments({ student }: Props) {
         {/* Historial */}
 
         <div>
-          <h3 className="text-2xl font-bold mb-6">Historial de pagos</h3>
+          <h3 className="text-2xl font-bold mb-6 text-slate-700">
+            Historial de pagos
+          </h3>
 
           {loading ? (
             <div className="bg-white rounded-3xl border p-12 text-center text-slate-500">

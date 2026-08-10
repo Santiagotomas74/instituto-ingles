@@ -1,6 +1,6 @@
 "use client";
-
-import { Camera, Mail, Pencil, UserCircle2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Camera, Mail, Pencil, UserCircle2 } from "lucide-react";
 
 import { StudentProfile } from "./Profile";
 
@@ -17,6 +17,7 @@ export default function ProfileHeader({ profile }: Props) {
         border
         shadow-sm
         p-8
+        mt-8
       "
     >
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
@@ -129,41 +130,24 @@ export default function ProfileHeader({ profile }: Props) {
         {/* Acciones */}
 
         <div className="flex flex-wrap gap-3">
-          <button
+          <Link
+            href="/student/dashboard"
             className="
-              h-11
+              h-12
               px-5
-              rounded-xl
-              border
-              border-slate-300
-              hover:bg-slate-100
+              rounded-2xl
+              bg-white/10
+              hover:bg-white/20
               flex
               items-center
               gap-2
-              font-medium
+              transition
+              text-slate-700
             "
           >
-            <Camera size={18} />
-            Cambiar foto
-          </button>
-
-          <button
-            className="
-              h-11
-              px-5
-              rounded-xl
-              bg-cyan-600
-              hover:bg-cyan-700
-              text-white
-              flex
-              items-center
-              gap-2
-              font-medium
-            "
-          >
-            <Pencil size={18} />
-            Editar perfil
-          </button>
+            <ArrowLeft className="w-5 h-5" />
+            Volver al panel
+          </Link>
         </div>
       </div>
     </div>
