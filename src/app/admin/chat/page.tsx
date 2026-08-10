@@ -1,14 +1,17 @@
 import ChatLayout from "@/components/chat/ChatLayout";
-import AdminNavbar from "../dashboard/components/AdminNavbar";
+import Navbar from "../dashboard/components/AdminNavbar";
+import Sidebar from "../dashboard/components/AdminSidebar";
 
-export default function StudentChatPage() {
+export default function AdminChatPage() {
   return (
-    <main className="h-screen flex flex-col bg-slate-100">
-      <AdminNavbar />
+    <div className="flex h-screen bg-slate-100">
+      <Sidebar />
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar />
+
         <ChatLayout />
       </div>
-    </main>
+    </div>
   );
 }

@@ -124,6 +124,34 @@ export default function AdminTeachersPage() {
                 información de contacto y niveles académicos.
               </p>
             </div>
+
+            <Link
+              href="/admin/dashboard"
+              className="
+          h-14
+          px-7
+          rounded-2xl
+          bg-white/10
+          border
+          border-white/10
+          backdrop-blur-md
+          hover:bg-white/20
+          text-white
+          transition-all
+          font-semibold
+          flex
+          items-center
+          justify-center
+          gap-3
+          shadow-lg
+          hover:-translate-y-0.5
+          w-full
+          md:w-auto
+        "
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Volver al panel
+            </Link>
           </div>
         </div>
 
