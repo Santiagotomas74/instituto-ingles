@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   GraduationCap,
   Users,
@@ -34,18 +34,46 @@ export default function AdminSidebar() {
   }, [isOpen]);
 
   const items = [
-    { label: "Students", href: "/admin/students", icon: GraduationCap },
-    { label: "Teachers", href: "/admin/teachers", icon: Users },
-    { label: "Classrooms", href: "/admin/classrooms", icon: School },
+    {
+      label: "Students",
+      href: "/admin/students",
+      icon: GraduationCap,
+    },
+    {
+      label: "Teachers",
+      href: "/admin/teachers",
+      icon: Users,
+    },
+    {
+      label: "Classrooms",
+      href: "/admin/classrooms",
+      icon: School,
+    },
     {
       label: "Inscripciones",
       href: "/admin/inscripciones",
       icon: ClipboardCheck,
     },
-    { label: "Boletines", href: "/admin/boletines", icon: FileText },
-    { label: "Calendario", href: "/admin/calendar", icon: CalendarDays },
-    { label: "Chats", href: "/admin/chat", icon: MessageCircle },
-    { label: "Pagos", href: "/admin/payments", icon: CreditCard },
+    {
+      label: "Boletines",
+      href: "/admin/boletines",
+      icon: FileText,
+    },
+    {
+      label: "Calendario",
+      href: "/admin/calendar",
+      icon: CalendarDays,
+    },
+    {
+      label: "Chats",
+      href: "/admin/chat",
+      icon: MessageCircle,
+    },
+    {
+      label: "Pagos",
+      href: "/admin/payments",
+      icon: CreditCard,
+    },
   ];
 
   return (
@@ -66,18 +94,43 @@ export default function AdminSidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
-          fixed lg:static top-0 left-0 z-50 h-screen w-80 bg-slate-950 border-r border-slate-800 flex flex-col
-          transition-transform duration-300 ease-in-out
+          flex
+          fixed
+          lg:static
+          top-0
+          left-0
+          z-50
+          h-screen
+          lg:h-auto
+          w-80
+          bg-slate-950
+          border-r
+          border-slate-800
+          flex-col
+          transition-transform
+          duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        {/* Header / Logo */}
-        <div className="px-6 py-7 border-b border-slate-800 flex items-center gap-4 shrink-0">
-          <Link href="/" className="flex-1" onClick={() => setIsOpen(false)}>
-            <div className="h-24 rounded-3xl bg-white flex items-center justify-center overflow-hidden transition hover:scale-[1.02] hover:shadow-xl">
+        {/* Logo */}
+        <div className="px-6 py-7 border-b border-slate-800 relative">
+          <Link href="/" onClick={() => setIsOpen(false)}>
+            <div
+              className="
+              h-28
+              rounded-3xl
+              bg-white
+              flex
+              items-center
+              justify-center
+              overflow-hidden
+              transition
+              hover:scale-[1.02]
+              hover:shadow-xl
+            "
+            >
               <img
                 src="/logo3.png"
                 alt="INK"
@@ -86,17 +139,17 @@ export default function AdminSidebar() {
             </div>
           </Link>
 
-          {/* Botón para cerrar en Mobile */}
+          {/* Botón X posicionado absolutamente para no romper tu diseño desktop */}
           <button
             onClick={() => setIsOpen(false)}
-            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="lg:hidden absolute top-9 right-8 p-1.5 rounded-lg bg-slate-900 text-slate-400"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Navegación */}
-        <nav className="flex-1 px-5 py-6 space-y-2 overflow-y-auto scrollbar-custom">
+        <nav className="flex-1 px-5 py-6 space-y-2 overflow-y-auto">
           {items.map((item) => (
             <SidebarItem
               key={item.href}
@@ -110,14 +163,37 @@ export default function AdminSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-slate-800 p-5 shrink-0">
-          <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-600 flex items-center justify-center shrink-0">
+        <div className="border-t border-slate-800 p-5">
+          <div
+            className="
+            rounded-2xl
+            bg-slate-900
+            border
+            border-slate-800
+            p-4
+            flex
+            items-center
+            gap-3
+          "
+          >
+            <div
+              className="
+              w-12
+              h-12
+              rounded-2xl
+              bg-cyan-600
+              flex
+              items-center
+              justify-center
+            "
+            >
               <ShieldCheck size={22} className="text-white" />
             </div>
-            <div className="min-w-0">
-              <p className="text-white font-semibold truncate">Administrador</p>
-              <p className="text-slate-400 text-sm truncate">INK Dashboard</p>
+
+            <div>
+              <p className="text-white font-semibold">Administrador</p>
+
+              <span className="text-slate-400 text-sm">INK Dashboard</span>
             </div>
           </div>
         </div>
@@ -126,18 +202,12 @@ export default function AdminSidebar() {
   );
 }
 
-/* 
-=============================================
-COMPONENTE SIDEBAR ITEM
-=============================================
-*/
-
 type SidebarItemProps = {
   href: string;
   label: string;
   icon: React.ElementType;
   active?: boolean;
-  onClick?: () => void; // Agregamos onClick para cerrar el menú en móviles al navegar
+  onClick?: () => void;
 };
 
 function SidebarItem({
@@ -152,7 +222,16 @@ function SidebarItem({
       href={href}
       onClick={onClick}
       className={`
-        relative flex items-center gap-4 h-14 px-5 rounded-2xl transition-all duration-200 group
+        relative
+        flex
+        items-center
+        gap-4
+        h-14
+        px-5
+        rounded-2xl
+        transition-all
+        duration-200
+        group
         ${
           active
             ? "bg-cyan-600 text-white shadow-lg shadow-cyan-900/40"
@@ -161,17 +240,28 @@ function SidebarItem({
       `}
     >
       {active && (
-        <div className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full bg-white" />
+        <div
+          className="
+            absolute
+            left-0
+            top-3
+            bottom-3
+            w-1
+            rounded-r-full
+            bg-white
+          "
+        />
       )}
 
       <Icon
         size={21}
-        className={`transition ${
-          active ? "text-white" : "text-slate-400 group-hover:text-cyan-400"
-        }`}
+        className={`
+          transition
+          ${active ? "text-white" : "text-slate-400 group-hover:text-cyan-400"}
+        `}
       />
 
-      <span className="font-medium tracking-wide truncate">{label}</span>
+      <span className="font-medium tracking-wide">{label}</span>
     </Link>
   );
 }
