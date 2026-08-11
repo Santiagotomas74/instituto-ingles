@@ -13,6 +13,7 @@ import StatsSection from "@/components/stats/Stats";
 import ContactSection from "@/components/contact/ContactSection";
 import Footer from "@/components/footer/Footer";
 import Navbar from "@/components/navbar/Navbar";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function Home() {
   return (
@@ -31,6 +32,8 @@ export default function Home() {
       <CTASection />
       <ContactSection />
       <Footer />
+      {/* Botón flotante */}
+      <WhatsAppButton />
     </>
   );
 }

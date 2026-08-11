@@ -137,9 +137,9 @@ export default function TeachersSection() {
                   w-24
                   h-24
                   rounded-3xl
-                  bg-gradient-to-br
-                  from-yellow-300
-                  to-yellow-500
+                 bg-gradient-to-r
+      from-[#d4a72c]
+      to-[#e5b83b]
                   flex
                   items-center
                   justify-center
@@ -167,7 +167,7 @@ export default function TeachersSection() {
                 <p
                   className="
                     mt-3
-                    text-blue-700
+                    text-blue-600
                     text-lg
                     font-medium
                   "

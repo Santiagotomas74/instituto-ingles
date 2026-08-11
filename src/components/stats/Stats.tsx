@@ -230,10 +230,9 @@ export default function StatsSection() {
           {/* Left */}
           <div
             className="
-              bg-gradient-to-br
-              from-red-700
-              via-red-800
-              to-red-900
+             bg-gradient-to-r
+      from-[#d4a72c]
+      to-[#e5b83b]
               rounded-[36px]
               p-12
               shadow-2xl
@@ -289,7 +288,7 @@ export default function StatsSection() {
                   text-4xl
                   md:text-5xl
                   font-semibold
-                  text-white
+                  text-white/90
                   leading-tight
                 "
               >

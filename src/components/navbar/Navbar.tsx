@@ -463,33 +463,63 @@ export default function MobileNavbar() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4 hidden lg:flex">
+        <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/login"
             className="
-              text-yellow-500
-              font-medium
-              hover:text-yellow-600
-              transition
-            "
+    group
+    relative
+    px-5
+    py-2.5
+    rounded-xl
+    text-[#b89245]
+    font-medium
+    transition-all
+    duration-300
+    hover:text-[#a6813d]
+    hover:bg-[#d4b36a]/10
+  "
           >
             Iniciar sesión
+            {/* Línea animada */}
+            <span
+              className="
+      absolute
+      bottom-0
+      left-0
+      h-[2px]
+      w-full
+      origin-left
+      scale-x-0
+      rounded-full
+      bg-blue-600
+      transition-transform
+      duration-300
+      ease-out
+      group-hover:scale-x-100
+    "
+            />
           </Link>
 
           <Link
             href="/inscriptions"
             className="
-              bg-yellow-500
-              hover:bg-yellow-600
-              text-white
-              px-6
-              py-3
-              rounded-xl
-              font-medium
-              transition-all
-              shadow-lg
-              hover:shadow-xl
-            "
+      px-6
+      py-3
+      rounded-xl
+      bg-gradient-to-r
+      from-[#d4a72c]
+      to-[#e5b83b]
+      text-white
+      font-semibold
+      transition-all
+      duration-300
+      shadow-[0_6px_20px_rgba(180,130,20,0.18)]
+      hover:from-[#c99520]
+      hover:to-[#d9a92e]
+      hover:shadow-[0_8px_28px_rgba(180,130,20,0.28)]
+      hover:-translate-y-[1px]
+    "
           >
             Inscribirse
           </Link>

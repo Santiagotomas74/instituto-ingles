@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function CTASection() {
   return (
     <section
@@ -110,54 +111,56 @@ export default function CTASection() {
         {/* Buttons */}
         <div
           className="
-            mt-12
-            flex
-            flex-col
-            sm:flex-row
-            items-center
-            justify-center
-            gap-5
-          "
+    mt-12
+    flex
+    flex-col
+    sm:flex-row
+    items-center
+    justify-center
+    gap-5
+  "
         >
-          <button
+          <Link
+            href="/inscriptions"
             className="
-              bg-white
-              text-blue-700
-              px-10
-              py-4
-              rounded-2xl
-              text-lg
-              font-semibold
-              shadow-2xl
-              hover:bg-gray-100
-              hover:scale-105
-              transition-all
-              duration-300
-            "
+      bg-white
+      text-blue-700
+      px-10
+      py-4
+      rounded-2xl
+      text-lg
+      font-semibold
+      shadow-2xl
+      hover:bg-gray-100
+      hover:scale-105
+      transition-all
+      duration-300
+    "
           >
             Inscribirme ahora
-          </button>
+          </Link>
 
-          <button
+          <Link
+            href="/#contact"
             className="
-              border
-              border-white/40
-              bg-white/10
-              backdrop-blur-md
-              text-white
-              px-10
-              py-4
-              rounded-2xl
-              text-lg
-              font-semibold
-              hover:bg-white
-              hover:text-blue-700
-              transition-all
-              duration-300
-            "
+      border
+      border-white/40
+      bg-white/10
+      backdrop-blur-md
+      text-white
+      px-10
+      py-4
+      rounded-2xl
+      text-lg
+      font-semibold
+      hover:bg-white
+      hover:text-blue-700
+      transition-all
+      duration-300
+    "
           >
             Solicitar información
-          </button>
+          </Link>
         </div>
       </div>
     </section>

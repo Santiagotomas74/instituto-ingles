@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const images = [
   "https://images.openai.com/static-rsc-4/Dofk9OBw5JxHsr3xLnp7Zar5YLn9x-TevuNzUj79RQJnsz6zaSyw_XHptCIXCKK-Tq0dKiEYtbp_ih-Y8ZFrUdpYwDYq2I_2dpcB1UOyLd7t1nch352Mm_yO5uWK1tKt43wChnND_eG_0B7XPLrABNQWS6JZgG4lyOV1SmrSLUTrk8Jx8bB00ihbDAz2x60f?purpose=fullsize",
@@ -24,88 +23,129 @@ export default function LondonHeroSlider() {
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div className="absolute inset-0">
+      {/* IMÁGENES */}
       {images.map((image, index) => (
         <div
           key={image}
           className={`
-          absolute
-          inset-0
-          transition-all
-          duration-[3000ms]
-          ease-in-out
-          ${current === index ? "opacity-100 scale-100" : "opacity-0 scale-105"}
-        `}
+            absolute
+            inset-0
+            transition-all
+            duration-[3000ms]
+            ease-in-out
+            ${
+              current === index
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-105"
+            }
+          `}
         >
           <img
             src={image}
             alt=""
             className="
-  w-full
-  h-full
-  object-cover
-  scale-100
-  md:scale-110
-  animate-[kenburns_15s_linear_infinite]
-"
+              w-full
+              h-full
+              object-cover
+              md:scale-110
+              animate-[kenburns_15s_linear_infinite]
+            "
           />
         </div>
       ))}
 
-      {/* Overlay oscuro */}
-      {/* Overlay institucional */}
+      {/* OVERLAY PRINCIPAL */}
       <div
         className="
     absolute
     inset-0
-    bg-yellow-700/50
+    bg-slate-950/38
   "
       />
-      {/* Overlay adicional */}
-      <div className="absolute inset-0 bg-black/20" />
 
-      {/* Golden light effect */}
+      {/* GRADIENTE PRINCIPAL */}
       <div
         className="
-        absolute
-        -top-32
-        -right-32
-        w-[500px]
-        h-[500px]
-        rounded-full
-        bg-yellow-400/20
-        blur-3xl
-      "
+    absolute
+    inset-0
+    bg-gradient-to-r
+    from-slate-950/75
+    via-slate-900/35
+    to-blue-950/45
+  "
       />
 
+      {/* TONO AZUL/CYAN DEL LADO DERECHO */}
       <div
         className="
-        absolute
-        bottom-[-200px]
-        left-[-150px]
-        w-[450px]
-        h-[450px]
-        rounded-full
-        bg-amber-300/20
-        blur-3xl
-      "
+    absolute
+    inset-0
+    bg-gradient-to-br
+    from-transparent
+    via-transparent
+    to-cyan-900/20
+  "
       />
 
-      {/* Indicadores estilo Netflix */}
+      {/* GRADIENTE INFERIOR */}
       <div
         className="
-        absolute
-        bottom-4
-        md:bottom-8
-        left-1/2
-        -translate-x-1/2
-        flex
-        items-center
-        gap-2
-        md:gap-3
-        z-30
-      "
+    absolute
+    inset-x-0
+    bottom-0
+    h-56
+    bg-gradient-to-t
+    from-slate-950/55
+    via-slate-950/20
+    to-transparent
+  "
+      />
+
+      {/* LUZ AZUL */}
+      <div
+        className="
+    absolute
+    -top-40
+    -right-40
+    w-[550px]
+    h-[550px]
+    rounded-full
+    bg-blue-500/15
+    blur-3xl
+  "
+      />
+
+      {/* LUZ CIAN */}
+      <div
+        className="
+    absolute
+    -bottom-48
+    -left-40
+    w-[500px]
+    h-[500px]
+    rounded-full
+    bg-cyan-400/12
+    blur-3xl
+  "
+      />
+
+      {/* INDICADORES */}
+      <div
+        className="
+          absolute
+          bottom-5
+          md:bottom-8
+          left-1/2
+          -translate-x-1/2
+          flex
+          items-center
+          gap-2
+          md:gap-3
+          z-30
+        "
       >
         {images.map((_, index) => (
           <button
@@ -113,40 +153,20 @@ export default function LondonHeroSlider() {
             onClick={() => setCurrent(index)}
             aria-label={`Ir a imagen ${index + 1}`}
             className={`
-            h-2
-            rounded-full
-            transition-all
-            duration-500
-            backdrop-blur-md
-            ${
-              current === index
-                ? "w-12 bg-yellow-400 shadow-lg shadow-yellow-400/40"
-                : "w-2 bg-white/40 hover:bg-white/70"
-            }
-          `}
+              h-2
+              rounded-full
+              transition-all
+              duration-500
+              backdrop-blur-md
+              ${
+                current === index
+                  ? "w-10 bg-white shadow-lg"
+                  : "w-2 bg-white/40 hover:bg-white/70"
+              }
+            `}
           />
         ))}
       </div>
-
-      {/* Contador 
-      <div
-        className="
-        absolute
-        bottom-7
-        right-8
-        z-30
-        px-4
-        py-2
-        rounded-full
-        bg-black/30
-        backdrop-blur-md
-        text-white
-        text-sm
-        font-medium
-      "
-      >
-        {current + 1} / {images.length}
-      </div>*/}
     </div>
   );
 }
