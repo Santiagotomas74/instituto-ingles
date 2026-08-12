@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, Laptop, Lock, Mail } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Eye, EyeOff, Laptop, Lock, Mail } from "lucide-react";
 
 export default function CampusLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +83,38 @@ export default function CampusLoginPage() {
         overflow-hidden
       "
     >
+      <Link
+        href="/"
+        className="
+      absolute
+      top-6
+      left-6
+      z-20
+      flex
+      items-center
+      gap-2
+      px-4
+      py-2.5
+      rounded-xl
+      border
+      border-white/10
+      bg-white/30
+      backdrop-blur-md
+      text-white/80
+      text-sm
+      font-medium
+      transition-all
+      duration-300
+      hover:bg-white/10
+      hover:text-white
+      hover:border-cyan-400/30
+      hover:-translate-x-0.5
+    "
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Volver al inicio
+      </Link>
+
       {/* Glow Effects */}
       <div
         className="
