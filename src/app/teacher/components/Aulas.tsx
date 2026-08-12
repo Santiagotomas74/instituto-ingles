@@ -37,6 +37,7 @@ export default async function Aulas() {
     <main className="p-8 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
+          <h1 className="text-4xl font-bold text-slate-900">Estadisticas</h1>
           <p className="mt-2 text-slate-500">
             Gestioná tus aulas, alumnos y materiales.
           </p>

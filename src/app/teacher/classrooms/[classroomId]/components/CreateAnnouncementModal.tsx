@@ -147,7 +147,10 @@ text-slate-900
             {editingId ? "Editar anuncio" : "Crear anuncio"}
           </h3>
 
-          <button onClick={() => setOpen(false)}>
+          <button
+            onClick={() => setOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-100 transition text-black"
+          >
             <X />
           </button>
         </div>

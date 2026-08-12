@@ -455,23 +455,6 @@ export default function StudentsTable({ students, classrooms }: Props) {
                     >
                       <Pencil className="w-5 h-5" />
                     </Link>
-
-                    <button
-                      className="
-                    w-11
-                    h-11
-                    rounded-2xl
-                    bg-red-100
-                    text-red-600
-                    flex
-                    items-center
-                    justify-center
-                    hover:bg-red-200
-                    transition
-                  "
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
                   </div>
                 </div>
               ))}

@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import {
-  LayoutDashboard,
-  GraduationCap,
-  CalendarDays,
-  MessageCircle,
-  LogOut,
-} from "lucide-react";
-
+import { LogOut, UserCircle2 } from "lucide-react";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useSocket } from "@/components/chat/hooks/useSocket";
 
-export default function Navbar() {
+// 1. Definimos las props que recibirá el componente
+type NavbarProps = {
+  nombre?: string;
+  apellido?: string;
+};
+
+// 2. Quitamos el "async" e inyectamos las props
+export default function Navbar({ nombre, apellido }: NavbarProps) {
   const [userId, setUserId] = useState("");
 
   /*
@@ -21,7 +20,6 @@ export default function Navbar() {
   Registrar usuario en Socket
   =====================================
   */
-
   useEffect(() => {
     async function loadUser() {
       try {
@@ -65,20 +63,21 @@ export default function Navbar() {
       "
     >
       <div className="flex items-center gap-10">
-        <h1 className="text-2xl font-bold text-cyan-600">INK</h1>
+        <h1 className="text-2xl font-bold text-cyan-600 hidden md:block">
+          I.N.K.
+        </h1>
       </div>
 
       <div className="flex items-center gap-4">
         <NotificationBell />
 
-        <div className="hidden md:flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-cyan-600 text-white flex items-center justify-center font-bold">
-            S
-          </div>
+        <div className="flex items-center gap-3">
+          <UserCircle2 className="text-blue-600" size={42} />
 
           <div>
-            <p className="font-semibold text-slate-800">Estudiante</p>
-            <span className="text-xs text-slate-500">Campus Virtual</span>
+            {/* 3. Usamos las props directamente */}
+            <p className="font-semibold text-slate-900"> {nombre} </p>
+            <p className="text-sm text-slate-500">{apellido}</p>
           </div>
         </div>
 

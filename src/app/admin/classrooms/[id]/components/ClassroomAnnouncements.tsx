@@ -308,7 +308,10 @@ export default function ClassroomAnnouncements({
                 {editingId ? "Editar anuncio" : "Crear anuncio"}
               </h3>
 
-              <button onClick={() => setOpen(false)}>
+              <button
+                onClick={() => setOpen(false)}
+                className="p-2 rounded-lg hover:bg-slate-100 transition text-black"
+              >
                 <X />
               </button>
             </div>

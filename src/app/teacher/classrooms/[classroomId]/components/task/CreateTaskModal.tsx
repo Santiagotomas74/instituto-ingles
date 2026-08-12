@@ -59,6 +59,7 @@ export default function CreateTaskModal({
               w-10
               h-10
               rounded-xl
+              text-gray-600
               hover:bg-slate-100
             "
           >

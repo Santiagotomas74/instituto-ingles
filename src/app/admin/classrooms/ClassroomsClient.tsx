@@ -10,8 +10,9 @@ import {
   GraduationCap,
   Clock3,
   Pencil,
-  Trash2,
   ArrowLeft,
+  Settings,
+  MonitorPlay,
 } from "lucide-react";
 
 export default function ClassroomsClient({
@@ -28,7 +29,6 @@ export default function ClassroomsClient({
   return (
     <main className="min-h-screen bg-slate-100">
       {/* HEADER */}
-
       <div
         className="
           bg-gradient-to-r
@@ -41,15 +41,15 @@ export default function ClassroomsClient({
           py-8
         "
       >
-        <div className="flex items-center justify-between gap-5 flex-wrap">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div>
-            <p className="text-cyan-300 uppercase tracking-[4px] text-sm">
+            <p className="text-cyan-300 uppercase tracking-[4px] text-sm font-semibold">
               Admin Panel
             </p>
 
-            <h1 className="text-4xl font-bold mt-3">Classrooms</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mt-3">Classrooms</h1>
 
-            <p className="text-slate-300 mt-4">
+            <p className="text-slate-300 mt-4 max-w-2xl">
               Administrá cursos, niveles y profesores.
             </p>
           </div>
@@ -57,26 +57,26 @@ export default function ClassroomsClient({
           <Link
             href="/admin/dashboard"
             className="
-          h-14
-          px-7
-          rounded-2xl
-          bg-white/10
-          border
-          border-white/10
-          backdrop-blur-md
-          hover:bg-white/20
-          text-white
-          transition-all
-          font-semibold
-          flex
-          items-center
-          justify-center
-          gap-3
-          shadow-lg
-          hover:-translate-y-0.5
-          w-full
-          md:w-auto
-        "
+              h-14
+              px-7
+              rounded-2xl
+              bg-white/10
+              border
+              border-white/10
+              backdrop-blur-md
+              hover:bg-white/20
+              text-white
+              transition-all
+              font-semibold
+              flex
+              items-center
+              justify-center
+              gap-3
+              shadow-lg
+              hover:-translate-y-0.5
+              w-full
+              md:w-auto
+            "
           >
             <ArrowLeft className="w-5 h-5" />
             Volver al panel
@@ -85,91 +85,111 @@ export default function ClassroomsClient({
       </div>
 
       {/* CONTENT */}
-
       <div className="p-6 md:p-10">
-        {/* SEARCH */}
+        {/* TOP BAR (Search & Create) */}
+        <div
+          className="
+            bg-white
+            rounded-[32px]
+            shadow-sm
+            border
+            border-slate-200
+            p-6
+            mb-8
+          "
+        >
+          <div className="flex flex-col lg:flex-row gap-5 lg:items-center lg:justify-between">
+            <div className="relative w-full lg:max-w-md">
+              <Search
+                className="
+                  absolute
+                  left-4
+                  top-1/2
+                  -translate-y-1/2
+                  w-5
+                  h-5
+                  text-slate-400
+                "
+              />
+              <input
+                type="text"
+                placeholder="Buscar classroom..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="
+                  w-full
+                  h-14
+                  pl-12
+                  text-slate-900
+                  pr-5
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
+                "
+              />
+            </div>
 
-        <div className="relative max-w-md mb-8">
-          <Search
-            className="
-              absolute
-              left-4
-              top-1/2
-              -translate-y-1/2
-              w-5
-              h-5
-              text-slate-400
-            "
-          />
-
-          <input
-            type="text"
-            placeholder="Buscar classroom..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="
-              w-full
-              h-14
-              pl-12
-              text-slate-900
-              pr-5
-              rounded-2xl
-              border
-              border-slate-200
-              focus:outline-none
-              focus:ring-2
-              focus:ring-cyan-500
-            "
-          />
+            <Link
+              href="/admin/classrooms/create"
+              className="
+                h-14
+                px-7
+                rounded-2xl
+                bg-cyan-600
+                hover:bg-cyan-500
+                transition
+                font-semibold
+                flex
+                items-center
+                justify-center
+                gap-3
+                shadow-md
+                text-white
+              "
+            >
+              <Plus className="w-5 h-5" />
+              Nuevo classroom
+            </Link>
+          </div>
         </div>
 
+        {/* LIST OR EMPTY STATE */}
         {filtered.length === 0 ? (
           <div
             className="
-      bg-white
-      rounded-[32px]
-      border
-      border-slate-200
-      shadow-sm
-      p-12
-      text-center
-    "
+              bg-white
+              rounded-[32px]
+              border
+              border-slate-200
+              shadow-sm
+              p-12
+              text-center
+            "
           >
             <div
               className="
-        w-24
-        h-24
-        mx-auto
-        rounded-3xl
-        bg-blue-100
-        text-blue-600
-        flex
-        items-center
-        justify-center
-      "
+                w-24
+                h-24
+                mx-auto
+                rounded-3xl
+                bg-cyan-100
+                text-cyan-600
+                flex
+                items-center
+                justify-center
+              "
             >
               <GraduationCap className="w-12 h-12" />
             </div>
 
-            <h2
-              className="
-        mt-8
-        text-3xl
-        font-bold
-        text-slate-900
-      "
-            >
+            <h2 className="mt-8 text-3xl font-bold text-slate-900">
               No hay classrooms creados
             </h2>
 
-            <p
-              className="
-        mt-4
-        text-slate-500
-        max-w-xl
-        mx-auto
-      "
-            >
+            <p className="mt-4 text-slate-500 max-w-xl mx-auto">
               Todavía no se creó ninguna classroom. Podés comenzar creando tu
               primer curso y asignarle un profesor.
             </p>
@@ -177,65 +197,51 @@ export default function ClassroomsClient({
             <Link
               href="/admin/classrooms/create"
               className="
-        mt-8
-        inline-flex
-        items-center
-        gap-3
-        h-14
-        px-7
-        rounded-2xl
-        bg-blue-600
-        hover:bg-blue-700
-        transition
-        text-white
-        font-semibold
-        shadow-lg
-        hover:-translate-y-0.5
-      "
+                mt-8
+                inline-flex
+                items-center
+                gap-3
+                h-14
+                px-7
+                rounded-2xl
+                bg-cyan-600
+                hover:bg-cyan-700
+                transition
+                text-white
+                font-semibold
+                shadow-md
+                hover:-translate-y-0.5
+              "
             >
               <Plus className="w-5 h-5" />
               Crear classroom
             </Link>
           </div>
         ) : (
-          <>
-            <Link
-              href="/admin/classrooms/create"
-              className="
-              h-14
-              px-7
-              rounded-2xl
-              bg-cyan-500
-              hover:bg-cyan-400
-              transition
-              font-semibold
-              flex
-              items-center
-              gap-3
-              mb-6
+          <div
+            className="
+              grid
+              grid-cols-1
+              xl:grid-cols-2
+              2xl:grid-cols-3
+              gap-6
             "
-            >
-              <Plus className="w-5 h-5" />
-              Nuevo classroom
-            </Link>
-            <div
-              className="
-      grid
-      grid-cols-1
-      xl:grid-cols-2
-      gap-8
-    "
-            >
-              {filtered.map((classroom) => (
-                <ClassroomCard key={classroom.id} classroom={classroom} />
-              ))}
-            </div>
-          </>
+          >
+            {filtered.map((classroom) => (
+              <ClassroomCard key={classroom.id} classroom={classroom} />
+            ))}
+          </div>
         )}
       </div>
     </main>
   );
 }
+
+/* 
+=============================================
+NUEVA CARD SUTIL Y ELEGANTE
+=============================================
+*/
 
 function ClassroomCard({ classroom }: { classroom: any }) {
   return (
@@ -243,161 +249,157 @@ function ClassroomCard({ classroom }: { classroom: any }) {
       className="
         bg-white
         rounded-[32px]
-        shadow-lg
         border
         border-slate-200
-        overflow-hidden
-      "
-    >
-      {/* TOP */}
-
-      <div
-        className="
-          bg-gradient-to-r
-          from-blue-700
-          to-cyan-600
-          text-white
-          p-6
-        "
-      >
-        <div className="flex items-start justify-between gap-5">
-          <div>
-            <p className="text-cyan-100 text-sm">Classroom</p>
-
-            <h2 className="text-3xl font-bold mt-2">{classroom.nombre}</h2>
-
-            <p className="text-cyan-100 mt-3">{classroom.nivel}</p>
-          </div>
-
-          <div
-            className="
-              w-16
-              h-16
-              rounded-2xl
-              bg-white/15
-              flex
-              items-center
-              justify-center
-            "
-          >
-            <GraduationCap className="w-8 h-8" />
-          </div>
-        </div>
-      </div>
-
-      {/* BODY */}
-
-      <div className="p-6 space-y-5">
-        <InfoRow
-          icon={<Users className="w-5 h-5" />}
-          label="Profesor"
-          value={
-            classroom.profesor_nombre
-              ? `${classroom.profesor_nombre} ${classroom.profesor_apellido}`
-              : "Sin asignar"
-          }
-        />
-
-        <InfoRow
-          icon={<Clock3 className="w-5 h-5" />}
-          label="Horario"
-          value={classroom.horario}
-        />
-
-        <InfoRow
-          icon={<GraduationCap className="w-5 h-5" />}
-          label="Modalidad"
-          value={classroom.modalidad}
-        />
-
-        {/* ACTIONS */}
-
-        <div className="flex gap-4 pt-4">
-          <Link
-            href={`/admin/classrooms/edit/${classroom.id}`}
-            className="
-              flex-1
-              h-12
-              rounded-2xl
-              bg-blue-600
-              hover:bg-blue-700
-              transition
-              text-white
-              font-semibold
-              flex
-              items-center
-              justify-center
-              gap-2
-            "
-          >
-            <Pencil className="w-4 h-4" />
-            Editar
-          </Link>
-
-          <Link
-            href={`/admin/classrooms/${classroom.id}`}
-            className="
-              flex-1
-              h-12
-              rounded-2xl
-              bg-green-500
-              hover:bg-green-600
-              transition
-              text-white
-              font-semibold
-              flex
-              items-center
-              justify-center
-              gap-2
-            "
-          >
-            Gestionar curso
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InfoRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div
-      className="
+        shadow-sm
+        hover:shadow-xl
+        transition-all
+        duration-300
+        
         flex
-        items-center
-        gap-4
-        bg-slate-50
-        rounded-2xl
-        p-4
+        flex-col
+        h-full
       "
     >
+      {/* HEADER CARD */}
       <div
-        className="
-          w-11
-          h-11
-          rounded-xl
-          bg-cyan-100
-          text-cyan-700
-          flex
-          items-center
-          justify-center
-        "
+        className="flex items-start gap-5 mb-8 bg-gradient-to-r
+
+from-slate-800
+
+via-blue-900
+
+to-cyan-900   rounded-[15px] p-8"
       >
-        {icon}
+        <div
+          className="
+            w-16
+            h-16
+            rounded-2xl
+            bg-cyan-50
+            text-cyan-600
+            flex
+            items-center
+            justify-center
+            shrink-0
+            border border-cyan-100
+          "
+        >
+          <GraduationCap className="w-8 h-8" />
+        </div>
+
+        <div>
+          <span
+            className="
+              inline-block
+              px-3
+              py-1
+              rounded-full
+              bg-slate-100
+              text-slate-600
+              text-xs
+              font-bold
+              tracking-wide
+              uppercase
+              mb-2
+            "
+          >
+            {classroom.nivel}
+          </span>
+          <h2 className="text-2xl font-bold text-white leading-tight">
+            {classroom.nombre}
+          </h2>
+        </div>
       </div>
 
-      <div>
-        <p className="text-sm text-slate-500">{label}</p>
+      {/* INFO LIST */}
+      <div className="flex flex-col gap-4 flex-1 mb-2 p-4">
+        <div className="flex items-center gap-4 text-slate-600">
+          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
+            <Users className="w-5 h-5 text-slate-400" />
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 font-medium uppercase">
+              Profesor
+            </p>
+            <p className="font-semibold text-slate-700">
+              {classroom.profesor_nombre
+                ? `${classroom.profesor_nombre} ${classroom.profesor_apellido}`
+                : "Sin asignar"}
+            </p>
+          </div>
+        </div>
 
-        <p className="font-semibold text-slate-900">{value}</p>
+        <div className="flex items-center gap-4 text-slate-600">
+          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
+            <Clock3 className="w-5 h-5 text-slate-400" />
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 font-medium uppercase">
+              Horario
+            </p>
+            <p className="font-semibold text-slate-700">{classroom.horario}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 text-slate-600">
+          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
+            <MonitorPlay className="w-5 h-5 text-slate-400" />
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 font-medium uppercase">
+              Modalidad
+            </p>
+            <p className="font-semibold text-slate-700">
+              {classroom.modalidad}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ACTIONS */}
+      <div className="flex gap-3 pt-2 mt-auto p-4">
+        <Link
+          href={`/admin/classrooms/${classroom.id}`}
+          className="
+            flex-1
+            h-14
+            rounded-2xl
+            bg-cyan-600
+            hover:bg-cyan-500
+            transition-colors
+            text-white
+            font-semibold
+            flex
+            items-center
+            justify-center
+            gap-2
+            shadow-md
+          "
+        >
+          <Settings className="w-5 h-5" />
+          Gestionar curso
+        </Link>
+
+        <Link
+          href={`/admin/classrooms/edit/${classroom.id}`}
+          title="Editar classroom"
+          className="
+            w-14
+            h-14
+            rounded-2xl
+            bg-slate-100
+            hover:bg-slate-200
+            transition-colors
+            text-slate-600
+            flex
+            items-center
+            justify-center
+            shrink-0
+          "
+        >
+          <Pencil className="w-5 h-5" />
+        </Link>
       </div>
     </div>
   );

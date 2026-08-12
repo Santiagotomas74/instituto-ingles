@@ -19,7 +19,6 @@ type Props = {
 
 export default function CalendarView({ events }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
-
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const year = currentDate.getFullYear();
@@ -79,15 +78,16 @@ export default function CalendarView({ events }: Props) {
   }
 
   return (
-    <section className="relative">
+    <section className="relative border rounded-2xl sm:rounded-[32px] p-4 sm:p-6 bg-white shadow-sm">
       {/* HEADER */}
-
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4 sm:mb-8">
         <button
           onClick={previousMonth}
           className="
-            w-10
-            h-10
+            w-9
+            h-9
+            sm:w-10
+            sm:h-10
             rounded-xl
             border
             border-slate-200
@@ -97,31 +97,37 @@ export default function CalendarView({ events }: Props) {
             hover:bg-slate-100
             transition
             text-gray-700
+            shrink-0
           "
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft className="w-5 h-5" />
         </button>
 
         <h2
           className="
-            text-2xl
+            text-lg
+            sm:text-2xl
             font-bold
             capitalize
             flex
             items-center
-            gap-2
+            gap-1.5
+            sm:gap-2
             text-gray-900
+            text-center
           "
         >
-          <CalendarDays />
-          {monthName}
+          <CalendarDays className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 shrink-0" />
+          <span>{monthName}</span>
         </h2>
 
         <button
           onClick={nextMonth}
           className="
-            w-10
-            h-10
+            w-9
+            h-9
+            sm:w-10
+            sm:h-10
             rounded-xl
             border
             border-slate-200
@@ -131,20 +137,22 @@ export default function CalendarView({ events }: Props) {
             hover:bg-slate-100
             transition
             text-gray-700
+            shrink-0
           "
         >
-          <ChevronRight size={20} />
+          <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
       {/* DÍAS DE LA SEMANA */}
-
       <div
         className="
           grid
           grid-cols-7
-          gap-2
-          mb-3
+          gap-1
+          sm:gap-2
+          mb-2
+          sm:mb-3
         "
       >
         {["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map((day) => (
@@ -154,7 +162,9 @@ export default function CalendarView({ events }: Props) {
               text-center
               font-semibold
               text-gray-500
-              text-sm
+              text-xs
+              sm:text-sm
+              py-1
             "
           >
             {day}
@@ -163,19 +173,17 @@ export default function CalendarView({ events }: Props) {
       </div>
 
       {/* CALENDARIO */}
-
       <div
         className="
           grid
           grid-cols-7
-          gap-2
+          gap-1
+          sm:gap-2
         "
       >
         {days.map((day, index) => {
           const dayEvents = day ? getEventsByDay(day) : [];
-
           const visibleEvents = dayEvents.slice(0, 2);
-
           const remainingEvents = Math.max(
             dayEvents.length - visibleEvents.length,
             0,
@@ -184,14 +192,23 @@ export default function CalendarView({ events }: Props) {
           return (
             <div
               key={index}
+              onClick={() => day && setSelectedDay(day)}
               className={`
-                h-[155px]
+                min-h-[60px]
+                sm:h-28
+                md:h-[155px]
                 border
                 rounded-xl
-                p-2
+                p-1
+                sm:p-2
                 transition-all
                 bg-white
                 overflow-hidden
+                flex
+                flex-col
+                justify-between
+                sm:justify-start
+                ${day ? "cursor-pointer" : "bg-slate-50/50"}
 
                 ${
                   day && isToday(day)
@@ -209,13 +226,16 @@ export default function CalendarView({ events }: Props) {
               {day && (
                 <>
                   {/* HEADER DEL DÍA */}
-
-                  <div className="flex justify-between items-start">
-                    <div className="flex flex-col items-center">
+                  <div className="flex justify-between items-center sm:items-start w-full">
+                    <div className="flex sm:flex-col items-center">
                       <div
                         className={`
-                          w-8
-                          h-8
+                          w-6
+                          h-6
+                          sm:w-8
+                          sm:h-8
+                          text-xs
+                          sm:text-base
                           rounded-full
                           flex
                           items-center
@@ -225,7 +245,7 @@ export default function CalendarView({ events }: Props) {
 
                           ${
                             isToday(day)
-                              ? "bg-blue-600 text-white shadow-md"
+                              ? "bg-blue-600 text-white shadow-sm"
                               : "text-gray-700"
                           }
                         `}
@@ -234,16 +254,19 @@ export default function CalendarView({ events }: Props) {
                       </div>
 
                       {isToday(day) && (
-                        <div className="w-2 h-2 rounded-full bg-blue-600 mt-1" />
+                        <div className="hidden sm:block w-2 h-2 rounded-full bg-blue-600 mt-1" />
                       )}
                     </div>
 
+                    {/* Contador badge (solo desktop) */}
                     {dayEvents.length > 0 && (
                       <span
                         className="
+                          hidden
+                          sm:inline-block
                           text-[10px]
                           font-semibold
-                          text-slate-400
+                          text-slate-500
                           px-1.5
                           py-0.5
                           rounded-md
@@ -255,14 +278,28 @@ export default function CalendarView({ events }: Props) {
                     )}
                   </div>
 
-                  {/* EVENTOS */}
+                  {/* VISTA MOBILE: Puntos Indicadores */}
+                  {dayEvents.length > 0 && (
+                    <div className="flex sm:hidden items-center justify-center gap-1 mt-auto pb-1">
+                      {dayEvents.slice(0, 3).map((_, i) => (
+                        <span
+                          key={i}
+                          className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"
+                        />
+                      ))}
+                      {dayEvents.length > 3 && (
+                        <span className="text-[9px] font-bold text-blue-600 leading-none">
+                          +
+                        </span>
+                      )}
+                    </div>
+                  )}
 
-                  <div className="mt-2 space-y-1.5">
+                  {/* VISTA DESKTOP: Eventos desplegados */}
+                  <div className="hidden sm:block mt-2 space-y-1.5 w-full">
                     {visibleEvents.map((event) => (
-                      <button
+                      <div
                         key={event.id}
-                        type="button"
-                        onClick={() => setSelectedDay(day)}
                         className="
                           w-full
                           text-left
@@ -280,57 +317,38 @@ export default function CalendarView({ events }: Props) {
                       >
                         <div className="flex items-center gap-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-
-                          <p
-                            className="
-                              font-semibold
-                              text-[11px]
-                              truncate
-                            "
-                          >
+                          <p className="font-semibold text-[11px] truncate">
                             {event.titulo}
                           </p>
                         </div>
 
-                        <p
-                          className="
-                            text-[10px]
-                            text-blue-500
-                            mt-0.5
-                            truncate
-                          "
-                        >
+                        <p className="text-[10px] text-blue-500 mt-0.5 truncate">
                           {event.hora}
                           {event.classroom_name
                             ? ` · ${event.classroom_name}`
                             : ""}
                         </p>
-                      </button>
+                      </div>
                     ))}
 
-                    {/* MÁS EVENTOS */}
-
+                    {/* MÁS EVENTOS (Desktop) */}
                     {remainingEvents > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedDay(day)}
+                      <div
                         className="
                           w-full
                           text-left
                           px-2
-                          py-1
+                          py-0.5
                           text-[11px]
                           font-semibold
                           text-blue-600
                           hover:text-blue-800
-                          hover:bg-blue-50
-                          rounded-lg
                           transition
                         "
                       >
                         +{remainingEvents}{" "}
                         {remainingEvents === 1 ? "evento" : "eventos"}
-                      </button>
+                      </div>
                     )}
                   </div>
                 </>
@@ -341,7 +359,6 @@ export default function CalendarView({ events }: Props) {
       </div>
 
       {/* MODAL DEL DÍA */}
-
       {selectedDay !== null && (
         <div
           className="
@@ -353,7 +370,8 @@ export default function CalendarView({ events }: Props) {
             flex
             items-center
             justify-center
-            p-4
+            p-3
+            sm:p-4
           "
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) {
@@ -365,32 +383,37 @@ export default function CalendarView({ events }: Props) {
             className="
               w-full
               max-w-lg
-              max-h-[80vh]
+              max-h-[85vh]
               bg-white
-              rounded-[28px]
+              rounded-2xl
+              sm:rounded-[28px]
               shadow-2xl
               overflow-hidden
+              flex
+              flex-col
             "
           >
             {/* MODAL HEADER */}
-
             <div
               className="
-                px-6
-                py-5
+                px-5
+                sm:px-6
+                py-4
+                sm:py-5
                 border-b
                 border-slate-100
                 flex
                 items-center
                 justify-between
+                shrink-0
               "
             >
               <div>
-                <p className="text-sm text-blue-600 font-semibold">
+                <p className="text-xs sm:text-sm text-blue-600 font-semibold">
                   Eventos del día
                 </p>
 
-                <h3 className="text-2xl font-bold text-slate-900 mt-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5 capitalize">
                   {selectedDay} de{" "}
                   {currentDate.toLocaleDateString("es-AR", {
                     month: "long",
@@ -401,24 +424,28 @@ export default function CalendarView({ events }: Props) {
               <button
                 type="button"
                 onClick={() => setSelectedDay(null)}
+                aria-label="Cerrar modal"
                 className="
-                  w-10
-                  h-10
+                  w-9
+                  h-9
+                  sm:w-10
+                  sm:h-10
                   rounded-xl
                   hover:bg-slate-100
                   flex
                   items-center
                   justify-center
                   text-slate-500
+                  transition
+                  shrink-0
                 "
               >
-                <X size={20} />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* EVENTOS */}
-
-            <div className="p-6 overflow-y-auto max-h-[60vh] space-y-3">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-3 flex-1">
               {selectedEvents.map((event) => (
                 <div
                   key={event.id}
@@ -436,7 +463,7 @@ export default function CalendarView({ events }: Props) {
                     <div
                       className="
                         w-2
-                        min-h-[55px]
+                        min-h-[48px]
                         rounded-full
                         bg-blue-500
                         shrink-0
@@ -444,19 +471,19 @@ export default function CalendarView({ events }: Props) {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-bold text-slate-900">
+                      <h4 className="font-bold text-slate-900 text-sm sm:text-base">
                         {event.titulo}
                       </h4>
 
-                      <div className="flex flex-wrap gap-3 mt-2 text-sm text-slate-500">
+                      <div className="flex flex-wrap gap-2 sm:gap-3 mt-2 text-xs sm:text-sm text-slate-500">
                         <span className="flex items-center gap-1.5">
-                          <Clock3 size={14} />
+                          <Clock3 className="w-3.5 h-3.5" />
                           {event.hora}
                         </span>
 
                         {event.classroom_name && (
                           <span className="flex items-center gap-1.5">
-                            <School size={14} />
+                            <School className="w-3.5 h-3.5" />
                             {event.classroom_name}
                           </span>
                         )}
@@ -467,7 +494,7 @@ export default function CalendarView({ events }: Props) {
               ))}
 
               {selectedEvents.length === 0 && (
-                <p className="text-center text-slate-500 py-8">
+                <p className="text-center text-slate-500 py-8 text-sm">
                   No hay eventos para este día.
                 </p>
               )}

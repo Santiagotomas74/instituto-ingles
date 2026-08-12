@@ -80,6 +80,7 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
               flex
               items-center
               justify-center
+              text-black
             "
           >
             <X size={22} />
@@ -197,7 +198,9 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
               <div className="flex items-center gap-2 mb-3">
                 <FileText className="text-cyan-600" size={20} />
 
-                <h3 className="font-bold text-lg">Tu respuesta</h3>
+                <h3 className="font-bold text-lg text-gray-600">
+                  Tu respuesta
+                </h3>
               </div>
 
               <div

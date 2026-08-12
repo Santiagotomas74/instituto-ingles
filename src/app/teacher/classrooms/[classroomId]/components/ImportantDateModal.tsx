@@ -255,6 +255,7 @@ px-5
 py-3
 rounded-xl
 border
+text-gray-700
 "
           >
             Cancelar

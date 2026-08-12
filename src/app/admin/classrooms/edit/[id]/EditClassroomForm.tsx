@@ -246,6 +246,7 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
                     {teacher.nombre} {teacher.apellido}
                   </option>
                 ))}
+                <option value="null">Sin profesor</option>
               </select>
             </div>
 

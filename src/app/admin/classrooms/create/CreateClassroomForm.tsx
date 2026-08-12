@@ -2,8 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-import { GraduationCap, Clock3, Users, BookOpen } from "lucide-react";
+import {
+  GraduationCap,
+  Clock3,
+  Users,
+  BookOpen,
+  ArrowLeft,
+} from "lucide-react";
 
 export default function CreateClassroomForm({ teachers }: { teachers: any[] }) {
   const router = useRouter();
@@ -76,6 +83,34 @@ export default function CreateClassroomForm({ teachers }: { teachers: any[] }) {
         <h1 className="text-4xl font-bold mt-3">Nuevo Classroom</h1>
 
         <p className="text-slate-300 mt-4">Creá un nuevo curso académico.</p>
+        <Link
+          href="/admin/classrooms"
+          className="
+              h-14
+              px-7
+              mt-3
+              rounded-2xl
+              bg-white/10
+              border
+              border-white/10
+              backdrop-blur-md
+              hover:bg-white/20
+              text-white
+              transition-all
+              font-semibold
+              flex
+              items-center
+              justify-center
+              gap-3
+              shadow-lg
+              hover:-translate-y-0.5
+              w-full
+              md:w-auto
+            "
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Volver
+        </Link>
       </div>
 
       {/* FORM */}

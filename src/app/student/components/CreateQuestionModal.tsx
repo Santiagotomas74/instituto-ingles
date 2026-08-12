@@ -87,7 +87,7 @@ export default function CreateQuestionModal({
 
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center"
+            className="w-10 h-10 rounded-xl text-black hover:bg-slate-100 flex items-center justify-center"
           >
             <X size={20} />
           </button>
@@ -104,8 +104,8 @@ export default function CreateQuestionModal({
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej: Duda sobre el Present Perfect"
-              className="w-full h-14 rounded-2xl border border-slate-200 px-5 outline-none focus:ring-2 focus:ring-cyan-500"
+              placeholder="Ej: Duda sobre el Present Perfect "
+              className="w-full h-14 text-gray-600 rounded-2xl border border-slate-200 px-5 outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
 
@@ -119,7 +119,7 @@ export default function CreateQuestionModal({
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Escribí tu consulta..."
-              className="w-full rounded-2xl border border-slate-200 p-5 resize-none outline-none focus:ring-2 focus:ring-cyan-500"
+              className="w-full text-gray-600 rounded-2xl border border-slate-200 p-5 resize-none outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
         </div>
@@ -129,7 +129,7 @@ export default function CreateQuestionModal({
         <div className="flex justify-end gap-3 p-7 border-t">
           <button
             onClick={onClose}
-            className="px-6 h-12 rounded-2xl border border-slate-300 hover:bg-slate-50"
+            className="px-6 h-12 rounded-2xl border border-slate-300 hover:bg-slate-50 text-gray-700"
           >
             Cancelar
           </button>

@@ -93,7 +93,9 @@ export default function AdminNavbar() {
       {/* Navegación */}
 
       <div className="flex items-center gap-8">
-        <h1 className="text-2xl font-bold text-blue-600">INK</h1>
+        <h1 className="text-2xl font-bold text-blue-600 hidden md:block">
+          INK
+        </h1>
       </div>
 
       {/* Derecha */}

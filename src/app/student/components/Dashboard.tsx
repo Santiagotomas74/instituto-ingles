@@ -70,154 +70,185 @@ export default async function Dashboard() {
         </p>
       </div>
 
-      {/* Métricas */}
-
-      <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div className="bg-white rounded-3xl p-6 shadow">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center">
-              <BookOpen className="text-blue-600" />
-            </div>
-
-            <div>
-              <p className="text-3xl font-bold">{stats.aulas}</p>
-              <span className="text-slate-500">Mis aulas</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 shadow">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-orange-100 flex items-center justify-center">
-              <FolderOpen className="text-orange-600" />
-            </div>
-
-            <div>
-              <p className="text-3xl font-bold">{stats.materiales}</p>
-              <span className="text-slate-500">Materiales</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 shadow">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center">
-              <ClipboardList className="text-green-600" />
-            </div>
-
-            <div>
-              <p className="text-3xl font-bold">{stats.tareas}</p>
-              <span className="text-slate-500">Tareas pendientes</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 shadow">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 flex items-center justify-center">
-              <Megaphone className="text-red-600" />
-            </div>
-
-            <div>
-              <p className="text-3xl font-bold">{stats.anuncios}</p>
-              <span className="text-slate-500">Anuncios nuevos</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Mis aulas */}
-
       <section>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold text-slate-900">Mis aulas</h2>
+        <div className="flex items-end justify-between mb-6">
+          <div>
+            <p className="text-sm font-semibold text-cyan-600 uppercase tracking-wide">
+              Campus virtual
+            </p>
 
-          <button className="text-cyan-600 font-semibold hover:text-cyan-700">
-            Ver todas
-          </button>
+            <h2 className="mt-1 text-3xl font-bold text-slate-900">
+              Mis aulas
+            </h2>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {classrooms.length === 0 && (
-            <div className="col-span-2 bg-white rounded-3xl p-10 text-center border border-slate-200">
-              <h3 className="text-2xl font-bold text-slate-900">
+        <div className="grid lg:grid-cols-2 gap-6">
+          {classrooms.length === 0 ? (
+            <div className="lg:col-span-2 bg-white rounded-3xl p-10 text-center border border-slate-200">
+              <BookOpen className="mx-auto text-slate-300" size={42} />
+
+              <h3 className="mt-4 text-xl font-bold text-slate-900">
                 No estás inscripto en ninguna aula
               </h3>
 
-              <p className="mt-3 text-slate-500">
+              <p className="mt-2 text-slate-500">
                 Cuando un administrador te asigne a un aula, aparecerá aquí.
               </p>
             </div>
-          )}
-          {classrooms.map((classroom) => (
-            <Link
-              key={classroom.id}
-              href={`/student/classroom/${classroom.id}`}
-              className="group bg-white rounded-[32px] border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition overflow-hidden"
-            >
-              <div className="h-2 bg-gradient-to-r from-cyan-500 to-blue-600" />
+          ) : (
+            classrooms.map((classroom) => (
+              <Link
+                key={classroom.id}
+                href={`/student/classroom/${classroom.id}`}
+                className="
+            group
+            relative
+            overflow-hidden
+            rounded-3xl
+            bg-white
+            border
+            border-slate-200
+            p-7
+            shadow-sm
+            hover:shadow-xl
+            hover:-translate-y-1
+            transition-all
+            duration-300
+          "
+              >
+                {/* Accent */}
+                <div
+                  className="
+              absolute
+              top-0
+              left-0
+              w-full
+              h-1
+              bg-gradient-to-r
+              from-cyan-500
+              to-blue-600
+            "
+                />
 
-              <div className="p-8">
-                <div className="flex justify-between">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <span className="inline-flex px-4 py-1 rounded-full bg-cyan-50 text-cyan-700 text-sm font-semibold">
+                    <span
+                      className="
+                  inline-flex
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-cyan-50
+                  text-cyan-700
+                  text-xs
+                  font-bold
+                "
+                    >
                       {classroom.nivel}
                     </span>
 
-                    <h3 className="mt-5 text-3xl font-bold text-cyan-600 transition">
+                    <h3
+                      className="
+                  mt-4
+                  text-2xl
+                  font-bold
+                  text-slate-900
+                  group-hover:text-cyan-600
+                  transition
+                "
+                    >
                       {classroom.nombre}
                     </h3>
 
-                    <div className="mt-3 flex items-center gap-2 text-slate-500">
+                    <p className="mt-2 text-sm text-slate-500">
                       🕒 {classroom.horario}
-                    </div>
+                    </p>
                   </div>
 
-                  <div className="w-12 h-12 rounded-2xl  flex items-center justify-center bg-cyan-100">
-                    <ChevronRight className="text-cyan-600" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mt-8">
-                  <div className="bg-blue-50 rounded-2xl p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                      <Users className="text-blue-600" size={20} />
-                    </div>
-
-                    <div>
-                      <p className="font-bold text-slate-900">
-                        {classroom.alumnos}
-                      </p>
-                      <span className="text-sm text-slate-500">compañeros</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-orange-50 rounded-2xl p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                      <FolderOpen className="text-orange-600" size={20} />
-                    </div>
-
-                    <div>
-                      <p className="font-bold text-slate-900">
-                        {classroom.materiales}
-                      </p>
-                      <span className="text-sm text-slate-500">materiales</span>
-                    </div>
+                  <div
+                    className="
+                w-11
+                h-11
+                rounded-2xl
+                bg-cyan-50
+                flex
+                items-center
+                justify-center
+                group-hover:bg-cyan-500
+                transition
+              "
+                  >
+                    <ChevronRight
+                      size={20}
+                      className="
+                  text-cyan-600
+                  group-hover:text-black
+                  transition
+                "
+                    />
                   </div>
                 </div>
 
-                <div className="mt-8 pt-5 border-t flex justify-between">
-                  <span className="text-slate-400 text-sm">Aula inscripta</span>
+                <div className="grid grid-cols-2 gap-3 mt-7">
+                  <div className="rounded-2xl bg-blue-50 p-4">
+                    <div className="flex items-center gap-3">
+                      <Users size={19} className="text-blue-600" />
 
-                  <span className="text-cyan-600 font-semibold group-hover:translate-x-1 transition">
-                    Ingresar →
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {classroom.alumnos}
+                        </p>
+
+                        <p className="text-xs text-slate-500">compañeros</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-orange-50 p-4">
+                    <div className="flex items-center gap-3">
+                      <FolderOpen size={19} className="text-orange-600" />
+
+                      <div>
+                        <p className="font-bold text-slate-900">
+                          {classroom.materiales}
+                        </p>
+
+                        <p className="text-xs text-slate-500">materiales</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-5 border-t border-slate-100">
+                  <span
+                    className="
+                text-sm
+                font-semibold
+                text-cyan-600
+                group-hover:translate-x-1
+                inline-block
+                transition
+              "
+                  >
+                    Ingresar al aula →
                   </span>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))
+          )}
         </div>
       </section>
     </div>
   );
 }
+
+/*
+<Link
+            href="/student/classrooms"
+            className="text-sm font-semibold text-cyan-600 hover:text-cyan-700 transition"
+          >
+            Ver todas →
+          </Link>s
+*/
