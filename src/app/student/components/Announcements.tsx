@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Megaphone, CalendarDays, User } from "lucide-react";
+import { Megaphone, CalendarDays, Loader2, AlertCircle } from "lucide-react";
 
 interface Props {
   classroomId: string;
@@ -35,7 +35,7 @@ export default function Announcements({ classroomId }: Props) {
           setAnnouncements(data.announcements);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error al obtener los anuncios:", error);
       } finally {
         setLoading(false);
       }
@@ -44,22 +44,35 @@ export default function Announcements({ classroomId }: Props) {
     fetchAnnouncements();
   }, [classroomId]);
 
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   if (loading) {
     return (
-      <div className="text-center py-20 text-slate-500">
-        Cargando anuncios...
+      <div className="py-20 flex flex-col items-center justify-center text-slate-500 gap-3">
+        <Loader2 size={32} className="animate-spin text-cyan-600" />
+        <span className="text-sm font-medium">Cargando anuncios...</span>
       </div>
     );
   }
 
   if (announcements.length === 0) {
     return (
-      <div className="bg-white rounded-3xl p-10 border border-slate-200 text-center">
-        <Megaphone size={40} className="mx-auto text-slate-300 mb-4" />
-
-        <h2 className="text-2xl font-bold text-slate-700">No hay anuncios</h2>
-
-        <p className="text-slate-500 mt-2">
+      <div className="rounded-2xl sm:rounded-3xl border border-dashed border-slate-300 bg-slate-50/50 p-8 sm:p-12 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
+        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+          <Megaphone size={24} />
+        </div>
+        <p className="text-base font-medium text-slate-600">No hay anuncios</p>
+        <p className="text-xs sm:text-sm text-slate-400">
           Cuando el profesor publique un anuncio aparecerá aquí.
         </p>
       </div>
@@ -67,128 +80,73 @@ export default function Announcements({ classroomId }: Props) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-6">
       {announcements.map((announcement) => (
-        <div
+        <article
           key={announcement.id}
-          className={`
-    rounded-[32px]
-    shadow-sm
-    hover:shadow-xl
-    transition
-    overflow-hidden
-    border
-
-    ${
-      announcement.is_important
-        ? "border-red-300 bg-gradient-to-br from-red-50 via-white to-red-50"
-        : "border-slate-200 bg-white"
-    }
-  `}
+          className={`rounded-2xl sm:rounded-3xl border transition-shadow shadow-sm hover:shadow-md overflow-hidden bg-white ${
+            announcement.is_important
+              ? "border-rose-200 bg-gradient-to-br from-rose-50/40 via-white to-rose-50/20"
+              : "border-slate-200/80"
+          }`}
         >
+          {/* Barra de acento superior */}
           <div
-            className={`h-2 ${
+            className={`h-1.5 ${
               announcement.is_important
-                ? "bg-gradient-to-r from-red-500 via-orange-500 to-red-500"
+                ? "bg-gradient-to-r from-rose-500 via-orange-500 to-rose-500"
                 : "bg-gradient-to-r from-cyan-500 to-blue-600"
             }`}
           />
 
-          <div className="p-8">
-            <div className="flex justify-between items-start gap-6">
-              <div className="flex gap-5">
-                <div
-                  className={`
-            w-16
-            h-16
-            rounded-2xl
-            flex
-            items-center
-            justify-center
-            shrink-0
+          <div className="p-4 sm:p-6 md:p-8 space-y-4">
+            {/* Cabecera del Anuncio */}
+            <div className="flex items-start gap-3.5 sm:gap-4">
+              <div
+                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${
+                  announcement.is_important
+                    ? "bg-rose-100 text-rose-600"
+                    : "bg-cyan-100 text-cyan-600"
+                }`}
+              >
+                <Megaphone className="w-5 h-5 sm:w-6 sm:h-6" />
+              </div>
 
-            ${announcement.is_important ? "bg-red-100" : "bg-cyan-100"}
-          `}
-                >
-                  <Megaphone
-                    size={28}
-                    className={
-                      announcement.is_important
-                        ? "text-red-600"
-                        : "text-cyan-600"
-                    }
-                  />
+              <div className="flex-1 min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base sm:text-lg md:text-xl font-bold text-slate-800 leading-snug">
+                    {announcement.titulo}
+                  </h2>
+
+                  {announcement.is_important && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm animate-pulse">
+                      <AlertCircle size={12} />
+                      Importante
+                    </span>
+                  )}
                 </div>
 
-                <div>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <h2 className="text-2xl font-bold text-slate-900">
-                      {announcement.titulo}
-                    </h2>
-
-                    {announcement.is_important && (
-                      <span
-                        className="
-                  px-4
-                  py-1.5
-                  rounded-full
-                  bg-red-600
-                  text-white
-                  text-sm
-                  font-bold
-                  uppercase
-                  tracking-wide
-                  animate-pulse
-                  shadow-lg
-                "
-                      >
-                        🚨 IMPORTANTE
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2 mt-4 text-sm text-slate-500">
-                    <CalendarDays size={16} />
-
-                    {new Date(announcement.created_at).toLocaleDateString(
-                      "es-AR",
-                    )}
-                  </div>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-400">
+                  <CalendarDays size={14} className="shrink-0" />
+                  <span>{formatDate(announcement.created_at)} hs</span>
                 </div>
               </div>
             </div>
 
+            {/* Contenido del Anuncio */}
             <div
-              className={`
-        mt-8
-        rounded-2xl
-        p-6
-        border
-
-        ${
-          announcement.is_important
-            ? "bg-red-50 border-red-200"
-            : "bg-slate-50 border-slate-200"
-        }
-      `}
+              className={`rounded-xl sm:rounded-2xl p-4 sm:p-5 border ${
+                announcement.is_important
+                  ? "bg-rose-50/60 border-rose-200/80 text-rose-950"
+                  : "bg-slate-50 border-slate-100 text-slate-700"
+              }`}
             >
-              <p
-                className={`
-          whitespace-pre-wrap
-          leading-8
-
-          ${
-            announcement.is_important
-              ? "text-red-900 font-medium text-lg"
-              : "text-slate-700"
-          }
-        `}
-              >
+              <p className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed font-normal">
                 {announcement.contenido}
               </p>
             </div>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   );

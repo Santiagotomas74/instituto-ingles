@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
-import { Pencil } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Pencil, Check, X, Loader2, School, Plus } from "lucide-react";
 
 type Classroom = {
   id: string;
@@ -20,11 +19,24 @@ export default function AssignClassroom({
   currentClassroom,
   classrooms,
 }: Props) {
-  const [selected, setSelected] = useState("");
+  // Buscar el objeto classroom correspondiente para obtener su ID si solo viene el nombre
+  const initialClassroom = classrooms.find(
+    (c) => c.nombre === currentClassroom || c.id === currentClassroom,
+  );
 
+  const [selected, setSelected] = useState<string>(initialClassroom?.id || "");
   const [loading, setLoading] = useState(false);
-
   const [editing, setEditing] = useState(false);
+
+  // Sincronizar el valor cuando cambien los props
+  useEffect(() => {
+    const matched = classrooms.find(
+      (c) => c.nombre === currentClassroom || c.id === currentClassroom,
+    );
+    if (matched) {
+      setSelected(matched.id);
+    }
+  }, [currentClassroom, classrooms]);
 
   const handleAssign = async () => {
     if (!selected) return;
@@ -49,72 +61,67 @@ export default function AssignClassroom({
         window.location.reload();
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error al asignar classroom:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // SI YA TIENE CLASSROOM Y NO ESTÁ EDITANDO
+  const handleCancel = () => {
+    setSelected(initialClassroom?.id || "");
+    setEditing(false);
+  };
+
+  // VISTA 1: TIENE CLASSROOM Y NO ESTÁ EDITANDO
   if (currentClassroom && !editing) {
     return (
-      <div className="flex items-center gap-3">
-        <div
-          className="
-            px-4
-            py-2
-            rounded-full
-            bg-blue-100
-            text-blue-700
-            text-sm
-            font-semibold
-          "
-        >
-          {currentClassroom}
-        </div>
+      <div className="flex items-center gap-1.5 group">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-200/80 text-xs font-semibold shrink-0">
+          <School className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+          <span className="truncate max-w-[130px]" title={currentClassroom}>
+            {currentClassroom}
+          </span>
+        </span>
 
         <button
-          onClick={() => setEditing(true)}
-          className="
-            w-10
-            h-10
-            rounded-xl
-            bg-slate-100
-            hover:bg-slate-200
-            transition
-            flex
-            items-center
-            justify-center
-            text-slate-700
-          "
+          type="button"
+          onClick={() => {
+            if (initialClassroom) setSelected(initialClassroom.id);
+            setEditing(true);
+          }}
+          title="Cambiar classroom"
+          className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition shrink-0"
         >
-          <Pencil className="w-4 h-4" />
+          <Pencil className="w-3.5 h-3.5" />
         </button>
       </div>
     );
   }
 
-  // SI NO TIENE CLASSROOM O ESTÁ EDITANDO
+  // VISTA 2: NO TIENE CLASSROOM Y NO ESTÁ EDITANDO
+  if (!currentClassroom && !editing) {
+    return (
+      <button
+        type="button"
+        onClick={() => setEditing(true)}
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-600 border border-slate-200/80 text-xs font-medium transition text-left shrink-0"
+      >
+        <Plus className="w-3.5 h-3.5 text-slate-400" />
+        <span>Sin classroom</span>
+      </button>
+    );
+  }
+
+  // VISTA 3: MODO EDICIÓN / ASIGNACIÓN
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 w-full max-w-full sm:max-w-[240px]">
       <select
         value={selected}
         onChange={(e) => setSelected(e.target.value)}
-        className="
-          h-11
-          rounded-xl
-          border
-          border-gray-200
-          px-4
-          text-gray-700
-          focus:outline-none
-          focus:ring-2
-          focus:ring-blue-500
-          bg-white
-        "
+        disabled={loading}
+        className="h-9 w-full rounded-lg border border-slate-300 bg-white px-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition disabled:opacity-50"
       >
-        <option value="">Seleccionar classroom</option>
-
+        <option value="">Seleccionar classroom...</option>
         {classrooms.map((classroom) => (
           <option key={classroom.id} value={classroom.id}>
             {classroom.nombre}
@@ -122,41 +129,31 @@ export default function AssignClassroom({
         ))}
       </select>
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-1 shrink-0 justify-end">
         <button
+          type="button"
           onClick={handleAssign}
-          disabled={loading}
-          className="
-            flex-1
-            h-11
-            rounded-xl
-            bg-blue-600
-            hover:bg-blue-700
-            transition
-            text-white
-            font-medium
-          "
+          disabled={loading || !selected}
+          title="Guardar"
+          className="h-9 px-2.5 sm:px-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs flex items-center justify-center gap-1 transition disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
-          {loading ? "Asignando..." : "Guardar"}
+          {loading ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Check className="w-3.5 h-3.5" />
+          )}
+          <span className="sm:hidden font-semibold">Guardar</span>
         </button>
 
-        {currentClassroom && (
-          <button
-            onClick={() => setEditing(false)}
-            className="
-              h-11
-              px-4
-              rounded-xl
-              border
-              border-gray-200
-              hover:bg-gray-100
-              transition
-              text-gray-700
-            "
-          >
-            Cancelar
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleCancel}
+          disabled={loading}
+          title="Cancelar"
+          className="h-9 px-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 text-xs transition disabled:opacity-50 shrink-0 flex items-center justify-center"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );

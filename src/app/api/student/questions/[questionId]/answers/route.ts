@@ -128,7 +128,7 @@ export async function POST(req: NextRequest, { params }: Props) {
             user_id,
             role,
             title,
-            message,
+            description,
             type,
             reference_id
         )

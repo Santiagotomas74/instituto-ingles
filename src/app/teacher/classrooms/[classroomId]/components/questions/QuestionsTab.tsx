@@ -14,31 +14,19 @@ export type Question = {
   id: string;
   titulo: string;
   contenido: string;
-
   student_name: string;
   student_lastname: string;
-
   created_at: string;
-
   replies_count: number;
-
   is_closed: boolean;
 };
 
 export default function QuestionsTab({ classroomId }: Props) {
   const [loading, setLoading] = useState(true);
-
   const [questions, setQuestions] = useState<Question[]>([]);
-
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
     null,
   );
-
-  /*
-  ========================================
-  Obtener consultas
-  ========================================
-  */
 
   async function loadQuestions() {
     try {
@@ -65,67 +53,40 @@ export default function QuestionsTab({ classroomId }: Props) {
     }
   }
 
-  /*
-  ========================================
-  useEffect
-  ========================================
-  */
-
   useEffect(() => {
     loadQuestions();
   }, [classroomId]);
 
-  /*
-  ========================================
-  Hilo abierto
-  ========================================
-  */
-
   if (selectedQuestionId) {
     return (
-      <QuestionThread
-        questionId={selectedQuestionId}
-        onBack={() => {
-          setSelectedQuestionId(null);
-
-          loadQuestions();
-        }}
-      />
-    );
-  }
-
-  /*
-  ========================================
-  Loading
-  ========================================
-  */
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-3xl p-12 text-center">
-        <p className="text-slate-500">Cargando consultas...</p>
+      <div className="w-full">
+        <QuestionThread
+          questionId={selectedQuestionId}
+          onBack={() => {
+            setSelectedQuestionId(null);
+            loadQuestions();
+          }}
+        />
       </div>
     );
   }
 
-  /*
-  ========================================
-  Sin consultas
-  ========================================
-  */
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center">
+        <p className="text-slate-500 text-sm sm:text-base">
+          Cargando consultas...
+        </p>
+      </div>
+    );
+  }
 
   if (questions.length === 0) {
     return <EmptyQuestions />;
   }
 
-  /*
-  ========================================
-  Lista
-  ========================================
-  */
-
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       {questions.map((question) => (
         <QuestionCard
           key={question.id}

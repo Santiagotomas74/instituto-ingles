@@ -1,12 +1,9 @@
 "use client";
 
 import Link from "next/link";
-
 import { MessageCircle, ChevronRight, Clock3 } from "lucide-react";
-
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-
 import { Question } from "./Questions";
 
 type Props = {
@@ -14,89 +11,64 @@ type Props = {
 };
 
 export default function QuestionCard({ question }: Props) {
-  const params = new URLSearchParams(window.location.search);
+  const formattedDate = formatDistanceToNow(new Date(question.created_at), {
+    addSuffix: true,
+    locale: es,
+  });
 
-  params.set("tab", "questions");
-  params.set("question", question.id);
+  const initials =
+    `${question.student_name?.[0] || ""}${
+      question.student_lastname?.[0] || ""
+    }`.toUpperCase() || "U";
+
   return (
     <Link
       href={`?tab=questions&question=${question.id}`}
-      className="
-        group
-        block
-        bg-white
-        rounded-3xl
-        border
-        border-slate-200
-        hover:border-cyan-300
-        hover:shadow-xl
-        transition
-      "
+      className="group block bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 hover:border-cyan-300 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
     >
-      <div className="p-7">
-        <div className="flex justify-between">
-          <div>
-            <h3
-              className="
-                text-xl
-                font-bold
-                text-slate-900
-                group-hover:text-cyan-600
-                transition
-              "
-            >
+      <div className="p-5 sm:p-7 space-y-4 sm:space-y-5">
+        {/* Encabezado de la Tarjeta */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1.5 flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-800 group-hover:text-cyan-600 transition-colors line-clamp-2">
               {question.titulo}
             </h3>
-
-            <p className="mt-3 text-slate-600 line-clamp-2">
+            <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">
               {question.contenido}
             </p>
           </div>
 
           <ChevronRight
-            className="
-              text-slate-400
-              group-hover:text-cyan-600
-            "
+            size={20}
+            className="text-slate-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all shrink-0 mt-1"
           />
         </div>
 
-        <div
-          className="
-            mt-6
-            flex
-            justify-between
-            items-center
-            border-t
-            pt-5
-          "
-        >
-          <div>
-            <p className="font-semibold text-slate-800">
-              {question.student_name} {question.student_lastname}
-            </p>
-
-            <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-              <Clock3 size={15} />
-
-              {formatDistanceToNow(new Date(question.created_at), {
-                addSuffix: true,
-                locale: es,
-              })}
+        {/* Pie de la Tarjeta */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4 text-xs sm:text-sm">
+          {/* Autor */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0 border border-slate-200">
+              {initials}
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-slate-800 truncate text-xs sm:text-sm">
+                {question.student_name} {question.student_lastname}
+              </p>
+              <div className="flex items-center gap-1 text-[11px] sm:text-xs text-slate-400 mt-0.5">
+                <Clock3 size={13} className="shrink-0" />
+                <span className="capitalize">{formattedDate}</span>
+              </div>
             </div>
           </div>
 
-          <div
-            className="
-              flex
-              items-center
-              gap-2
-              text-cyan-600
-              font-semibold
-            "
-          >
-            <MessageCircle size={18} />
-            {question.replies} respuestas
+          {/* Contador de Respuestas */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-semibold border border-cyan-100/80">
+            <MessageCircle size={14} className="text-cyan-600" />
+            <span>
+              {question.replies}{" "}
+              {question.replies === 1 ? "respuesta" : "respuestas"}
+            </span>
           </div>
         </div>
       </div>

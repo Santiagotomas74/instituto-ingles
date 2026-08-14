@@ -8,6 +8,7 @@ import {
   Download,
   MessageSquare,
   Award,
+  Clock,
 } from "lucide-react";
 
 type Props = {
@@ -28,247 +29,179 @@ type Props = {
 export default function SubmissionDetailModal({ open, onClose, task }: Props) {
   if (!open) return null;
 
+  const formatDateTime = (dateStr: string | null) => {
+    if (!dateStr) return "-";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
-    <div
-      className="
-        fixed
-        inset-0
-        z-50
-        bg-black/50
-        backdrop-blur-sm
-        flex
-        items-center
-        justify-center
-        p-6
-      "
-    >
-      <div
-        className="
-          bg-white
-          w-full
-          max-w-3xl
-          rounded-3xl
-          shadow-2xl
-          overflow-hidden
-        "
-      >
-        {/* Header */}
-
-        <div
-          className="
-            px-8
-            py-6
-            border-b
-            flex
-            items-center
-            justify-between
-          "
-        >
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">Mi entrega</h2>
-
-            <p className="text-slate-500 mt-1">{task.titulo}</p>
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="bg-white w-full max-w-2xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col my-auto border border-slate-100">
+        {/* Encabezado Fijo */}
+        <div className="px-5 sm:px-8 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+          <div className="min-w-0 pr-4">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800">
+              Mi entrega
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 truncate mt-0.5">
+              {task.titulo}
+            </p>
           </div>
 
           <button
             onClick={onClose}
-            className="
-              w-11
-              h-11
-              rounded-xl
-              hover:bg-slate-100
-              flex
-              items-center
-              justify-center
-              text-black
-            "
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors shrink-0"
+            aria-label="Cerrar ventana"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
 
-        <div className="p-8 space-y-8">
-          {/* Estado */}
-
-          <div
-            className="
-              rounded-2xl
-              bg-emerald-50
-              border
-              border-emerald-200
-              p-5
-              flex
-              items-center
-              gap-4
-            "
-          >
-            <CheckCircle2 className="text-emerald-600 shrink-0" size={34} />
-
-            <div>
-              <p className="font-semibold text-emerald-800">
-                Tarea entregada correctamente
+        {/* Creador de Contenido / Cuerpo desplazable */}
+        <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 overflow-y-auto">
+          {/* Banner de Estado de Entrega */}
+          <div className="rounded-xl sm:rounded-2xl bg-emerald-50/80 border border-emerald-200/80 p-4 sm:p-5 flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <CheckCircle2 size={22} />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-emerald-900 text-xs sm:text-sm">
+                Entrega registrada con éxito
               </p>
-
               {task.submitted_at && (
-                <div className="flex items-center gap-2 mt-1 text-sm text-emerald-700">
-                  <Calendar size={15} />
-                  {new Date(task.submitted_at).toLocaleString("es-AR")}
+                <div className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs text-emerald-700">
+                  <Calendar size={13} className="shrink-0" />
+                  <span>
+                    Entregado el {formatDateTime(task.submitted_at)} hs
+                  </span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Nota */}
+          {/* Grilla de Nota y Feedback Docente */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Tarjeta de Calificación */}
+            <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-5 bg-slate-50/50 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-slate-700">
+                  <Award className="text-cyan-600 shrink-0" size={18} />
+                  <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
+                    Calificación
+                  </h3>
+                </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div
-              className="
-                rounded-2xl
-                border
-                p-6
-                bg-slate-50
-              "
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Award className="text-cyan-600" size={22} />
-
-                <h3 className="font-bold text-lg text-gray-800">
-                  Calificación
-                </h3>
+                {task.grade !== null ? (
+                  <div className="mt-2">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl sm:text-4xl font-black text-cyan-600">
+                        {task.grade}
+                      </span>
+                      <span className="text-base sm:text-lg font-bold text-slate-400">
+                        / {task.max_score}
+                      </span>
+                    </div>
+                    <p className="text-slate-500 text-xs mt-1">
+                      Nota evaluada por el profesor.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mt-2">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-100/70 text-amber-800 text-xs font-semibold">
+                      <Clock size={14} />
+                      <span>Pendiente de corrección</span>
+                    </div>
+                    <p className="text-slate-500 text-xs mt-2">
+                      El docente aún no ha asignado puntaje a esta entrega.
+                    </p>
+                  </div>
+                )}
               </div>
-
-              {task.grade !== null ? (
-                <>
-                  <p className="text-5xl font-black text-cyan-600">
-                    {task.grade}
-                    <span className="text-2xl text-slate-500">
-                      /{task.max_score}
-                    </span>
-                  </p>
-
-                  <p className="text-slate-500 mt-3">
-                    Nota asignada por el profesor.
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="text-xl font-semibold text-amber-600">
-                    Pendiente
-                  </p>
-
-                  <p className="text-slate-500 mt-2">
-                    El profesor todavía no corrigió esta tarea.
-                  </p>
-                </>
-              )}
             </div>
 
-            <div
-              className="
-                rounded-2xl
-                border
-                p-6
-                bg-slate-50
-              "
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <MessageSquare className="text-blue-600" size={22} />
-
-                <h3 className="font-bold text-lg text-gray-800">
-                  Observaciones
+            {/* Tarjeta de Observaciones Docentes */}
+            <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-5 bg-slate-50/50">
+              <div className="flex items-center gap-2 mb-2 text-slate-700">
+                <MessageSquare className="text-cyan-600 shrink-0" size={18} />
+                <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
+                  Devolución
                 </h3>
               </div>
 
               {task.teacher_feedback ? (
-                <p className="whitespace-pre-wrap leading-7 text-slate-700">
+                <p className="whitespace-pre-wrap leading-relaxed text-xs sm:text-sm text-slate-700 mt-2">
                   {task.teacher_feedback}
                 </p>
               ) : (
-                <p className="text-slate-500">
-                  El profesor aún no dejó comentarios.
+                <p className="text-slate-400 text-xs sm:text-sm italic mt-2">
+                  Sin comentarios del profesor por el momento.
                 </p>
               )}
             </div>
           </div>
 
-          {/* Respuesta */}
-
+          {/* Sección de Respuesta del Alumno */}
           {task.comentario && (
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <FileText className="text-cyan-600" size={20} />
-
-                <h3 className="font-bold text-lg text-gray-600">
-                  Tu respuesta
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-slate-700">
+                <FileText className="text-cyan-600 shrink-0" size={18} />
+                <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
+                  Tu respuesta o comentario
                 </h3>
               </div>
-
-              <div
-                className="
-                  rounded-2xl
-                  border
-                  bg-slate-50
-                  p-6
-                  whitespace-pre-wrap
-                  leading-7
-                  text-slate-700
-                "
-              >
+              <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 whitespace-pre-wrap leading-relaxed text-xs sm:text-sm text-slate-700">
                 {task.comentario}
               </div>
             </div>
           )}
 
-          {/* Archivo */}
-
+          {/* Sección de Archivo Adjunto */}
           {task.archivo_url && (
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Download className="text-cyan-600" size={20} />
-
-                <h3 className="font-bold text-lg">Archivo entregado</h3>
-              </div>
+            <div className="space-y-2">
+              <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider text-slate-700">
+                Archivo adjunto
+              </h3>
 
               <a
                 href={task.archivo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="
-                  flex
-                  items-center
-                  justify-between
-                  rounded-2xl
-                  border
-                  bg-white
-                  p-5
-                  hover:bg-slate-50
-                  transition
-                "
+                className="group flex items-center justify-between rounded-xl sm:rounded-2xl border border-cyan-200 bg-cyan-50/50 hover:bg-cyan-100/70 p-3.5 sm:p-4 transition-colors"
               >
-                <div>
-                  <p className="font-semibold">{task.archivo_nombre}</p>
-
-                  <p className="text-sm text-slate-500">Abrir archivo</p>
+                <div className="flex items-center gap-3 min-w-0 pr-3">
+                  <div className="w-9 h-9 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
+                    <FileText size={18} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-xs sm:text-sm text-cyan-950 truncate">
+                      {task.archivo_nombre || "Documento adjunto"}
+                    </p>
+                    <p className="text-[11px] sm:text-xs text-cyan-700">
+                      Haz clic para abrir o descargar
+                    </p>
+                  </div>
                 </div>
 
-                <Download size={22} />
+                <div className="w-8 h-8 rounded-lg bg-white/80 group-hover:bg-white text-cyan-700 flex items-center justify-center shrink-0 shadow-sm transition-colors">
+                  <Download size={16} />
+                </div>
               </a>
             </div>
           )}
         </div>
 
-        <div className="border-t px-8 py-5 flex justify-end">
+        {/* Pie de Modal / Footer */}
+        <div className="border-t border-slate-100 px-5 sm:px-8 py-4 flex justify-end bg-slate-50/50 shrink-0">
           <button
             onClick={onClose}
-            className="
-              h-11
-              px-8
-              rounded-xl
-              bg-cyan-600
-              hover:bg-cyan-700
-              text-white
-              font-semibold
-            "
+            className="w-full sm:w-auto h-10 sm:h-11 px-6 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs sm:text-sm transition-colors shadow-sm"
           >
             Cerrar
           </button>

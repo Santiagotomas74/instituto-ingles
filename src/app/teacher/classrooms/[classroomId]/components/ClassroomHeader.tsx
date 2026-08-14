@@ -47,10 +47,15 @@ export default function ClassroomHeader({ classroomId }: Props) {
   return (
     <div
       className="
-      mt-8
+      mt-6
+      lg:mt-8
       flex
-      items-start
+      flex-col
+      lg:flex-row
+      lg:items-start
       justify-between
+      gap-6
+      lg:gap-4
       "
     >
       <div>
@@ -58,13 +63,16 @@ export default function ClassroomHeader({ classroomId }: Props) {
           className="
           flex
           items-center
-          gap-4
+          gap-3
+          sm:gap-4
           "
         >
           <div
             className="
-            w-12
-            h-12
+            w-10
+            h-10
+            sm:w-12
+            sm:h-12
             rounded-full
             bg-blue-600
             text-white
@@ -72,6 +80,7 @@ export default function ClassroomHeader({ classroomId }: Props) {
             items-center
             justify-center
             font-semibold
+            shrink-0
             "
           >
             {classroom.nivel}
@@ -80,7 +89,9 @@ export default function ClassroomHeader({ classroomId }: Props) {
           <div>
             <h1
               className="
-              text-4xl
+              text-2xl
+              sm:text-3xl
+              lg:text-4xl
               font-bold
               text-gray-900
               "
@@ -92,6 +103,8 @@ export default function ClassroomHeader({ classroomId }: Props) {
               className="
               text-gray-500
               mt-1
+              text-sm
+              sm:text-base
               "
             >
               {classroom.horario}
@@ -103,7 +116,14 @@ export default function ClassroomHeader({ classroomId }: Props) {
       <div
         className="
         flex
-        gap-4
+        flex-col
+        sm:flex-row
+        flex-wrap
+        lg:flex-nowrap
+        gap-3
+        sm:gap-4
+        w-full
+        lg:w-auto
         "
       >
         <button
@@ -113,6 +133,8 @@ export default function ClassroomHeader({ classroomId }: Props) {
             )
           }
           className="
+          w-full
+          sm:w-auto
           h-11
           px-5
           rounded-xl
@@ -121,12 +143,13 @@ export default function ClassroomHeader({ classroomId }: Props) {
           text-white
           flex
           items-center
+          justify-center
           gap-2
           transition
           "
         >
           <Plus size={18} />
-          Nueva fecha importante
+          <span>Nueva fecha importante</span>
         </button>
 
         <button
@@ -136,6 +159,8 @@ export default function ClassroomHeader({ classroomId }: Props) {
             )
           }
           className="
+          w-full
+          sm:w-auto
           h-11
           px-5
           rounded-xl
@@ -145,17 +170,20 @@ export default function ClassroomHeader({ classroomId }: Props) {
           hover:bg-blue-50
           flex
           items-center
+          justify-center
           gap-2
           transition
           "
         >
           <Plus size={18} />
-          Nuevo anuncio
+          <span>Nuevo anuncio</span>
         </button>
 
         <Link
           href={`/teacher/classrooms/${classroomId}/materials/new`}
           className="
+          w-full
+          sm:w-auto
           h-12
           px-5
           rounded-2xl
@@ -165,12 +193,13 @@ export default function ClassroomHeader({ classroomId }: Props) {
           text-white
           flex
           items-center
+          justify-center
           gap-2
           font-medium
           "
         >
           <Upload size={18} />
-          Subir material
+          <span>Subir material</span>
         </Link>
       </div>
     </div>

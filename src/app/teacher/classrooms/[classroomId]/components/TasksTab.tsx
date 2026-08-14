@@ -73,14 +73,16 @@ export default function TasksTab({ classroomId }: Props) {
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Tareas</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+              Tareas
+            </h2>
 
-            <p className="text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 sm:mt-1">
               Administra las actividades de esta classroom.
             </p>
           </div>
@@ -88,16 +90,24 @@ export default function TasksTab({ classroomId }: Props) {
           <button
             onClick={() => setOpenCreate(true)}
             className="
+              w-full
+              sm:w-auto
               h-11
               px-5
               rounded-xl
               bg-cyan-600
               hover:bg-cyan-700
+              active:bg-cyan-800
               text-white
               flex
               items-center
+              justify-center
               gap-2
               transition
+              shrink-0
+              font-medium
+              text-sm
+              sm:text-base
             "
           >
             <Plus size={18} />
@@ -108,7 +118,7 @@ export default function TasksTab({ classroomId }: Props) {
         {/* Loading */}
 
         {loading && (
-          <div className="text-center py-16 text-slate-500">
+          <div className="text-center py-12 sm:py-16 text-slate-500 text-sm sm:text-base">
             Cargando tareas...
           </div>
         )}
@@ -120,7 +130,7 @@ export default function TasksTab({ classroomId }: Props) {
         {/* Lista */}
 
         {!loading && tasks.length > 0 && (
-          <div className="space-y-5">
+          <div className="space-y-3 sm:space-y-5">
             {tasks.map((task) => (
               <TaskCard
                 key={task.id}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Loader2, HelpCircle } from "lucide-react";
 
 type Props = {
   open: boolean;
@@ -17,7 +17,6 @@ export default function CreateQuestionModal({
   onCreated,
 }: Props) {
   const [loading, setLoading] = useState(false);
-
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -29,8 +28,9 @@ export default function CreateQuestionModal({
     }
   }, [open]);
 
-  async function handleSubmit() {
-    if (!title.trim() || !content.trim()) return;
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!title.trim() || !content.trim() || loading) return;
 
     try {
       setLoading(true);
@@ -50,14 +50,12 @@ export default function CreateQuestionModal({
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message);
+        throw new Error(data.message || "Error al publicar la consulta.");
       }
 
       setTitle("");
       setContent("");
-
       onClose();
-
       onCreated();
     } catch (err) {
       console.error(err);
@@ -69,79 +67,94 @@ export default function CreateQuestionModal({
 
   if (!open) return null;
 
+  const isValid = title.trim().length > 0 && content.trim().length > 0;
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl">
-        {/* Header */}
-
-        <div className="flex justify-between items-center p-7 border-b">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">
-              Nueva consulta
-            </h2>
-
-            <p className="text-slate-500 mt-1">
-              Escribí tu duda para que el profesor pueda responderla.
-            </p>
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="bg-white w-full max-w-2xl rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col my-auto border border-slate-100">
+        {/* Encabezado Fijo */}
+        <div className="px-5 sm:px-8 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center shrink-0">
+              <HelpCircle size={20} />
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-800">
+                Nueva consulta
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Escribí tu duda para que el profesor pueda responderla.
+              </p>
+            </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl text-black hover:bg-slate-100 flex items-center justify-center"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors shrink-0"
+            aria-label="Cerrar modal"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* Body */}
+        {/* Formulario / Cuerpo */}
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col flex-1 overflow-y-auto"
+        >
+          <div className="p-5 sm:p-8 space-y-5 flex-1">
+            <div>
+              <label className="block mb-1.5 text-xs sm:text-sm font-semibold text-slate-700">
+                Título de la consulta
+              </label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Ej: Duda sobre el ejercicio de Present Perfect"
+                className="w-full h-11 sm:h-12 text-xs sm:text-sm text-slate-800 bg-slate-50/50 rounded-xl border border-slate-200 px-4 outline-none focus:bg-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-slate-400"
+              />
+            </div>
 
-        <div className="p-7 space-y-5">
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Título
-            </label>
-
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej: Duda sobre el Present Perfect "
-              className="w-full h-14 text-gray-600 rounded-2xl border border-slate-200 px-5 outline-none focus:ring-2 focus:ring-cyan-500"
-            />
+            <div>
+              <label className="block mb-1.5 text-xs sm:text-sm font-semibold text-slate-700">
+                Detalle de la consulta
+              </label>
+              <textarea
+                rows={5}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Explicá tu duda de manera clara..."
+                className="w-full text-xs sm:text-sm text-slate-800 bg-slate-50/50 rounded-xl border border-slate-200 p-4 resize-none outline-none focus:bg-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-slate-400"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block mb-2 font-medium text-slate-700">
-              Consulta
-            </label>
+          {/* Pie de Modal */}
+          <div className="px-5 sm:px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 sm:px-5 h-10 sm:h-11 rounded-xl border border-slate-200 hover:bg-white text-slate-600 font-semibold text-xs sm:text-sm transition-colors"
+            >
+              Cancelar
+            </button>
 
-            <textarea
-              rows={7}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Escribí tu consulta..."
-              className="w-full text-gray-600 rounded-2xl border border-slate-200 p-5 resize-none outline-none focus:ring-2 focus:ring-cyan-500"
-            />
+            <button
+              type="submit"
+              disabled={loading || !isValid}
+              className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-11 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-200 text-white font-semibold text-xs sm:text-sm shadow-sm transition-all disabled:text-slate-400 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Publicando...</span>
+                </>
+              ) : (
+                <span>Publicar consulta</span>
+              )}
+            </button>
           </div>
-        </div>
-
-        {/* Footer */}
-
-        <div className="flex justify-end gap-3 p-7 border-t">
-          <button
-            onClick={onClose}
-            className="px-6 h-12 rounded-2xl border border-slate-300 hover:bg-slate-50 text-gray-700"
-          >
-            Cancelar
-          </button>
-
-          <button
-            disabled={loading}
-            onClick={handleSubmit}
-            className="px-7 h-12 rounded-2xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold disabled:opacity-50"
-          >
-            {loading ? "Publicando..." : "Publicar consulta"}
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   );

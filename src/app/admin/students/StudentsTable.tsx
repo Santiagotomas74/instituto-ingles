@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-
 import {
   Plus,
   Search,
@@ -12,6 +11,10 @@ import {
   Users,
   Mail,
   ArrowLeft,
+  IdCard,
+  GraduationCap,
+  X,
+  AlertTriangle,
 } from "lucide-react";
 
 import AssignClassroom from "./AssignClassroom";
@@ -35,433 +38,408 @@ type Classroom = {
 type Props = {
   students: Student[];
   classrooms: Classroom[];
+  onDelete?: (studentId: string) => void | Promise<void>;
 };
 
-export default function StudentsTable({ students, classrooms }: Props) {
+export default function StudentsTable({
+  students,
+  classrooms,
+  onDelete,
+}: Props) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const filteredStudents = students.filter((student) =>
-    `
-      ${student.nombre}
-      ${student.apellido}
-      ${student.email}
-      ${student.dni}
-    `
+    `${student.nombre} ${student.apellido} ${student.email} ${student.dni}`
       .toLowerCase()
       .includes(search.toLowerCase()),
   );
 
+  const handleDeleteConfirm = async () => {
+    if (!studentToDelete) return;
+
+    try {
+      setIsDeleting(true);
+
+      const res = await fetch(`/api/admin/students/${studentToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "No se pudo eliminar el alumno");
+      }
+
+      // Actualizar el estado local si existe onDelete
+      if (onDelete) {
+        await onDelete(studentToDelete.id);
+      }
+
+      // Cerrar modal
+      setStudentToDelete(null);
+
+      // Refrescar los datos del Server Component
+      router.refresh();
+    } catch (error) {
+      console.error("Error eliminando alumno:", error);
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "No se pudo eliminar el alumno",
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+            Activo
+          </span>
+        );
+      case "inactive":
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700 border border-rose-200">
+            Inactivo
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200">
+            Pendiente
+          </span>
+        );
+    }
+  };
+
   return (
-    <main
-      className="
-        min-h-screen
-        bg-gradient-to-br
-        from-slate-100
-        via-white
-        to-blue-50
-        p-6
-        md:p-10
-      "
-    >
-      {/* HEADER */}
-      <div
-        className="
-          flex
-          flex-col
-          lg:flex-row
-          lg:items-center
-          lg:justify-between
-          gap-6
-          mb-10
-        "
-      >
-        <div>
+    <main className="min-h-screen bg-slate-50/50 p-4 sm:p-6 md:p-10">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div
-              className="
-                w-14
-                h-14
-                rounded-2xl
-                bg-blue-100
-                text-blue-700
-                flex
-                items-center
-                justify-center
-              "
-            >
-              <Users className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
+              <Users className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-
             <div>
-              <p className="text-gray-500">Gestión académica</p>
-
-              <h1
-                className="
-                  text-4xl
-                  font-bold
-                  text-gray-900
-                "
-              >
-                Students
+              <p className="text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                Gestión académica
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Estudiantes
               </h1>
             </div>
           </div>
-        </div>
 
-        <Link
-          href="/admin/dashboard"
-          className="
-          h-14
-          px-7
-          rounded-2xl
-          bg-blue-600
-          border
-          border-white/10
-          backdrop-blur-md
-          
-          text-white
-          transition-all
-          font-semibold
-          flex
-          items-center
-          justify-center
-          gap-3
-          shadow-lg
-          hover:-translate-y-0.5
-          w-full
-          md:w-auto
-        "
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Volver al panel
-        </Link>
-      </div>
-
-      {/* SEARCH */}
-      <div
-        className="
-          bg-white
-          rounded-[32px]
-          border
-          border-gray-100
-          shadow-lg
-          p-5
-          mb-8
-        "
-      >
-        <div className="relative">
-          <Search
-            className="
-              absolute
-              left-4
-              top-1/2
-              -translate-y-1/2
-              text-gray-400
-              w-5
-              h-5
-            "
-          />
-
-          <input
-            type="text"
-            placeholder="Buscar estudiante..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="
-              w-full
-              h-14
-              rounded-2xl
-              border
-              border-gray-200
-              pl-12
-              pr-4
-              focus:outline-none
-              focus:ring-2
-              focus:ring-blue-500
-              text-gray-700
-            "
-          />
-        </div>
-        <Link
-          href="/admin/students/create"
-          className="
-            mt-5
-            h-14
-            px-6
-            rounded-2xl
-            bg-gradient-to-r
-            from-blue-600
-            to-cyan-500
-            text-white
-            font-semibold
-            flex
-            items-center
-            justify-center
-            gap-2
-            shadow-xl
-          
-          
-          "
-        >
-          <Plus className="w-5 h-5" />
-          Crear estudiante
-        </Link>
-      </div>
-      {filteredStudents.length === 0 ? (
-        <div
-          className="
-      bg-white
-      rounded-[32px]
-      border
-      border-slate-200
-      shadow-sm
-      p-12
-      text-center
-    "
-        >
-          <div
-            className="
-        w-24
-        h-24
-        mx-auto
-        rounded-3xl
-        bg-blue-100
-        text-blue-700
-        flex
-        items-center
-        justify-center
-      "
+          <Link
+            href="/admin/dashboard"
+            className="h-11 sm:h-12 px-5 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium flex items-center justify-center gap-2 shadow-sm transition-all w-full sm:w-auto text-sm"
           >
-            <Users className="w-12 h-12" />
+            <ArrowLeft className="w-4 h-4" />
+            Volver al panel
+          </Link>
+        </div>
+
+        {/* SEARCH & ACTIONS BAR */}
+        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Buscar por nombre, DNI o email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full h-11 rounded-xl border border-gray-200 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800 transition"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-
-          <h2
-            className="
-        mt-8
-        text-3xl
-        font-bold
-        text-slate-900
-      "
-          >
-            No hay estudiantes registrados
-          </h2>
-
-          <p
-            className="
-        mt-4
-        text-slate-500
-        max-w-xl
-        mx-auto
-      "
-          >
-            Todavía no se registró ningún estudiante en el sistema. Podés crear
-            alumnos y luego asignarlos a classrooms.
-          </p>
 
           <Link
             href="/admin/students/create"
-            className="
-        mt-8
-        inline-flex
-        items-center
-        gap-3
-        h-14
-        px-7
-        rounded-2xl
-        bg-blue-600
-        hover:bg-blue-700
-        transition
-        text-white
-        font-semibold
-        shadow-lg
-        hover:-translate-y-0.5
-      "
+            className="w-full sm:w-auto h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition text-sm shrink-0"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4" />
             Crear estudiante
           </Link>
         </div>
-      ) : (
-        <div className="overflow-x-auto">
-          {/* TABLE */}
-          <div
-            className="
-          bg-white
-          rounded-[32px]
-          shadow-2xl
-          border
-          border-gray-100
-          overflow-hidden
-        "
-          >
-            {/* TABLE HEADER */}
-            <div
-              className="
-            hidden
-            lg:grid
-            grid-cols-7
-            gap-4
-            px-8
-            py-5
-            bg-gray-50
-            border-b
-            border-gray-100
-            text-sm
-            font-semibold
-            text-gray-500
-          "
-            >
-              <div>Alumno</div>
-              <div>DNI</div>
-              <div>Email</div>
-              <div>Nivel</div>
-              <div>Classroom</div>
-              <div>Estado</div>
-              <div className="text-right">Acciones</div>
+
+        {/* CONTENT */}
+        {filteredStudents.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 sm:p-12 text-center max-w-lg mx-auto my-8">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+              <Users className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">
+              {search
+                ? "No se encontraron resultados"
+                : "Sin estudiantes registrados"}
+            </h2>
+            <p className="mt-2 text-sm text-gray-500">
+              {search
+                ? `No hay alumnos que coincidan con "${search}". Prueba con otro término de búsqueda.`
+                : "Todavía no se registró ningún estudiante en el sistema."}
+            </p>
+            {!search && (
+              <Link
+                href="/admin/students/create"
+                className="mt-6 inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition shadow-sm"
+              >
+                <Plus className="w-4 h-4" />
+                Crear primer estudiante
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div>
+            {/* DESKTOP TABLE (Visible en pantallas lg+) */}
+            <div className="hidden lg:block bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50/80 border-b border-gray-200 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <th className="py-4 px-6">Alumno</th>
+                      <th className="py-4 px-4">DNI</th>
+                      <th className="py-4 px-4">Email</th>
+                      <th className="py-4 px-4">Nivel</th>
+                      <th className="py-4 px-4">Classroom</th>
+                      <th className="py-4 px-4">Estado</th>
+                      <th className="py-4 px-6 text-right">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {filteredStudents.map((student) => (
+                      <tr
+                        key={student.id}
+                        className="hover:bg-slate-50/60 transition-colors"
+                      >
+                        {/* ALUMNO */}
+                        <td className="py-4 px-6">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0">
+                              {student.nombre[0]?.toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">
+                                {student.nombre} {student.apellido}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* DNI */}
+                        <td className="py-4 px-4 text-gray-600 font-mono text-xs">
+                          {student.dni}
+                        </td>
+
+                        {/* EMAIL */}
+                        <td className="py-4 px-4 text-gray-600">
+                          <div className="flex items-center gap-1.5 max-w-[200px] truncate">
+                            <Mail className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                            <span className="truncate" title={student.email}>
+                              {student.email}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* NIVEL */}
+                        <td className="py-4 px-4">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-cyan-50 text-cyan-700 border border-cyan-200 text-xs font-medium">
+                            {student.nivel}
+                          </span>
+                        </td>
+
+                        {/* CLASSROOM */}
+                        <td className="py-4 px-4 min-w-[180px]">
+                          <AssignClassroom
+                            studentId={student.id}
+                            currentClassroom={student.classroom}
+                            classrooms={classrooms}
+                          />
+                        </td>
+
+                        {/* ESTADO */}
+                        <td className="py-4 px-4">
+                          {getStatusBadge(student.status)}
+                        </td>
+
+                        {/* ACCIONES */}
+                        <td className="py-4 px-6 text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Link
+                              href={`/admin/students/${student.id}/edit`}
+                              title="Editar estudiante"
+                              className="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Link>
+
+                            <button
+                              type="button"
+                              onClick={() => setStudentToDelete(student)}
+                              title="Eliminar estudiante"
+                              className="p-2 rounded-lg text-gray-500 hover:text-rose-600 hover:bg-rose-50 transition"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            {/* ROWS */}
-            <div className="divide-y divide-gray-100">
+            {/* MOBILE & TABLET CARD LIST (Oculto en pantallas lg+) */}
+            <div className="lg:hidden space-y-4">
               {filteredStudents.map((student) => (
                 <div
                   key={student.id}
-                  className="
-                grid
-                grid-cols-1
-                lg:grid-cols-7
-                gap-5
-                px-8
-                py-6
-                items-center
-                hover:bg-blue-50/40
-                transition
-              "
+                  className="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 sm:p-5 space-y-4"
                 >
-                  {/* STUDENT */}
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="
-                    w-14
-                    h-14
-                    rounded-2xl
-                    bg-blue-100
-                    text-blue-700
-                    flex
-                    items-center
-                    justify-center
-                    font-bold
-                  "
-                    >
-                      {student.nombre[0]}
+                  {/* Top Bar: Avatar, Info & Acciones */}
+                  <div className="flex items-start justify-between gap-3 pb-3 border-b border-gray-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-base shrink-0">
+                        {student.nombre[0]?.toUpperCase()}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-base leading-snug">
+                          {student.nombre} {student.apellido}
+                        </h3>
+                        <div className="mt-1">
+                          {getStatusBadge(student.status)}
+                        </div>
+                      </div>
                     </div>
 
-                    <div>
-                      <h3
-                        className="
-                      font-semibold
-                      text-gray-900
-                    "
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Link
+                        href={`/admin/students/${student.id}/edit`}
+                        className="p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition"
+                        title="Editar"
                       >
-                        {student.nombre} {student.apellido}
-                      </h3>
+                        <Pencil className="w-4 h-4" />
+                      </Link>
 
-                      <p className="text-sm text-gray-500">Estudiante</p>
+                      <button
+                        type="button"
+                        onClick={() => setStudentToDelete(student)}
+                        className="p-2 rounded-lg text-gray-600 hover:text-rose-600 hover:bg-rose-50 transition"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
 
-                  {/* DNI */}
-                  <div className="text-gray-700">{student.dni}</div>
+                  {/* Student Details */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <IdCard className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="font-medium text-gray-500">DNI:</span>
+                      <span className="font-mono text-gray-800">
+                        {student.dni}
+                      </span>
+                    </div>
 
-                  {/* EMAIL */}
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <Mail className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="font-medium text-gray-500">Email:</span>
+                      <span
+                        className="text-gray-800 truncate"
+                        title={student.email}
+                      >
+                        {student.email}
+                      </span>
+                    </div>
 
-                    {student.email}
+                    <div className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="font-medium text-gray-500">Nivel:</span>
+                      <span className="px-2 py-0.5 rounded bg-cyan-50 text-cyan-700 font-medium text-xs">
+                        {student.nivel}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* NIVEL */}
-                  <div>
-                    <span
-                      className="
-                    px-4
-                    py-2
-                    rounded-full
-                    bg-cyan-100
-                    text-cyan-700
-                    text-sm
-                    font-medium
-                  "
-                    >
-                      {student.nivel}
+                  {/* Classroom Selector */}
+                  <div className="pt-2 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-semibold text-gray-500">
+                      Classroom asignada:
                     </span>
-                  </div>
-
-                  {/* CLASSROOM */}
-                  <div>
-                    <AssignClassroom
-                      studentId={student.id}
-                      currentClassroom={student.classroom}
-                      classrooms={classrooms}
-                    />
-                  </div>
-                  <div>
-                    <span
-                      className={`
-      px-4
-      py-2
-      rounded-full
-      text-sm
-      font-medium
-      ${
-        student.status === "active"
-          ? "bg-emerald-100 text-emerald-700"
-          : student.status === "inactive"
-            ? "bg-red-100 text-red-700"
-            : "bg-amber-100 text-amber-700"
-      }
-    `}
-                    >
-                      {student.status === "active" && "Activo"}
-
-                      {student.status === "inactive" && "Inactivo"}
-
-                      {student.status === "pending" && "Pendiente"}
-                    </span>
-                  </div>
-
-                  {/* ACTIONS */}
-                  <div
-                    className="
-                  flex
-                  items-center
-                  justify-end
-                  gap-3
-                "
-                  >
-                    <Link
-                      href={`/admin/students/${student.id}/edit`}
-                      className="
-                    w-11
-                    h-11
-                    rounded-2xl
-                    bg-blue-100
-                    text-blue-700
-                    flex
-                    items-center
-                    justify-center
-                    hover:bg-blue-200
-                    transition
-                  "
-                    >
-                      <Pencil className="w-5 h-5" />
-                    </Link>
+                    <div className="w-full sm:w-auto">
+                      <AssignClassroom
+                        studentId={student.id}
+                        currentClassroom={student.classroom}
+                        classrooms={classrooms}
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* DELETE CONFIRMATION MODAL */}
+        {studentToDelete && (
+          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-100 space-y-4 animate-in fade-in zoom-in duration-150">
+              <div className="flex items-center gap-3 text-rose-600">
+                <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900">
+                  ¿Eliminar estudiante?
+                </h3>
+              </div>
+
+              <p className="text-sm text-gray-600">
+                ¿Estás seguro de que deseas eliminar a{" "}
+                <span className="font-semibold text-gray-900">
+                  {studentToDelete.nombre} {studentToDelete.apellido}
+                </span>
+                ? Esta acción no se puede deshacer.
+              </p>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={() => setStudentToDelete(null)}
+                  className="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={handleDeleteConfirm}
+                  className="px-4 py-2 rounded-xl bg-rose-600 text-white text-sm font-medium hover:bg-rose-700 transition flex items-center gap-2 disabled:opacity-50"
+                >
+                  {isDeleting ? "Eliminando..." : "Sí, eliminar"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </main>
   );
 }
