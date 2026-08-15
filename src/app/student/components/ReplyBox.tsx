@@ -50,18 +50,18 @@ export default function ReplyBox({ questionId, onReplyCreated }: Props) {
       className="
         bg-white
         rounded-3xl
-        border
-        border-slate-200
+       
+      
         shadow-sm
-        p-6
+        p-3
       "
     >
-      <h3 className="text-lg font-semibold text-slate-900 mb-4">
+      <h3 className="text-lg font-semibold text-slate-900 mb-2">
         Escribir respuesta
       </h3>
 
       <textarea
-        rows={5}
+        rows={3}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Escribí tu respuesta..."

@@ -429,7 +429,7 @@ export default function QuestionThread({ questionId, onClose }: Props) {
         </div>
 
         {/* FOOTER - REPLY BOX */}
-        <div className="border-t border-slate-200 bg-white p-4 sm:p-6 shrink-0">
+        <div className="border-t  bg-white p-2 sm:p-3 shrink-0">
           <ReplyBox
             questionId={questionId}
             onReplyCreated={handleReplyCreated}

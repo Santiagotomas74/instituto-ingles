@@ -83,7 +83,9 @@ export async function POST(req: NextRequest) {
         [
           student.student_id,
 
-          content ? `${title}. ${content}` : title,
+          content
+            ? `Nuevo anuncio de la Coordinadora: "${title}". ${content}`
+            : title,
 
           result.rows[0].id,
 

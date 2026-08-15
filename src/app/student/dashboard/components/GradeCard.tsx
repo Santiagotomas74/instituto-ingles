@@ -1,7 +1,12 @@
 "use client";
 
-import { GraduationCap, School, Star, CalendarDays, Eye } from "lucide-react";
-
+import {
+  GraduationCap,
+  School,
+  CalendarDays,
+  Eye,
+  MessageSquareText,
+} from "lucide-react";
 import { Grade } from "./Grades";
 
 type Props = {
@@ -10,129 +15,130 @@ type Props = {
 };
 
 export default function GradeCard({ grade, onClick }: Props) {
-  const percentage = Math.round((grade.grade / grade.max_score) * 100);
+  // Evitar división por cero
+  const percentage =
+    grade.max_score > 0 ? Math.round((grade.grade / grade.max_score) * 100) : 0;
 
-  const badgeColor =
-    percentage >= 90
-      ? "bg-emerald-100 text-emerald-700"
-      : percentage >= 70
-        ? "bg-cyan-100 text-cyan-700"
-        : percentage >= 60
-          ? "bg-amber-100 text-amber-700"
-          : "bg-red-100 text-red-700";
+  // Lógica de colores más moderna y con bordes
+  const getBadgeStyle = () => {
+    if (percentage >= 90)
+      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    if (percentage >= 70) return "bg-blue-50 text-blue-700 border-blue-200";
+    if (percentage >= 60) return "bg-amber-50 text-amber-700 border-amber-200";
+    return "bg-rose-50 text-rose-700 border-rose-200";
+  };
+
+  // Formateo seguro de fecha (evita saltos de zona horaria)
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "-";
+    const [year, month, day] = dateStr.split("T")[0].split("-");
+    if (!year || !month || !day) return dateStr;
+    return `${day}/${month}/${year}`;
+  };
 
   return (
-    <div
-      className="
-        bg-white
-        rounded-3xl
-        border
-        shadow-sm
-        hover:shadow-md
-        transition
-        p-6
-      "
-    >
-      <div className="flex justify-between items-start">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-700">{grade.titulo}</h2>
-
+    <div className="group bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 p-5 sm:p-6 flex flex-col gap-6">
+      {/* CABECERA: Título y Nota */}
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
+            {grade.titulo}
+          </h2>
           {grade.descripcion && (
-            <p className="mt-2 text-slate-600">{grade.descripcion}</p>
+            <p className="mt-1.5 text-sm text-slate-500 line-clamp-2 leading-relaxed">
+              {grade.descripcion}
+            </p>
           )}
         </div>
 
         <div
-          className={`
-            px-4
-            py-2
-            rounded-2xl
-            font-bold
-            text-slate-600
-            text-lg
-            ${badgeColor}
-          `}
+          className={`shrink-0 px-4 py-1.5 rounded-xl font-bold text-lg border ${getBadgeStyle()}`}
         >
-          {grade.grade} / {grade.max_score}
+          {grade.grade}{" "}
+          <span className="opacity-60 text-sm font-medium">
+            / {grade.max_score}
+          </span>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-5 mt-7">
-        <div className="flex gap-3">
-          <School className="text-cyan-600" />
-
-          <div>
-            <p className="text-xs text-slate-500">Aula</p>
-
-            <p className="font-medium text-slate-600">{grade.classroom}</p>
+      {/* METADATOS */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-slate-600">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 text-slate-400">
+            <School className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+              Aula
+            </p>
+            <p
+              className="font-medium text-slate-700 truncate"
+              title={grade.classroom}
+            >
+              {grade.classroom}
+            </p>
           </div>
         </div>
 
-        <div className="flex gap-3">
-          <GraduationCap className="text-cyan-600" />
-
-          <div>
-            <p className="text-xs text-slate-500">Profesor</p>
-
-            <p className="font-medium text-slate-600">{grade.teacher}</p>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 text-slate-400">
+            <GraduationCap className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+              Profesor
+            </p>
+            <p
+              className="font-medium text-slate-700 truncate"
+              title={grade.teacher}
+            >
+              {grade.teacher}
+            </p>
           </div>
         </div>
 
-        <div className="flex gap-3">
-          <CalendarDays className="text-cyan-600" />
-
+        <div className="flex items-center gap-2.5 col-span-2 md:col-span-1">
+          <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 text-slate-400">
+            <CalendarDays className="w-4 h-4" />
+          </div>
           <div>
-            <p className="text-xs text-slate-500">Fecha de corrección</p>
-
-            <p className="font-medium text-slate-600">
-              {grade.graded_at
-                ? new Date(grade.graded_at).toLocaleDateString()
-                : "-"}
+            <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+              Corregido el
+            </p>
+            <p className="font-medium text-slate-700">
+              {formatDate(grade.graded_at)}
             </p>
           </div>
         </div>
       </div>
 
-      {grade.teacher_feedback && (
-        <div
-          className="
-            mt-6
-            rounded-2xl
-            bg-slate-50
-            border
-            p-5
-          "
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <Star className="text-amber-500" size={18} />
-
-            <span className="font-semibold text-slate-600">
-              Observación del profesor
-            </span>
-          </div>
-
-          <p className="text-slate-600 line-clamp-2">
-            {grade.teacher_feedback}
-          </p>
+      {/* FEEDBACK & ACCIÓN */}
+      <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row gap-4 justify-between items-end sm:items-center">
+        {/* Feedback del profesor */}
+        <div className="flex-1 w-full">
+          {grade.teacher_feedback ? (
+            <div className="flex gap-3 bg-amber-50/50 border border-amber-100/50 rounded-2xl p-3">
+              <MessageSquareText className="text-amber-500 shrink-0 w-5 h-5 mt-0.5" />
+              <div>
+                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider block mb-0.5">
+                  Observación
+                </span>
+                <p className="text-sm text-slate-700 line-clamp-2">
+                  &quot;{grade.teacher_feedback}&quot;
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="hidden sm:block" /> /* Spacer if no feedback */
+          )}
         </div>
-      )}
 
-      <div className="flex justify-end mt-6">
+        {/* Botón Ver Detalle */}
         <button
           onClick={onClick}
-          className="
-            h-11
-            px-5
-            rounded-xl
-            bg-cyan-600
-            hover:bg-cyan-700
-            text-white
-            flex
-            items-center
-            gap-2
-          "
+          className="w-full sm:w-auto shrink-0 h-10 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm"
         >
-          <Eye size={18} />
+          <Eye className="w-4 h-4" />
           Ver detalle
         </button>
       </div>
