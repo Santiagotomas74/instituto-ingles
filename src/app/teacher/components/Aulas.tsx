@@ -34,7 +34,7 @@ export default async function Aulas() {
   const classrooms = classroomsData.classrooms || [];
 
   return (
-    <main className="p-8 bg-slate-50 min-h-screen">
+    <main className="p-8 bg-slate-50 min-h-screen ">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
           <h1 className="text-4xl font-bold text-slate-900">Estadisticas</h1>

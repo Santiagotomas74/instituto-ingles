@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 
 export default function StudentProfile() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-amber-50/50 to-amber-100/30">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-blue-100">
       {/* NAVEGACIÓN */}
       <Navbar />
 

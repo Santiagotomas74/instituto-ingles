@@ -365,13 +365,6 @@ export default function MobileNavbar() {
                     title="Mensajes"
                     description="Comunicación con profesores"
                   />
-
-                  <DropdownIconItem
-                    href="/student/certificates"
-                    icon={<FileText className="w-5 h-5" />}
-                    title="Certificados"
-                    description="Descarga tus certificados"
-                  />
                 </div>
               </li>
 
@@ -427,13 +420,6 @@ export default function MobileNavbar() {
                   />
 
                   <DropdownIconItem
-                    href="/teacher/attendance"
-                    icon={<ClipboardCheck className="w-5 h-5" />}
-                    title="Asistencia"
-                    description="Control de alumnos"
-                  />
-
-                  <DropdownIconItem
                     href="/teacher/messages"
                     icon={<MessageSquare className="w-5 h-5" />}
                     title="Mensajes"
@@ -441,10 +427,10 @@ export default function MobileNavbar() {
                   />
 
                   <DropdownIconItem
-                    href="/teacher/reports"
+                    href="/teacher/calendario"
                     icon={<BarChart3 className="w-5 h-5" />}
-                    title="Reportes"
-                    description="Estadísticas y rendimiento"
+                    title="Calendario Academico"
+                    description="Fechas y eventos del año"
                   />
                 </div>
               </li>

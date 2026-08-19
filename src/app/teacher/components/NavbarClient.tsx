@@ -26,7 +26,7 @@ export default function NavbarClient({
   }
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shadow-sm">
+    <header className="h-20 bg-white border-b border-slate-200 px-7 flex items-center justify-between shadow-sm">
       <div>
         <h1 className="text-2xl font-bold text-slate-900  hidden md:block">
           Panel del Profesor
