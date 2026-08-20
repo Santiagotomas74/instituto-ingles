@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 import {
   ArrowLeft,
   Save,
@@ -12,69 +13,150 @@ import {
   CalendarDays,
   BookOpen,
   ClipboardList,
-  MessageSquareText,
   CheckCircle2,
 } from "lucide-react";
 
+/*
+=====================================================
+TIPO BOLETÍN
+=====================================================
+*/
+
 export type Boletin = {
   id: string;
+
+  teacher_id: string;
 
   dni: number;
 
   estudiante_nombre: string;
   estudiante_apellido: string;
 
-  es_mayor_edad?: boolean | null;
+  profesor_nombre: string | null;
+  profesor_apellido: string | null;
 
-  anio: number;
+  /*
+  INFORMACIÓN GENERAL
+  */
+
+  anio: number | null;
 
   nivel: string | null;
 
-  profesor_nombre?: string;
-  profesor_apellido?: string;
+  es_mayor_edad: boolean | null;
+
+  /*
+  CALIFICACIONES
+  */
 
   nota_1: number | null;
   nota_2: number | null;
   nota_3: number | null;
 
-  promedio?: number | null;
+  /*
+  PROMEDIO GUARDADO EN BD
+  */
 
-  behavoir_1: string | null;
-  behavoir_2: string | null;
-  behavoir_3: string | null;
+  promedio: number | null;
+
+  /*
+  COMPORTAMIENTO
+  */
+
+  behaviour_1: string | null;
+  behaviour_2: string | null;
+  behaviour_3: string | null;
+
+  /*
+  AUSENCIAS
+  */
 
   ausentes: number | null;
-  ausentes_2?: number | null;
-  ausentes_3?: number | null;
+  ausentes_2: number | null;
+  ausentes_3: number | null;
+
+  /*
+  PROMEDIO DE AUSENCIAS GUARDADO EN BD
+  */
+
+  ausentes_promedio: number | null;
+
+  /*
+  OBSERVACIONES
+  */
 
   observaciones_1: string | null;
   observaciones_2: string | null;
   observaciones_3: string | null;
 
-  behavoir_final?: string | null;
-  observaciones_final?: string | null;
+  /*
+  EVALUACIÓN FINAL
+  */
 
-  aclaracion_padre?: string | null;
-  aclaracion_estudiante?: string | null;
+  behaviour_final: string | null;
+  observaciones_final: string | null;
 
-  created_at?: string;
-  updated_at?: string;
+  /*
+  FECHAS
+  */
+
+  created_at: string | null;
+  updated_at: string | null;
 };
+
+/*
+=====================================================
+TIPO FORM DATA
+=====================================================
+*/
+
+type FormData = {
+  anio: string;
+  nivel: string;
+  es_mayor_edad: boolean;
+
+  nota_1: string;
+  nota_2: string;
+  nota_3: string;
+
+  behaviour_1: string;
+  behaviour_2: string;
+  behaviour_3: string;
+
+  ausentes: string;
+  ausentes_2: string;
+  ausentes_3: string;
+
+  observaciones_1: string;
+  observaciones_2: string;
+  observaciones_3: string;
+
+  behaviour_final: string;
+  observaciones_final: string;
+};
+
+/*
+=====================================================
+COMPONENTE
+=====================================================
+*/
 
 export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
   const [errorMsg, setErrorMsg] = useState("");
+
   const [successMsg, setSuccessMsg] = useState("");
 
   /*
-  =====================================
+  =====================================================
   FORM DATA
-  =====================================
+  =====================================================
   */
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     /*
     INFORMACIÓN GENERAL
     */
@@ -99,11 +181,11 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
     COMPORTAMIENTO
     */
 
-    behavoir_1: boletin.behavoir_1 ?? "",
+    behaviour_1: boletin.behaviour_1 ?? "",
 
-    behavoir_2: boletin.behavoir_2 ?? "",
+    behaviour_2: boletin.behaviour_2 ?? "",
 
-    behavoir_3: boletin.behavoir_3 ?? "",
+    behaviour_3: boletin.behaviour_3 ?? "",
 
     /*
     AUSENCIAS
@@ -129,23 +211,15 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
     EVALUACIÓN FINAL
     */
 
-    behavoir_final: boletin.behavoir_final ?? "",
+    behaviour_final: boletin.behaviour_final ?? "",
 
     observaciones_final: boletin.observaciones_final ?? "",
-
-    /*
-    ACLARACIONES
-    */
-
-    aclaracion_padre: boletin.aclaracion_padre ?? "",
-
-    aclaracion_estudiante: boletin.aclaracion_estudiante ?? "",
   });
 
   /*
-  =====================================
+  =====================================================
   HANDLE CHANGE
-  =====================================
+  =====================================================
   */
 
   const handleChange = (
@@ -162,9 +236,9 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
   };
 
   /*
-  =====================================
-  HANDLE CHECKBOX
-  =====================================
+  =====================================================
+  HANDLE MAYOR DE EDAD
+  =====================================================
   */
 
   const handleMayorEdadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,9 +249,9 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
   };
 
   /*
-  =====================================
-  PROMEDIO
-  =====================================
+  =====================================================
+  PROMEDIO DE NOTAS
+  =====================================================
   */
 
   const notas = [formData.nota_1, formData.nota_2, formData.nota_3]
@@ -185,15 +259,15 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
     .map(Number)
     .filter((value) => !Number.isNaN(value));
 
-  const promedio =
+  const promedioCalculado =
     notas.length > 0
       ? notas.reduce((total, nota) => total + nota, 0) / notas.length
       : null;
 
   /*
-  =====================================
-  PROMEDIO AUSENCIAS
-  =====================================
+  =====================================================
+  PROMEDIO DE AUSENCIAS
+  =====================================================
   */
 
   const ausencias = [
@@ -205,70 +279,173 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
     .map(Number)
     .filter((value) => !Number.isNaN(value));
 
-  const promedioAusencias =
+  const promedioAusenciasCalculado =
     ausencias.length > 0
       ? ausencias.reduce((total, value) => total + value, 0) / ausencias.length
       : null;
 
   /*
-  =====================================
+  =====================================================
   SUBMIT
-  =====================================
+  =====================================================
   */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (loading) return;
+
     setLoading(true);
+
     setErrorMsg("");
+
     setSuccessMsg("");
 
     try {
-      const res = await fetch(`/api/teacher/boletines?id=${boletin.id}`, {
-        method: "PATCH",
+      /*
+      =================================================
+      PAYLOAD
+      =================================================
 
-        headers: {
-          "Content-Type": "application/json",
+      Este payload está alineado con el PATCH.
+      */
+
+      const payload = {
+        /*
+        INFORMACIÓN GENERAL
+        */
+
+        anio: formData.anio === "" ? null : Number(formData.anio),
+
+        nivel: formData.nivel.trim() === "" ? null : formData.nivel.trim(),
+
+        es_mayor_edad: formData.es_mayor_edad,
+
+        /*
+        NOTAS
+        */
+
+        nota_1: formData.nota_1 === "" ? null : Number(formData.nota_1),
+
+        nota_2: formData.nota_2 === "" ? null : Number(formData.nota_2),
+
+        nota_3: formData.nota_3 === "" ? null : Number(formData.nota_3),
+
+        /*
+        COMPORTAMIENTO
+        */
+
+        behaviour_1: formData.behaviour_1 === "" ? null : formData.behaviour_1,
+
+        behaviour_2: formData.behaviour_2 === "" ? null : formData.behaviour_2,
+
+        behaviour_3: formData.behaviour_3 === "" ? null : formData.behaviour_3,
+
+        /*
+        AUSENCIAS
+        */
+
+        ausentes: formData.ausentes === "" ? null : Number(formData.ausentes),
+
+        ausentes_2:
+          formData.ausentes_2 === "" ? null : Number(formData.ausentes_2),
+
+        ausentes_3:
+          formData.ausentes_3 === "" ? null : Number(formData.ausentes_3),
+
+        /*
+        OBSERVACIONES
+        */
+
+        observaciones_1:
+          formData.observaciones_1.trim() === ""
+            ? null
+            : formData.observaciones_1.trim(),
+
+        observaciones_2:
+          formData.observaciones_2.trim() === ""
+            ? null
+            : formData.observaciones_2.trim(),
+
+        observaciones_3:
+          formData.observaciones_3.trim() === ""
+            ? null
+            : formData.observaciones_3.trim(),
+
+        /*
+        EVALUACIÓN FINAL
+        */
+
+        behaviour_final:
+          formData.behaviour_final === "" ? null : formData.behaviour_final,
+
+        observaciones_final:
+          formData.observaciones_final.trim() === ""
+            ? null
+            : formData.observaciones_final.trim(),
+      };
+
+      /*
+      =================================================
+      PATCH
+      =================================================
+      */
+
+      const res = await fetch(
+        `/api/teacher/boletines/editar/${encodeURIComponent(boletin.id)}`,
+        {
+          method: "PATCH",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify(payload),
         },
-
-        body: JSON.stringify(formData),
-      });
+      );
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Error al actualizar boletín");
+        throw new Error(data.message || "Error al actualizar el boletín");
       }
 
-      setSuccessMsg("Boletín actualizado correctamente.");
-
       /*
-      Esperamos un momento para que el usuario
-      vea el mensaje.
+      =================================================
+      ÉXITO
+      =================================================
       */
+
+      setSuccessMsg("Boletín actualizado correctamente.");
 
       setTimeout(() => {
         router.push("/teacher/boletines");
         router.refresh();
       }, 700);
-    } catch (err: unknown) {
-      console.error("Error actualizando boletín:", err);
+    } catch (error: unknown) {
+      console.error("Error actualizando boletín:", error);
 
-      if (err instanceof Error) {
-        setErrorMsg(err.message);
+      if (error instanceof Error) {
+        setErrorMsg(error.message);
       } else {
-        setErrorMsg("Error inesperado al guardar los cambios");
+        setErrorMsg("Error inesperado al guardar los cambios.");
       }
     } finally {
       setLoading(false);
     }
   };
 
+  /*
+  =====================================================
+  RENDER
+  =====================================================
+  */
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl mx-auto pb-10">
-      {/* =====================================
+      {/* =================================================
           HEADER
-      ===================================== */}
+      ================================================= */}
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -317,6 +494,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
             font-semibold
             transition
             disabled:opacity-50
+            disabled:cursor-not-allowed
           "
         >
           {loading ? (
@@ -329,40 +507,85 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </button>
       </div>
 
-      {/* =====================================
+      {/* =================================================
           MENSAJES
-      ===================================== */}
+      ================================================= */}
 
       {errorMsg && (
-        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-sm">
+        <div
+          className="
+            p-4
+            rounded-2xl
+            bg-red-50
+            border
+            border-red-200
+            text-red-600
+            text-sm
+          "
+        >
           {errorMsg}
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-green-50 border border-green-200 text-green-700 text-sm flex items-center gap-2">
+        <div
+          className="
+            p-4
+            rounded-2xl
+            bg-green-50
+            border
+            border-green-200
+            text-green-700
+            text-sm
+            flex
+            items-center
+            gap-2
+          "
+        >
           <CheckCircle2 size={18} />
 
           {successMsg}
         </div>
       )}
 
-      {/* =====================================
+      {/* =================================================
           INFORMACIÓN DEL ALUMNO
-      ===================================== */}
+      ================================================= */}
 
       <section className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center shrink-0">
+          <div
+            className="
+              w-12
+              h-12
+              rounded-2xl
+              bg-cyan-100
+              flex
+              items-center
+              justify-center
+              shrink-0
+            "
+          >
             <User className="text-cyan-600" size={24} />
           </div>
 
-          <div>
+          <div className="flex-1">
             <h2 className="text-lg font-bold text-slate-900">
               {boletin.estudiante_apellido}, {boletin.estudiante_nombre}
             </h2>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 mt-1">
+            <div
+              className="
+                flex
+                flex-wrap
+                items-center
+                gap-x-4
+                gap-y-1
+                text-sm
+                text-slate-500
+                mt-1
+              "
+            >
               <span>DNI: {boletin.dni}</span>
 
               <span className="flex items-center gap-1">
@@ -373,19 +596,46 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
 
               <span className="flex items-center gap-1">
                 <CalendarDays size={14} />
-                Año {boletin.anio}
+                Año {boletin.anio ?? "-"}
               </span>
             </div>
+
+            {/* PROFESOR */}
+
+            {(boletin.profesor_nombre || boletin.profesor_apellido) && (
+              <p className="text-sm text-slate-500 mt-2">
+                Profesor:{" "}
+                <span className="font-medium text-slate-700">
+                  {boletin.profesor_apellido}, {boletin.profesor_nombre}
+                </span>
+              </p>
+            )}
           </div>
         </div>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           DATOS GENERALES
-      ===================================== */}
+      ================================================= */}
 
-      <section className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-        <div className="border-b bg-slate-50 px-6 py-5">
+      <section
+        className="
+          bg-white
+          border
+          border-slate-200
+          rounded-3xl
+          shadow-sm
+          overflow-hidden
+        "
+      >
+        <div
+          className="
+            border-b
+            bg-slate-50
+            px-6
+            py-5
+          "
+        >
           <h2 className="font-bold text-slate-900">Datos generales</h2>
 
           <p className="text-sm text-slate-500 mt-1">
@@ -394,7 +644,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
 
         <div className="p-6 grid md:grid-cols-3 gap-6">
-          {/* Año */}
+          {/* AÑO */}
 
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -406,6 +656,8 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
               name="anio"
               value={formData.anio}
               onChange={handleChange}
+              min="2000"
+              max="2100"
               className="
                 text-slate-800
                 w-full
@@ -424,7 +676,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
             />
           </div>
 
-          {/* Nivel */}
+          {/* NIVEL */}
 
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -455,7 +707,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
             />
           </div>
 
-          {/* Mayor de edad */}
+          {/* MAYOR DE EDAD */}
 
           <label className="flex items-center gap-3 cursor-pointer md:pt-7">
             <input
@@ -480,11 +732,21 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           CALIFICACIONES
-      ===================================== */}
+      ================================================= */}
 
-      <section className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
+      <section
+        className="
+          bg-white
+          border
+          border-slate-200
+          rounded-3xl
+          p-6
+          shadow-sm
+          space-y-6
+        "
+      >
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <FileEdit className="text-cyan-600" size={20} />
           Calificaciones
@@ -492,12 +754,20 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((period) => {
-            const notaField = `nota_${period}` as keyof typeof formData;
+            const notaField = `nota_${period}` as
+              | "nota_1"
+              | "nota_2"
+              | "nota_3";
 
-            const behaviorField = `behavoir_${period}` as keyof typeof formData;
+            const behaviorField = `behaviour_${period}` as
+              | "behaviour_1"
+              | "behaviour_2"
+              | "behaviour_3";
 
-            const observationField =
-              `observaciones_${period}` as keyof typeof formData;
+            const observationField = `observaciones_${period}` as
+              | "observaciones_1"
+              | "observaciones_2"
+              | "observaciones_3";
 
             return (
               <div
@@ -515,7 +785,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
                   {period}° Trimestre
                 </h3>
 
-                {/* Nota */}
+                {/* NOTA */}
 
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">
@@ -547,7 +817,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
                   />
                 </div>
 
-                {/* Conducta */}
+                {/* COMPORTAMIENTO */}
 
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">
@@ -584,7 +854,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
                   </select>
                 </div>
 
-                {/* Observaciones */}
+                {/* OBSERVACIONES */}
 
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1">
@@ -619,27 +889,66 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
 
         {/* PROMEDIO */}
 
-        <div className="rounded-2xl bg-cyan-50 border border-cyan-100 p-5 flex items-center justify-between">
+        <div
+          className="
+            rounded-2xl
+            bg-cyan-50
+            border
+            border-cyan-100
+            p-5
+            flex
+            items-center
+            justify-between
+          "
+        >
           <div>
             <p className="text-sm font-semibold text-cyan-700">Promedio</p>
 
             <p className="text-xs text-cyan-600 mt-1">
-              Calculado automáticamente
+              Se recalcula automáticamente según las notas.
             </p>
+
+            {boletin.promedio !== null && (
+              <p className="text-xs text-slate-500 mt-2">
+                Promedio guardado actualmente:{" "}
+                <span className="font-semibold">
+                  {Number(boletin.promedio).toFixed(2)}
+                </span>
+              </p>
+            )}
           </div>
 
           <span className="text-3xl font-bold text-cyan-700">
-            {promedio !== null ? promedio.toFixed(2) : "-"}
+            {promedioCalculado !== null ? promedioCalculado.toFixed(2) : "-"}
           </span>
         </div>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           ASISTENCIA
-      ===================================== */}
+      ================================================= */}
 
-      <section className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-        <div className="border-b bg-slate-50 px-6 py-5 flex items-center gap-3">
+      <section
+        className="
+          bg-white
+          border
+          border-slate-200
+          rounded-3xl
+          shadow-sm
+          overflow-hidden
+        "
+      >
+        <div
+          className="
+            border-b
+            bg-slate-50
+            px-6
+            py-5
+            flex
+            items-center
+            gap-3
+          "
+        >
           <CalendarDays className="text-cyan-600" />
 
           <div>
@@ -652,60 +961,133 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
 
         <div className="p-6 grid md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((period) => {
-            const field =
-              period === 1
-                ? "ausentes"
-                : (`ausentes_${period}` as "ausentes_2" | "ausentes_3");
+          {/* AUSENTES 1 */}
 
-            return (
-              <div key={period}>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Ausentes {period}
-                </label>
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Ausentes 1
+            </label>
 
-                <input
-                  type="number"
-                  min="0"
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  placeholder="0"
-                  className="
-                    text-slate-800
-                    w-full
-                    h-11
-                    px-3
-                    rounded-xl
-                    border
-                    border-slate-200
-                    bg-white
-                    text-sm
-                    focus:border-cyan-500
-                    outline-none
-                  "
-                />
-              </div>
-            );
-          })}
+            <input
+              type="number"
+              min="0"
+              name="ausentes"
+              value={formData.ausentes}
+              onChange={handleChange}
+              placeholder="0"
+              className="
+                text-slate-800
+                w-full
+                h-11
+                px-3
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                text-sm
+                focus:border-cyan-500
+                outline-none
+              "
+            />
+          </div>
+
+          {/* AUSENTES 2 */}
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Ausentes 2
+            </label>
+
+            <input
+              type="number"
+              min="0"
+              name="ausentes_2"
+              value={formData.ausentes_2}
+              onChange={handleChange}
+              placeholder="0"
+              className="
+                text-slate-800
+                w-full
+                h-11
+                px-3
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                text-sm
+                focus:border-cyan-500
+                outline-none
+              "
+            />
+          </div>
+
+          {/* AUSENTES 3 */}
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Ausentes 3
+            </label>
+
+            <input
+              type="number"
+              min="0"
+              name="ausentes_3"
+              value={formData.ausentes_3}
+              onChange={handleChange}
+              placeholder="0"
+              className="
+                text-slate-800
+                w-full
+                h-11
+                px-3
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                text-sm
+                focus:border-cyan-500
+                outline-none
+              "
+            />
+          </div>
 
           {/* PROMEDIO AUSENCIAS */}
 
           <div className="md:col-span-3">
-            <div className="rounded-2xl bg-orange-50 border border-orange-100 p-5 flex items-center justify-between">
+            <div
+              className="
+                rounded-2xl
+                bg-orange-50
+                border
+                border-orange-100
+                p-5
+                flex
+                items-center
+                justify-between
+              "
+            >
               <div>
                 <p className="text-sm font-semibold text-orange-700">
                   Promedio de ausencias
                 </p>
 
                 <p className="text-xs text-orange-600 mt-1">
-                  Calculado automáticamente
+                  Se recalcula automáticamente.
                 </p>
+
+                {boletin.ausentes_promedio !== null && (
+                  <p className="text-xs text-slate-500 mt-2">
+                    Promedio guardado actualmente:{" "}
+                    <span className="font-semibold">
+                      {Number(boletin.ausentes_promedio).toFixed(2)}
+                    </span>
+                  </p>
+                )}
               </div>
 
               <span className="text-3xl font-bold text-orange-700">
-                {promedioAusencias !== null
-                  ? promedioAusencias.toFixed(2)
+                {promedioAusenciasCalculado !== null
+                  ? promedioAusenciasCalculado.toFixed(2)
                   : "-"}
               </span>
             </div>
@@ -713,12 +1095,31 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           EVALUACIÓN FINAL
-      ===================================== */}
+      ================================================= */}
 
-      <section className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-        <div className="border-b bg-slate-50 px-6 py-5 flex items-center gap-3">
+      <section
+        className="
+          bg-white
+          border
+          border-slate-200
+          rounded-3xl
+          shadow-sm
+          overflow-hidden
+        "
+      >
+        <div
+          className="
+            border-b
+            bg-slate-50
+            px-6
+            py-5
+            flex
+            items-center
+            gap-3
+          "
+        >
           <ClipboardList className="text-cyan-600" />
 
           <div>
@@ -731,7 +1132,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
 
         <div className="p-6 grid md:grid-cols-2 gap-6">
-          {/* Conducta final */}
+          {/* COMPORTAMIENTO FINAL */}
 
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -739,8 +1140,8 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
             </label>
 
             <select
-              name="behavoir_final"
-              value={formData.behavoir_final}
+              name="behaviour_final"
+              value={formData.behaviour_final}
               onChange={handleChange}
               className="
                 text-slate-800
@@ -768,7 +1169,7 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
             </select>
           </div>
 
-          {/* Observación final */}
+          {/* OBSERVACIÓN FINAL */}
 
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -799,89 +1200,97 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </div>
       </section>
 
-      {/* =====================================
-          ACLARACIONES
-      ===================================== */}
+      {/* =================================================
+          INFORMACIÓN DEL SISTEMA
+      ================================================= */}
 
-      <section className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-        <div className="border-b bg-slate-50 px-6 py-5 flex items-center gap-3">
-          <MessageSquareText className="text-cyan-600" />
+      <section
+        className="
+          bg-slate-50
+          border
+          border-slate-200
+          rounded-3xl
+          p-6
+        "
+      >
+        <h2 className="font-bold text-slate-900">Información del boletín</h2>
+
+        <div className="grid md:grid-cols-3 gap-4 mt-4 text-sm">
+          {/* ID */}
 
           <div>
-            <h2 className="font-bold text-slate-900">Aclaraciones</h2>
+            <p className="text-slate-500">ID del boletín</p>
 
-            <p className="text-sm text-slate-500">
-              Datos correspondientes a la firma del boletín.
+            <p className="font-medium text-slate-700 break-all mt-1">
+              {boletin.id}
             </p>
           </div>
-        </div>
 
-        <div className="p-6 grid md:grid-cols-2 gap-6">
-          {/* Padre */}
+          {/* TEACHER ID */}
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Aclaración del padre
-            </label>
+            <p className="text-slate-500">ID del profesor</p>
 
-            <input
-              type="text"
-              name="aclaracion_padre"
-              value={formData.aclaracion_padre}
-              onChange={handleChange}
-              placeholder="Nombre y apellido"
-              className="
-                text-slate-800
-                w-full
-                h-11
-                px-3
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                text-sm
-                focus:border-cyan-500
-                outline-none
-              "
-            />
+            <p className="font-medium text-slate-700 break-all mt-1">
+              {boletin.teacher_id}
+            </p>
           </div>
 
-          {/* Estudiante */}
+          {/* PROFESOR */}
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              Aclaración del estudiante
-            </label>
+            <p className="text-slate-500">Profesor</p>
 
-            <input
-              type="text"
-              name="aclaracion_estudiante"
-              value={formData.aclaracion_estudiante}
-              onChange={handleChange}
-              placeholder="Nombre y apellido"
-              className="
-                text-slate-800
-                w-full
-                h-11
-                px-3
-                rounded-xl
-                border
-                border-slate-200
-                bg-white
-                text-sm
-                focus:border-cyan-500
-                outline-none
-              "
-            />
+            <p className="font-medium text-slate-700 mt-1">
+              {boletin.profesor_apellido || boletin.profesor_nombre
+                ? `${boletin.profesor_apellido ?? ""}${
+                    boletin.profesor_apellido && boletin.profesor_nombre
+                      ? ", "
+                      : ""
+                  }${boletin.profesor_nombre ?? ""}`
+                : "-"}
+            </p>
+          </div>
+
+          {/* CREATED */}
+
+          <div>
+            <p className="text-slate-500">Creado</p>
+
+            <p className="font-medium text-slate-700 mt-1">
+              {boletin.created_at
+                ? new Date(boletin.created_at).toLocaleString("es-AR")
+                : "-"}
+            </p>
+          </div>
+
+          {/* UPDATED */}
+
+          <div>
+            <p className="text-slate-500">Última modificación</p>
+
+            <p className="font-medium text-slate-700 mt-1">
+              {boletin.updated_at
+                ? new Date(boletin.updated_at).toLocaleString("es-AR")
+                : "-"}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           FIRMAS
-      ===================================== */}
+      ================================================= */}
 
-      <section className="bg-cyan-50 border border-cyan-100 rounded-3xl p-6">
+      <section
+        className="
+          bg-cyan-50
+          border
+          border-cyan-100
+          rounded-3xl
+          p-6
+        "
+      >
         <h2 className="font-bold text-cyan-900">Firmas</h2>
 
         <p className="text-sm text-cyan-700 mt-2">
@@ -891,9 +1300,9 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         </p>
       </section>
 
-      {/* =====================================
+      {/* =================================================
           FOOTER
-      ===================================== */}
+      ================================================= */}
 
       <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
         <Link
