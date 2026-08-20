@@ -1,134 +1,204 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { query } from "@/lib/db";
 
-type Params = {
-  params: Promise<{ id: string }>;
-};
-
-// GET: Obtener boletín por ID
-export async function GET(req: NextRequest, { params }: Params) {
+export async function PATCH(request: Request) {
   try {
-    const { id } = await params;
+    /*
+    =====================================
+    AUTENTICACIÓN
+    =====================================
+    */
+
     const cookieStore = await cookies();
-    const userId = cookieStore.get("user_id")?.value;
+
+    const teacherId = cookieStore.get("user_id")?.value;
     const role = cookieStore.get("role")?.value;
 
-    if (!userId || role !== "teacher") {
+    if (!teacherId || role !== "teacher") {
       return NextResponse.json(
-        { success: false, message: "No autorizado" },
-        { status: 403 },
+        {
+          success: false,
+          message: "No autorizado",
+        },
+        {
+          status: 403,
+        },
       );
     }
 
-    const sql = `
-      SELECT * FROM boletines 
-      WHERE id = $1 AND teacher_id = $2
-    `;
-    const result = await query(sql, [id, userId]);
+    /*
+    =====================================
+    OBTENER ID DEL BOLETÍN
+    =====================================
+    */
 
-    if (!result.rows || result.rows.length === 0) {
+    const { searchParams } = new URL(request.url);
+
+    const boletinId = searchParams.get("id");
+
+    if (!boletinId) {
       return NextResponse.json(
-        { success: false, message: "Boletín no encontrado" },
-        { status: 404 },
+        {
+          success: false,
+          message: "El ID del boletín es obligatorio",
+        },
+        {
+          status: 400,
+        },
       );
     }
 
-    return NextResponse.json({ success: true, boletin: result.rows[0] });
-  } catch (error) {
-    console.error("Error al obtener boletín:", error);
-    return NextResponse.json(
-      { success: false, message: "Error interno del servidor" },
-      { status: 500 },
-    );
-  }
-}
+    /*
+    =====================================
+    BODY
+    =====================================
+    */
 
-// PATCH: Actualizar el boletín
-export async function PATCH(req: NextRequest, { params }: Params) {
-  try {
-    const { id } = await params;
-    const cookieStore = await cookies();
-    const userId = cookieStore.get("user_id")?.value;
-    const role = cookieStore.get("role")?.value;
-
-    if (!userId || role !== "teacher") {
-      return NextResponse.json(
-        { success: false, message: "No autorizado" },
-        { status: 403 },
-      );
-    }
-
-    const body = await req.json();
+    const body = await request.json();
 
     const {
+      anio,
+      nivel,
+      es_mayor_edad,
+
       nota_1,
       nota_2,
       nota_3,
-      behavior_1,
-      behavior_2,
-      behavior_3,
+
+      behaviour_1,
+      behaviour_2,
+      behaviour_3,
+
       ausentes,
+      ausentes_2,
+      ausentes_3,
+
       observaciones_1,
       observaciones_2,
       observaciones_3,
-      firma_teacher,
+
+      behaviour_final,
+      observaciones_final,
     } = body;
 
-    // Cálculo automático de promedio
-    const notasValidas = [nota_1, nota_2, nota_3]
-      .map((n) => (n !== null && n !== "" ? Number(n) : null))
-      .filter((n): n is number => n !== null && !isNaN(n));
+    /*
+    =====================================
+    VALIDAR QUE EL BOLETÍN PERTENEZCA
+    AL PROFESOR AUTENTICADO
+    =====================================
+    */
 
-    const promedio =
-      notasValidas.length > 0
-        ? notasValidas.reduce((acc, curr) => acc + curr, 0) /
-          notasValidas.length
-        : null;
+    const boletinResult = await query(
+      `
+      SELECT
+        id
+      FROM boletines
+      WHERE id = $1
+        AND teacher_id = $2
+      LIMIT 1
+      `,
+      [boletinId, teacherId],
+    );
 
-    const sql = `
+    if (boletinResult.rows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Boletín no encontrado o no autorizado",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    /*
+    =====================================
+    ACTUALIZAR BOLETÍN
+    =====================================
+    */
+
+    const result = await query(
+      `
       UPDATE boletines
       SET
-        nota_1 = $1,
-        nota_2 = $2,
-        nota_3 = $3,
-        promedio = $4,
-        behavior_1 = $5,
-        behavior_2 = $6,
-        behavior_3 = $7,
-        ausentes = $8,
-        observaciones_1 = $9,
-        observaciones_2 = $10,
-        observaciones_3 = $11,
-        firma_teacher = $12,
+        anio = $1,
+        nivel = $2,
+        es_mayor_edad = $3,
+
+        nota_1 = $4,
+        nota_2 = $5,
+        nota_3 = $6,
+
+        behaviour_1 = $7,
+        behaviour_2 = $8,
+        behaviour_3 = $9,
+
+        ausentes = $10,
+        ausentes_2 = $11,
+        ausentes_3 = $12,
+
+        observaciones_1 = $13,
+        observaciones_2 = $14,
+        observaciones_3 = $15,
+
+    
+
+        behaviour_final = $16,
+        observaciones_final = $17,
+
         updated_at = NOW()
-      WHERE id = $13 AND teacher_id = $14
-      RETURNING *;
-    `;
 
-    const values = [
-      nota_1 !== "" && nota_1 !== null ? Number(nota_1) : null,
-      nota_2 !== "" && nota_2 !== null ? Number(nota_2) : null,
-      nota_3 !== "" && nota_3 !== null ? Number(nota_3) : null,
-      promedio,
-      behavior_1 || null,
-      behavior_2 || null,
-      behavior_3 || null,
-      ausentes !== "" && ausentes !== null ? Number(ausentes) : null,
-      observaciones_1 || null,
-      observaciones_2 || null,
-      observaciones_3 || null,
-      firma_teacher || null,
-      id,
-      userId,
-    ];
+      WHERE id = $18
+        AND teacher_id = $19
 
-    const result = await query(sql, values);
+      RETURNING *
+      `,
+      [
+        anio,
+        nivel,
+        es_mayor_edad,
 
-    if (!result.rows || result.rows.length === 0) {
+        nota_1,
+        nota_2,
+        nota_3,
+
+        behaviour_1,
+        behaviour_2,
+        behaviour_3,
+
+        ausentes,
+        ausentes_2,
+        ausentes_3,
+
+        observaciones_1,
+        observaciones_2,
+        observaciones_3,
+
+        behaviour_final,
+        observaciones_final,
+
+        boletinId,
+        teacherId,
+      ],
+    );
+
+    /*
+    =====================================
+    RESPUESTA
+    =====================================
+    */
+
+    if (result.rows.length === 0) {
       return NextResponse.json(
-        { success: false, message: "Boletín no encontrado o no autorizado" },
-        { status: 404 },
+        {
+          success: false,
+          message: "No se pudo actualizar el boletín",
+        },
+        {
+          status: 404,
+        },
       );
     }
 
@@ -138,10 +208,16 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       boletin: result.rows[0],
     });
   } catch (error) {
-    console.error("Error al actualizar boletín:", error);
+    console.error("Error actualizando boletín:", error);
+
     return NextResponse.json(
-      { success: false, message: "Error al actualizar el boletín" },
-      { status: 500 },
+      {
+        success: false,
+        message: "Error actualizando boletín",
+      },
+      {
+        status: 500,
+      },
     );
   }
 }

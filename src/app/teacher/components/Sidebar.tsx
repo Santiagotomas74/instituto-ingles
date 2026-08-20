@@ -37,6 +37,11 @@ const menu = [
     href: "/teacher/profile",
     icon: User,
   },
+  {
+    name: "Boletines",
+    href: "/teacher/boletines",
+    icon: User,
+  },
 ];
 
 export default function Sidebar() {

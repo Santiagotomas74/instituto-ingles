@@ -526,8 +526,9 @@ export default function InscriptionsPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-gray-400">Teléfono</p>
-                      <p className="font-medium">+54 11 1234-5678</p>
+                      <p className="text-sm text-gray-400">Teléfonos</p>
+                      <p className="font-medium">+54 11 2710-8566</p>
+                      <p className="font-medium">+54 11 6981-0175</p>
                     </div>
                   </div>
 
@@ -548,8 +549,9 @@ export default function InscriptionsPage() {
                     </div>
 
                     <div>
-                      <p className="text-sm text-gray-400">Email</p>
-                      <p className="font-medium">contacto@institutoink.com</p>
+                      <p className="text-sm text-gray-400">Emails</p>
+                      <p className="font-medium">newknowledge@live.com.ar</p>
+                      <p className="font-medium">institutoink2010@gmail.com</p>
                     </div>
                   </div>
 
@@ -593,7 +595,10 @@ export default function InscriptionsPage() {
 
                     <div>
                       <p className="text-sm text-gray-400">Horarios</p>
-                      <p className="font-medium">Lun a Vie · 09:00 a 20:00</p>
+                      <p className="font-medium">
+                        Lunes a viernes: 17:00 a 20:30 hs
+                      </p>
+                      <p className="font-medium">Sábados: 08:30 a 13:30 hs</p>
                     </div>
                   </div>
                 </div>
