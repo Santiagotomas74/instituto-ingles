@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+
 import {
   LayoutDashboard,
   ClipboardList,
@@ -88,21 +90,24 @@ export default function Sidebar() {
         }`}
       >
         {/* Header */}
-        <div className="h-20 flex items-center justify-between px-6 border-b border-slate-800 shrink-0">
-          <div className="flex items-center">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-600 flex items-center justify-center font-bold text-xl shadow-inner">
-              I
+        <div className="h-24 flex items-center justify-between px-5 border-b border-slate-800 shrink-0 gap-3">
+          <Link href="/student/dashboard" className="flex-1 flex items-center">
+            <div className="w-full bg-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-100 flex items-center justify-center">
+              <Image
+                src="/logo2.png"
+                alt="Logo I.N.K."
+                width={200}
+                height={60}
+                className="h-12 w-auto object-contain"
+                priority
+              />
             </div>
-            <div className="ml-4">
-              <h2 className="font-bold text-lg leading-tight">I.N.K.</h2>
-              <p className="text-sm text-slate-400">Campus Virtual</p>
-            </div>
-          </div>
+          </Link>
 
           <button
             onClick={() => setOpen(false)}
             aria-label="Cerrar menú"
-            className="lg:hidden p-2 -mr-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"
+            className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors shrink-0"
           >
             <X size={24} />
           </button>

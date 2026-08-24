@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     console.log("Received material data:", body);
 
     // =====================================================
-    // Capturar cookie del profesor
+    // CAPTURAR COOKIE DEL PROFESOR
     // =====================================================
 
     const teacherId = req.cookies.get("user_id")?.value;
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // =====================================================
-    // Datos
+    // DATOS
     // =====================================================
 
     const {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // =====================================================
-    // Validaciones
+    // VALIDACIONES
     // =====================================================
 
     if (!classroom_id || !titulo || !tipo) {
@@ -60,7 +60,19 @@ export async function POST(req: NextRequest) {
     }
 
     // =====================================================
-    // Crear material
+    // NORMALIZAR PUBLICACIÓN
+    // =====================================================
+    //
+    // Si no viene definido, se considera publicado.
+    //
+    // true  -> publicado
+    // false -> oculto
+    //
+
+    const published = is_published ?? true;
+
+    // =====================================================
+    // CREAR MATERIAL
     // =====================================================
 
     const result = await query(
@@ -111,7 +123,7 @@ export async function POST(req: NextRequest) {
         archivo_url || null,
         archivo_nombre || null,
         archivo_size || null,
-        is_published ?? true,
+        published,
         orden ?? 0,
         teacherId,
       ],
@@ -120,85 +132,111 @@ export async function POST(req: NextRequest) {
     const material = result.rows[0];
 
     // =====================================================
-    // Obtener alumnos del aula
+    // NOTIFICACIONES
+    // =====================================================
+    //
+    // IMPORTANTE:
+    //
+    // Si el material está oculto:
+    //
+    //   - Se guarda en DB.
+    //   - Los profesores pueden verlo.
+    //   - Los alumnos NO reciben notificación.
+    //
+    // Si está publicado:
+    //
+    //   - Se guarda en DB.
+    //   - Los alumnos reciben notificación.
+    //
     // =====================================================
 
-    const students = await query(
-      `
-      SELECT
-        student_id
-      FROM classroom_students
-      WHERE classroom_id = $1
-      `,
-      [classroom_id],
-    );
+    if (published === true) {
+      // ===================================================
+      // OBTENER ALUMNOS DEL AULA
+      // ===================================================
 
-    // =====================================================
-    // Crear notificación para cada alumno
-    // =====================================================
-
-    for (const student of students.rows) {
-      const notification = await query(
+      const students = await query(
         `
-        INSERT INTO notifications
-        (
-          user_id,
-          role,
-          title,
-          description,
-          type,
-          reference_id,
-          reference_type,
-          action_url
-        )
-        VALUES
-        (
-          $1,
-          'student',
-          '📚 Nuevo material disponible',
-          $2,
-          'material',
-          $3,
-          'classroom_material',
-          $4
-        )
-        RETURNING *;
+        SELECT
+          student_id
+        FROM classroom_students
+        WHERE classroom_id = $1
         `,
-        [
-          student.student_id,
-
-          descripcion
-            ? `El profesor publicó "${titulo}". ${descripcion}`
-            : `El profesor publicó el material "${titulo}".`,
-
-          material.id,
-
-          `/student/classroom/${classroom_id}?tab=materials`,
-        ],
+        [classroom_id],
       );
 
       // ===================================================
-      // Notificación en vivo
+      // CREAR NOTIFICACIÓN PARA CADA ALUMNO
       // ===================================================
 
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: student.student_id,
-            notification: notification.rows[0],
-          }),
-        });
-      } catch (error) {
-        console.error("Error enviando notificación por Socket:", error);
+      for (const student of students.rows) {
+        const notification = await query(
+          `
+          INSERT INTO notifications
+          (
+            user_id,
+            role,
+            title,
+            description,
+            type,
+            reference_id,
+            reference_type,
+            action_url
+          )
+          VALUES
+          (
+            $1,
+            'student',
+            '📚 Nuevo material disponible',
+            $2,
+            'material',
+            $3,
+            'classroom_material',
+            $4
+          )
+          RETURNING *;
+          `,
+          [
+            student.student_id,
+
+            descripcion
+              ? `El profesor publicó "${titulo}". ${descripcion}`
+              : `El profesor publicó el material "${titulo}".`,
+
+            material.id,
+
+            `/student/classroom/${classroom_id}?tab=materials`,
+          ],
+        );
+
+        // =================================================
+        // NOTIFICACIÓN EN VIVO
+        // =================================================
+
+        try {
+          await fetch(
+            `${process.env.NEXT_PUBLIC_SOCKET_URL}/emit-notification`,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+              },
+
+              body: JSON.stringify({
+                userId: student.student_id,
+                notification: notification.rows[0],
+              }),
+            },
+          );
+        } catch (error) {
+          console.error("Error enviando notificación por Socket:", error);
+        }
       }
     }
 
     // =====================================================
-    // Respuesta
+    // RESPUESTA
     // =====================================================
 
     return NextResponse.json({
