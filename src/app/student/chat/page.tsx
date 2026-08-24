@@ -12,7 +12,9 @@ export default async function StudentChatPage() {
       <Sidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar nombre={nombre} apellido={apellido} />
+        <header className="sticky top-0 z-48">
+          <Navbar nombre={nombre} apellido={apellido} />
+        </header>
 
         <ChatLayout />
       </div>

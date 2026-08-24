@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image"; // 1. Importamos Image de Next.js
 import { LogOut, UserCircle2 } from "lucide-react";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useSocket } from "@/components/chat/hooks/useSocket";
@@ -63,9 +64,17 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
       "
     >
       <div className="flex items-center gap-10">
-        <h1 className="text-2xl font-bold text-cyan-600 hidden md:block">
-          I.N.K.
-        </h1>
+        {/* 3. Reemplazamos el h1 por la Imagen, manteniendo hidden md:block */}
+        <div className="hidden md:block">
+          <Image
+            src="/logo3.png" // Asegurate de que esta sea la ruta correcta
+            alt="Logo I.N.K."
+            width={260}
+            height={40}
+            className="h-20 w-auto object-contain"
+            priority
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
