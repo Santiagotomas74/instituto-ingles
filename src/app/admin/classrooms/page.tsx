@@ -15,7 +15,10 @@ export default async function AdminClassroomsPage() {
       <AdminSidebar />
 
       <div className="flex-1 min-w-0">
-        <Navbar />
+        {/* HEADER FIJO */}
+        <header className="sticky top-0 z-10">
+          <Navbar />
+        </header>
 
         <div>
           <ClassroomsClient classrooms={data.classrooms || []} />

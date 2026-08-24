@@ -266,7 +266,7 @@ export default function EditMaterialModal({
                 focus:outline-none
                 focus:ring-2
                 focus:ring-cyan-500
-                  text-slate-600
+                text-slate-600
               "
             />
           </div>
@@ -341,7 +341,7 @@ export default function EditMaterialModal({
                   focus:outline-none
                   focus:ring-2
                   focus:ring-cyan-500
-                    text-slate-600
+                  text-slate-600
                 "
               >
                 <option value="grammar">Grammar</option>
@@ -391,7 +391,7 @@ export default function EditMaterialModal({
                   focus:outline-none
                   focus:ring-2
                   focus:ring-cyan-500
-                    text-slate-600
+                  text-slate-600
                 "
               >
                 <option value="">Sin subcategoría</option>
@@ -452,7 +452,7 @@ export default function EditMaterialModal({
                 focus:outline-none
                 focus:ring-2
                 focus:ring-cyan-500
-                  text-slate-600
+                text-slate-600
               "
             >
               <option value="file">Archivo</option>
@@ -548,7 +548,7 @@ export default function EditMaterialModal({
                   focus:outline-none
                   focus:ring-2
                   focus:ring-cyan-500
-                    text-slate-600
+                  text-slate-600
                 "
               />
             </div>
@@ -595,6 +595,64 @@ export default function EditMaterialModal({
               PUBLICADO / ORDEN
           ================================================= */}
 
+          <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-slate-50 p-5 rounded-xl border border-slate-100">
+            {/* PUBLICADO (CHECKBOX) */}
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="checkbox"
+                name="is_published"
+                checked={formData.is_published}
+                onChange={handleChange}
+                className="
+                  w-5
+                  h-5
+                  text-cyan-600
+                  rounded
+                  border-slate-300
+                  focus:ring-cyan-500
+                  cursor-pointer
+                  transition
+                "
+              />
+              <div className="flex flex-col">
+                <span className="font-medium text-slate-700 group-hover:text-slate-900 transition">
+                  Publicar material
+                </span>
+                <span className="text-xs text-slate-500">
+                  {formData.is_published
+                    ? "Visible para los estudiantes"
+                    : "Oculto (guardado como borrador)"}
+                </span>
+              </div>
+            </label>
+
+            <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
+
+            {/* ORDEN */}
+            <div className="flex items-center gap-3">
+              <label className="font-medium text-slate-700">Orden:</label>
+              <input
+                type="number"
+                name="orden"
+                value={formData.orden}
+                onChange={handleChange}
+                className="
+                  w-20
+                  h-10
+                  px-3
+                  rounded-lg
+                  border
+                  border-slate-200
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-cyan-500
+                  text-slate-600
+                  text-center
+                "
+              />
+            </div>
+          </div>
+
           {/* =================================================
               BOTONES
           ================================================= */}
@@ -605,8 +663,8 @@ export default function EditMaterialModal({
               justify-end
               gap-3
               pt-5
-             
-              border-slate-200
+              border-t
+              border-slate-100
             "
           >
             <button

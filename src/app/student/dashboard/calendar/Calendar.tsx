@@ -52,7 +52,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div>
       <CalendarView events={events} />
     </div>
   );

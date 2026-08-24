@@ -8,7 +8,9 @@ export default function PaymentsPage() {
       <AdminSidebar />
 
       <div className="flex-1 min-w-0">
-        <Navbar />
+        <header className="sticky top-0 z-48">
+          <Navbar />
+        </header>
 
         <div>
           <Payments />

@@ -44,7 +44,9 @@ export default async function InscriptionsAdminPage() {
       <AdminSidebar />
 
       <div className="flex-1 min-w-0">
-        <AdminNavbar />
+        <header className="sticky top-0 z-30 ">
+          <AdminNavbar />
+        </header>
 
         {/* TOP HERO */}
         <section

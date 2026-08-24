@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Upload } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  Eye,
+  EyeOff,
+  Globe,
+  LockKeyhole,
+} from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -29,9 +36,26 @@ export default function CreateMaterialForm({ classroomId }: Props) {
 
     contenido_texto: "",
     url: "",
+
+    /*
+    =====================================================
+    PUBLICACIÓN
+    =====================================================
+
+    true  = visible para alumnos
+    false = oculto para alumnos, visible para profesores
+    */
+
     is_published: true,
+
     orden: 0,
   });
+
+  /*
+  =====================================================
+  HANDLE CHANGE
+  =====================================================
+  */
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -42,10 +66,17 @@ export default function CreateMaterialForm({ classroomId }: Props) {
 
     setFormData((prev) => ({
       ...prev,
+
       [name]:
         type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
     }));
   };
+
+  /*
+  =====================================================
+  HANDLE SUBMIT
+  =====================================================
+  */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,39 +84,16 @@ export default function CreateMaterialForm({ classroomId }: Props) {
     try {
       setLoading(true);
 
-      let archivo_url = "";
-      let archivo_nombre = "";
-      let archivo_size = 0;
-
       /*
-       * SUBIR ARCHIVO A CLOUDINARY
-       */
+      ===================================================
+      VALIDACIONES
+      ===================================================
+      */
 
-      if (formData.tipo === "file" && file) {
-        const uploadData = new FormData();
-
-        uploadData.append("file", file);
-
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadData,
-        });
-
-        const uploadResult = await uploadRes.json();
-
-        if (!uploadRes.ok || !uploadResult.success) {
-          alert(uploadResult.message || "Error subiendo archivo");
-          return;
-        }
-
-        archivo_url = uploadResult.url;
-        archivo_nombre = file.name;
-        archivo_size = file.size;
+      if (!formData.titulo.trim()) {
+        alert("Ingresá un título para el material.");
+        return;
       }
-
-      /*
-       * VALIDACIONES
-       */
 
       if (formData.tipo === "file" && !file) {
         alert("Seleccioná un archivo.");
@@ -103,10 +111,55 @@ export default function CreateMaterialForm({ classroomId }: Props) {
       }
 
       /*
-       * GUARDAR MATERIAL EN DB
-       */
+      ===================================================
+      VARIABLES DEL ARCHIVO
+      ===================================================
+      */
+
+      let archivo_url = "";
+      let archivo_nombre = "";
+      let archivo_size = 0;
+
+      /*
+      ===================================================
+      SUBIR ARCHIVO A CLOUDINARY
+      ===================================================
+      */
+
+      if (formData.tipo === "file" && file) {
+        const uploadData = new FormData();
+
+        uploadData.append("file", file);
+
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadData,
+        });
+
+        const uploadResult = await uploadRes.json();
+
+        if (!uploadRes.ok || !uploadResult.success) {
+          alert(uploadResult.message || "Error subiendo archivo.");
+
+          return;
+        }
+
+        archivo_url = uploadResult.url;
+
+        archivo_nombre = file.name;
+
+        archivo_size = file.size;
+      }
+
+      /*
+      ===================================================
+      GUARDAR MATERIAL EN DB
+      ===================================================
+      */
 
       console.log("classroomId:", classroomId);
+
+      console.log("Material publicado:", formData.is_published);
 
       const res = await fetch("/api/teacher/classrooms/materials", {
         method: "POST",
@@ -118,26 +171,77 @@ export default function CreateMaterialForm({ classroomId }: Props) {
         body: JSON.stringify({
           classroom_id: classroomId,
 
-          titulo: formData.titulo,
-          descripcion: formData.descripcion,
+          titulo: formData.titulo.trim(),
 
-          // Tipo técnico del material
+          descripcion: formData.descripcion.trim(),
+
+          /*
+            =================================================
+            TIPO TÉCNICO
+            =================================================
+            */
+
           tipo: formData.tipo,
 
-          // Categoría pedagógica
+          /*
+            =================================================
+            CATEGORÍA PEDAGÓGICA
+            =================================================
+            */
+
           material_category: formData.material_category,
 
-          // Subcategoría del recurso
+          /*
+            =================================================
+            SUBCATEGORÍA
+            =================================================
+            */
+
           sub_category: formData.sub_category,
 
+          /*
+            =================================================
+            CONTENIDO
+            =================================================
+            */
+
           contenido_texto: formData.contenido_texto,
-          url: formData.url,
+
+          url: formData.url.trim(),
+
+          /*
+            =================================================
+            ARCHIVO
+            =================================================
+            */
 
           archivo_url,
+
           archivo_nombre,
+
           archivo_size,
 
-          is_published: formData.is_published,
+          /*
+            =================================================
+            PUBLICACIÓN
+            =================================================
+
+            true:
+              visible para alumnos
+
+            false:
+              oculto para alumnos,
+              pero visible para profesores
+            */
+
+          is_published: Boolean(formData.is_published),
+
+          /*
+            =================================================
+            ORDEN
+            =================================================
+            */
+
           orden: Number(formData.orden),
         }),
       });
@@ -145,15 +249,22 @@ export default function CreateMaterialForm({ classroomId }: Props) {
       const result = await res.json();
 
       if (!res.ok || !result.success) {
-        alert(result.message || "Error guardando material");
+        alert(result.message || "Error guardando material.");
+
         return;
       }
+
+      /*
+      ===================================================
+      VOLVER AL AULA
+      ===================================================
+      */
 
       router.push(`/teacher/classrooms/${classroomId}`);
 
       router.refresh();
     } catch (error) {
-      console.error(error);
+      console.error("Error guardando material:", error);
 
       alert("Ocurrió un error al guardar el material.");
     } finally {
@@ -161,9 +272,17 @@ export default function CreateMaterialForm({ classroomId }: Props) {
     }
   };
 
+  /*
+  =====================================================
+  RENDER
+  =====================================================
+  */
+
   return (
     <main className="min-h-screen bg-slate-100">
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <div
         className="
@@ -184,6 +303,7 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             flex
             justify-between
             items-center
+            gap-6
           "
         >
           <div>
@@ -210,6 +330,7 @@ export default function CreateMaterialForm({ classroomId }: Props) {
               items-center
               gap-2
               transition
+              shrink-0
             "
           >
             <ArrowLeft size={18} />
@@ -218,7 +339,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
         </div>
       </div>
 
-      {/* FORM */}
+      {/* =================================================
+          FORM
+      ================================================= */}
 
       <div className="p-6 md:p-10">
         <form
@@ -234,7 +357,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             text-slate-700
           "
         >
-          {/* TITULO */}
+          {/* =================================================
+              TITULO
+          ================================================= */}
 
           <div>
             <label className="block mb-2 font-medium text-slate-700">
@@ -262,7 +387,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             />
           </div>
 
-          {/* DESCRIPCION */}
+          {/* =================================================
+              DESCRIPCIÓN
+          ================================================= */}
 
           <div>
             <label className="block mb-2 font-medium text-slate-700">
@@ -288,10 +415,14 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             />
           </div>
 
-          {/* SELECTS */}
+          {/* =================================================
+              SELECTS
+          ================================================= */}
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* CATEGORÍA */}
+            {/* =================================================
+                CATEGORÍA
+            ================================================= */}
 
             <div>
               <label className="block mb-2 font-medium text-slate-700">
@@ -315,17 +446,26 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 "
               >
                 <option value="grammar">Grammar</option>
+
                 <option value="vocabulary">Vocabulary</option>
+
                 <option value="reading">Reading</option>
+
                 <option value="listening">Listening</option>
+
                 <option value="speaking">Speaking</option>
+
                 <option value="writing">Writing</option>
+
                 <option value="homework">Homework</option>
+
                 <option value="exam">Exam</option>
               </select>
             </div>
 
-            {/* SUBCATEGORÍA */}
+            {/* =================================================
+                SUBCATEGORÍA
+            ================================================= */}
 
             <div>
               <label className="block mb-2 font-medium text-slate-700">
@@ -349,19 +489,30 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 "
               >
                 <option value="imagen">Imagen</option>
+
                 <option value="video">Video</option>
+
                 <option value="audio">Audio</option>
+
                 <option value="libro">Libro</option>
+
                 <option value="documento">Documento</option>
+
                 <option value="presentacion">Presentación</option>
+
                 <option value="ejercicio">Ejercicio</option>
+
                 <option value="enlace">Enlace</option>
+
                 <option value="guia">Guía</option>
+
                 <option value="otro">Otro</option>
               </select>
             </div>
 
-            {/* TIPO */}
+            {/* =================================================
+                TIPO
+            ================================================= */}
 
             <div>
               <label className="block mb-2 font-medium text-slate-700">
@@ -385,13 +536,17 @@ export default function CreateMaterialForm({ classroomId }: Props) {
                 "
               >
                 <option value="file">Archivo</option>
+
                 <option value="link">Link</option>
+
                 <option value="text">Texto</option>
               </select>
             </div>
           </div>
 
-          {/* FILE */}
+          {/* =================================================
+              ARCHIVO
+          ================================================= */}
 
           {formData.tipo === "file" && (
             <div>
@@ -422,7 +577,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             </div>
           )}
 
-          {/* LINK */}
+          {/* =================================================
+              LINK
+          ================================================= */}
 
           {formData.tipo === "link" && (
             <div>
@@ -451,7 +608,9 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             </div>
           )}
 
-          {/* TEXTO */}
+          {/* =================================================
+              TEXTO
+          ================================================= */}
 
           {formData.tipo === "text" && (
             <div>
@@ -479,7 +638,326 @@ export default function CreateMaterialForm({ classroomId }: Props) {
             </div>
           )}
 
-          {/* BUTTON */}
+          {/* =================================================
+              PUBLICACIÓN
+          ================================================= */}
+
+          <section
+            className="
+              rounded-3xl
+              border
+              border-slate-200
+              bg-slate-50
+              overflow-hidden
+            "
+          >
+            {/* HEADER */}
+
+            <div
+              className="
+                px-6
+                py-5
+                border-b
+                border-slate-200
+                bg-white
+              "
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="
+                    w-10
+                    h-10
+                    rounded-xl
+                    bg-cyan-100
+                    flex
+                    items-center
+                    justify-center
+                  "
+                >
+                  {formData.is_published ? (
+                    <Globe size={20} className="text-cyan-600" />
+                  ) : (
+                    <LockKeyhole size={20} className="text-slate-500" />
+                  )}
+                </div>
+
+                <div>
+                  <h2 className="font-bold text-slate-900">
+                    Visibilidad del material
+                  </h2>
+
+                  <p className="text-sm text-slate-500 mt-1">
+                    Elegí si los alumnos pueden verlo inmediatamente.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* OPTIONS */}
+
+            <div className="p-5">
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* =================================================
+                    PUBLICADO
+                ================================================= */}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      is_published: true,
+                    }))
+                  }
+                  className={`
+                    text-left
+                    rounded-2xl
+                    border-2
+                    p-5
+                    transition
+                    ${
+                      formData.is_published
+                        ? `
+                          border-cyan-500
+                          bg-cyan-50
+                        `
+                        : `
+                          border-slate-200
+                          bg-white
+                          hover:border-slate-300
+                        `
+                    }
+                  `}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`
+                        w-10
+                        h-10
+                        rounded-xl
+                        flex
+                        items-center
+                        justify-center
+                        shrink-0
+                        ${
+                          formData.is_published
+                            ? "bg-cyan-500 text-white"
+                            : "bg-slate-100 text-slate-500"
+                        }
+                      `}
+                    >
+                      <Eye size={20} />
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-slate-800">Publicar ahora</p>
+
+                      <p className="text-sm text-slate-500 mt-1 leading-5">
+                        Los alumnos podrán ver y acceder al material
+                        inmediatamente.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+
+                {/* =================================================
+                    OCULTO
+                ================================================= */}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      is_published: false,
+                    }))
+                  }
+                  className={`
+                    text-left
+                    rounded-2xl
+                    border-2
+                    p-5
+                    transition
+                    ${
+                      !formData.is_published
+                        ? `
+                          border-amber-500
+                          bg-amber-50
+                        `
+                        : `
+                          border-slate-200
+                          bg-white
+                          hover:border-slate-300
+                        `
+                    }
+                  `}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`
+                        w-10
+                        h-10
+                        rounded-xl
+                        flex
+                        items-center
+                        justify-center
+                        shrink-0
+                        ${
+                          !formData.is_published
+                            ? "bg-amber-500 text-white"
+                            : "bg-slate-100 text-slate-500"
+                        }
+                      `}
+                    >
+                      <EyeOff size={20} />
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-slate-800">
+                        Guardar como oculto
+                      </p>
+
+                      <p className="text-sm text-slate-500 mt-1 leading-5">
+                        Los alumnos no podrán verlo. Solo los profesores podrán
+                        acceder y publicarlo después.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              {/* =================================================
+                  ESTADO ACTUAL
+              ================================================= */}
+
+              <div
+                className={`
+                  mt-5
+                  rounded-2xl
+                  px-4
+                  py-3
+                  flex
+                  items-center
+                  gap-3
+                  text-sm
+                  ${
+                    formData.is_published
+                      ? "bg-cyan-100 text-cyan-800"
+                      : "bg-amber-100 text-amber-800"
+                  }
+                `}
+              >
+                {formData.is_published ? (
+                  <>
+                    <Eye size={18} />
+
+                    <span>
+                      Este material será{" "}
+                      <strong>visible para los alumnos</strong> al guardarlo.
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <EyeOff size={18} />
+
+                    <span>
+                      Este material quedará{" "}
+                      <strong>oculto para los alumnos</strong>. Los profesores
+                      podrán publicarlo posteriormente.
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================
+              ORDEN
+
+               <div>
+            <label className="block mb-2 font-medium text-slate-700">
+              Orden
+            </label>
+
+            <input
+              type="number"
+              name="orden"
+              value={formData.orden}
+              onChange={handleChange}
+              min={0}
+              className="
+                w-full
+                h-14
+                px-5
+                rounded-2xl
+                border
+                border-slate-200
+                outline-none
+                focus:ring-2
+                focus:ring-cyan-500
+              "
+            />
+
+            <p className="text-xs text-slate-400 mt-2">
+              Permite determinar el orden en que aparecerá el material dentro
+              del aula.
+            </p>
+          </div>
+          ================================================= */}
+
+          {/* =================================================
+              RESUMEN
+          ================================================= */}
+
+          <div
+            className="
+              rounded-2xl
+              bg-slate-50
+              border
+              border-slate-200
+              p-5
+            "
+          >
+            <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+              Estado del material
+            </p>
+
+            <div className="flex items-center gap-3 mt-3">
+              {formData.is_published ? (
+                <>
+                  <div className="w-9 h-9 rounded-xl bg-cyan-100 flex items-center justify-center">
+                    <Eye size={18} className="text-cyan-600" />
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-slate-800">Publicado</p>
+
+                    <p className="text-sm text-slate-500">
+                      Visible para los alumnos.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
+                    <EyeOff size={18} className="text-amber-600" />
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-slate-800">Oculto</p>
+
+                    <p className="text-sm text-slate-500">
+                      Solo visible para profesores.
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* =================================================
+              BUTTON
+          ================================================= */}
 
           <button
             type="submit"
@@ -503,7 +981,11 @@ export default function CreateMaterialForm({ classroomId }: Props) {
           >
             <Upload size={20} />
 
-            {loading ? "Subiendo..." : "Guardar material"}
+            {loading
+              ? "Guardando..."
+              : formData.is_published
+                ? "Publicar material"
+                : "Guardar material oculto"}
           </button>
         </form>
       </div>

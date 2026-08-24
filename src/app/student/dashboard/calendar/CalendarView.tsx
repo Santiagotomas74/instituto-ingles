@@ -143,7 +143,7 @@ export default function CalendarView({ events, onEventClick }: Props) {
   });
 
   return (
-    <section className="w-full">
+    <section className="w-full ">
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 p-3 sm:p-7">
         {/* ENCABEZADO Y CONTROLES */}
         <div className="flex items-center justify-between gap-2 mb-4 sm:mb-6">

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   ClipboardList,
-  GraduationCap,
+  FileText,
   MessageSquare,
   User,
   CalendarDays,
@@ -40,7 +40,7 @@ const menu = [
   {
     name: "Boletines",
     href: "/teacher/boletines",
-    icon: User,
+    icon: FileText,
   },
 ];
 

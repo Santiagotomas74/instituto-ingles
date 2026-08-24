@@ -122,8 +122,10 @@ export default function AdminDashboardPage() {
 
       {/* CONTENT */}
       <div className="flex-1">
-        {/* HEADER */}
-        <Navbar />
+        {/* HEADER FIJO */}
+        <header className="sticky top-0 z-10">
+          <Navbar />
+        </header>
 
         {/* BODY */}
         <div className="p-6 md:p-10">

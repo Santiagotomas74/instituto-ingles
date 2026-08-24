@@ -281,20 +281,25 @@ export default function MaterialsTab({ classroomId }: Props) {
   }) => {
     const href = getMaterialLink(material);
 
+    // Verificamos explícitamente si es false para que se muestre como apagado
+    // (si no existe la propiedad o es true, se muestra normal)
+    const isPublished = material.is_published !== false;
+
     return (
       <div
-        className="
+        className={`
           group
           bg-white
           rounded-3xl
           p-5
           border
-          border-slate-200
-          shadow-sm
-          hover:shadow-xl
-          hover:-translate-y-1
           transition-all
-        "
+          ${
+            isPublished
+              ? "border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1"
+              : "border-dashed border-slate-300 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 bg-slate-50"
+          }
+        `}
       >
         {/* =================================================
             CONTENIDO
@@ -351,6 +356,22 @@ export default function MaterialsTab({ classroomId }: Props) {
             {/* BADGES */}
 
             <div className="flex flex-wrap gap-2 mt-3">
+              {!isPublished && (
+                <span
+                  className="
+                    text-xs
+                    px-2.5
+                    py-1
+                    rounded-full
+                    bg-slate-700
+                    text-white
+                    font-medium
+                  "
+                >
+                  No publicado
+                </span>
+              )}
+
               {material.material_category && (
                 <span
                   className="
@@ -699,23 +720,14 @@ export default function MaterialsTab({ classroomId }: Props) {
             ================================================= */}
 
             <MaterialSection subCategory="libro" />
-
             <MaterialSection subCategory="documento" />
-
             <MaterialSection subCategory="imagen" />
-
             <MaterialSection subCategory="video" />
-
             <MaterialSection subCategory="audio" />
-
             <MaterialSection subCategory="presentacion" />
-
             <MaterialSection subCategory="ejercicio" />
-
             <MaterialSection subCategory="guia" />
-
             <MaterialSection subCategory="quiz" />
-
             <MaterialSection subCategory="texto" />
 
             {/* =================================================

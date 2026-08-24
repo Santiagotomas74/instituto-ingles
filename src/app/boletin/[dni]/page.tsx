@@ -22,6 +22,7 @@ export default async function StudentBoletinPage({ params }: Props) {
     cache: "no-store",
   });
   const data = await res.json();
+  console.log(data);
 
   if (!data.success) {
     return (
@@ -374,12 +375,12 @@ export default async function StudentBoletinPage({ params }: Props) {
               >
                 <SignatureCard
                   title="Firma del profesor"
-                  image={boletin.firma_teacher}
+                  image={boletin.teacher_firma_url}
                 />
 
                 <SignatureCard
                   title="Firma del coordinador"
-                  image={boletin.firma_coordinator}
+                  image={boletin.admin_firma_url}
                 />
               </div>
             </section>

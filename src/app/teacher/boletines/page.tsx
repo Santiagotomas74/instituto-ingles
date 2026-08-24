@@ -87,7 +87,7 @@ export default async function TeacherBoletinesPage() {
   const boletines = teacherId ? await getBoletines(teacherId) : [];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-10">
       {/* HEADER */}
 
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
@@ -420,7 +420,7 @@ export default async function TeacherBoletinesPage() {
 
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Link
-                        href={`/teacher/boletines/${boletin.id}`}
+                        href={`/boletin/${boletin.dni}`}
                         className="
                           h-10
                           px-4

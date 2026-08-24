@@ -15,9 +15,11 @@ export default function ChatInput({ conversation, setMessages }: Props) {
   const [sending, setSending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-enfocar el input cuando se cambia de conversación
+  // Auto-enfocar el input cuando se cambia de conversación (solo en desktop para no forzar el teclado en mobile)
   useEffect(() => {
-    inputRef.current?.focus();
+    if (window.matchMedia("(min-width: 640px)").matches) {
+      inputRef.current?.focus();
+    }
   }, [conversation.id]);
 
   async function handleSubmit(e?: React.FormEvent) {
@@ -43,15 +45,14 @@ export default function ChatInput({ conversation, setMessages }: Props) {
         throw new Error(data.message || "Error al enviar el mensaje");
       }
 
-      // NO agregar el mensaje manualmente.
-      // El servidor Node lo enviará por Socket.IO.
       setMessage("");
     } catch (error) {
       console.error(error);
       alert("No se pudo enviar el mensaje. Inténtalo de nuevo.");
     } finally {
       setSending(false);
-      // Volver a enfocar el input automáticamente tras enviar el mensaje
+
+      // Mantiene el foco tras enviar
       setTimeout(() => inputRef.current?.focus(), 0);
     }
   }
@@ -77,7 +78,7 @@ export default function ChatInput({ conversation, setMessages }: Props) {
           border
           border-transparent
           px-5
-          text-sm
+          text-[16px] sm:text-sm
           text-slate-700
           placeholder:text-slate-400
           outline-none
@@ -117,7 +118,6 @@ export default function ChatInput({ conversation, setMessages }: Props) {
         {sending ? (
           <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
         ) : (
-          /* mr-0.5 compensa visualmente el peso del icono hacia la derecha */
           <Send className="w-5 h-5 mr-0.5" />
         )}
       </button>

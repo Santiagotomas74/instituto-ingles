@@ -49,9 +49,12 @@ export default async function StudentsPage() {
       <AdminSidebar />
 
       <div className="flex-1 flex flex-col">
-        <Navbar />
+        {/* HEADER FIJO */}
+        <header className="sticky top-0 z-10">
+          <Navbar />
+        </header>
 
-        <div className="flex-1  overflow-auto">
+        <div className="flex-1 overflow-auto">
           <StudentsTable students={students} classrooms={classrooms} />
         </div>
       </div>
