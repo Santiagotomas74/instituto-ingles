@@ -11,11 +11,16 @@ export default async function StudentDashboardLayout({
   const cookieStore = await cookies();
   const nombre = cookieStore.get("student_name")?.value;
   const apellido = cookieStore.get("student_lastname")?.value;
+
   return (
     <div className="min-h-screen bg-slate-100 flex">
-      <Sidebar />
+      {/* Sidebar fijo en pantalla para desktop (oculto en mobile) */}
+      <aside className="hidden lg:block sticky top-0 h-screen shrink-0">
+        <Sidebar />
+      </aside>
 
-      <div className="flex-1 flex flex-col">
+      {/* Contenedor principal */}
+      <div className="flex-1 flex flex-col min-w-0">
         <Navbar nombre={nombre} apellido={apellido} />
 
         <main className="flex-1 p-8 overflow-y-auto">{children}</main>

@@ -1,26 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image"; // 1. Importamos Image de Next.js
+import Image from "next/image";
 import { LogOut, UserCircle2 } from "lucide-react";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useSocket } from "@/components/chat/hooks/useSocket";
+import Sidebar from "./Sidebar"; // O @/components/Sidebar según tu estructura
 
-// 1. Definimos las props que recibirá el componente
 type NavbarProps = {
   nombre?: string;
   apellido?: string;
 };
 
-// 2. Quitamos el "async" e inyectamos las props
 export default function Navbar({ nombre, apellido }: NavbarProps) {
   const [userId, setUserId] = useState("");
 
-  /*
-  =====================================
-  Registrar usuario en Socket
-  =====================================
-  */
   useEffect(() => {
     async function loadUser() {
       try {
@@ -38,7 +32,6 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
     loadUser();
   }, []);
 
-  // Este hook hace socket.emit("register", userId)
   useSocket(userId);
 
   async function handleLogout() {
@@ -52,47 +45,61 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
   return (
     <header
       className="
+        sticky
+        top-0
+        z-50
+        w-full
         h-20
         bg-white
         border-b
         border-slate-200
-        px-8
+        px-4
+        sm:px-8
         flex
         items-center
         justify-between
         shadow-sm
       "
     >
-      <div className="flex items-center gap-10">
-        {/* 3. Reemplazamos el h1 por la Imagen, manteniendo hidden md:block */}
+      {/* Lado Izquierdo: Sidebar (solo en mobile) + Logo */}
+      <div className="flex items-center gap-3 md:gap-6">
+        {/* Sidebar visible únicamente en pantallas mobile/tablet (lg:hidden) */}
+        <div className="lg:hidden flex items-center">
+          <Sidebar />
+        </div>
+
+        {/* Logo del colegio/instituto */}
         <div className="hidden md:block">
           <Image
-            src="/logo3.png" // Asegurate de que esta sea la ruta correcta
+            src="/logo3.png"
             alt="Logo I.N.K."
             width={260}
             height={40}
-            className="h-20 w-auto object-contain"
+            className="h-16 w-auto object-contain"
             priority
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Lado Derecho: Notificaciones + Usuario + Logout */}
+      <div className="flex items-center gap-3 sm:gap-4">
         <NotificationBell />
 
-        <div className="flex items-center gap-3">
-          <UserCircle2 className="text-blue-600" size={42} />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <UserCircle2 className="text-blue-600 shrink-0" size={38} />
 
           <div>
-            {/* 3. Usamos las props directamente */}
-            <p className="font-semibold text-slate-900"> {nombre} </p>
-            <p className="text-sm text-slate-500">{apellido}</p>
+            <p className="font-semibold text-slate-900 leading-tight">
+              {nombre}
+            </p>
+            <p className="text-sm text-slate-500 leading-tight">{apellido}</p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="w-11 h-11 rounded-2xl bg-red-50 hover:bg-red-100 transition flex items-center justify-center"
+          aria-label="Cerrar sesión"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-red-50 hover:bg-red-100 transition flex items-center justify-center shrink-0"
         >
           <LogOut size={20} className="text-red-600" />
         </button>
