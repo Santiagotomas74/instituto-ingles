@@ -103,7 +103,6 @@ export default function AdminSidebar() {
           left-0
           z-50
           h-screen
-          lg:h-auto
           w-80
           bg-slate-950
           border-r

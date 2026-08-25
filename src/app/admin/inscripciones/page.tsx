@@ -41,7 +41,10 @@ export default async function InscriptionsAdminPage() {
 
   return (
     <main className="min-h-screen bg-slate-100 flex">
-      <AdminSidebar />
+      {/* SIDEBAR FIJO */}
+            <aside className="sticky top-0 h-screen shrink-0">
+              <AdminSidebar />
+            </aside>
 
       <div className="flex-1 min-w-0">
         <header className="sticky top-0 z-30 ">

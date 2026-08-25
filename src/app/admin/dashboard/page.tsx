@@ -117,11 +117,13 @@ export default function AdminDashboardPage() {
         flex
       "
     >
-      {/* SIDEBAR */}
-      <AdminSidebar />
+      {/* SIDEBAR FIJO */}
+      <aside className="sticky top-0 h-screen shrink-0">
+        <AdminSidebar />
+      </aside>
 
       {/* CONTENT */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         {/* HEADER FIJO */}
         <header className="sticky top-0 z-10">
           <Navbar />
@@ -132,34 +134,34 @@ export default function AdminDashboardPage() {
           <Link
             href="/"
             className="
-    md:hidden
-    fixed
-    bottom-5
-    right-5
-    z-50
+              md:hidden
+              fixed
+              bottom-5
+              right-5
+              z-50
 
-    flex
-    items-center
-    gap-2
+              flex
+              items-center
+              gap-2
 
-    px-5
-    h-14
+              px-5
+              h-14
 
-    rounded-2xl
-    bg-cyan-500
-    hover:bg-cyan-400
+              rounded-2xl
+              bg-cyan-500
+              hover:bg-cyan-400
 
-    text-white
-    font-semibold
+              text-white
+              font-semibold
 
-    shadow-2xl
-    transition-all
-  "
+              shadow-2xl
+              transition-all
+            "
           >
             <House className="w-5 h-5" />
             Inicio
           </Link>
-          {/* QUICK ACTIONS   <Stats /> */}
+
           <section className="mt-2">
             <div className="mb-8">
               <h2 className="text-3xl font-bold text-gray-900">

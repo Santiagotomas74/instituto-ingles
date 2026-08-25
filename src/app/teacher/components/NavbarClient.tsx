@@ -48,7 +48,7 @@ export default function NavbarClient({
       <div className="flex items-center gap-2 md:gap-4">
         <NotificationBell />
 
-        <div className="text-right hidden sm:block">
+        <div className="text-right ">
           <p className="font-semibold text-slate-900 leading-tight">
             {teacherName} {teacherLastname}
           </p>

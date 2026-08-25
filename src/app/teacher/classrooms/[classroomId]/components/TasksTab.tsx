@@ -118,8 +118,55 @@ export default function TasksTab({ classroomId }: Props) {
         {/* Loading */}
 
         {loading && (
-          <div className="text-center py-12 sm:py-16 text-slate-500 text-sm sm:text-base">
-            Cargando tareas...
+          <div
+            className="
+              bg-white
+              rounded-[32px]
+              border
+              border-slate-200
+              shadow-sm
+              p-16
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
+          >
+            <div className="relative">
+              <div
+                className="
+                  absolute
+                  inset-0
+                  rounded-full
+                  border-4
+                  border-cyan-200
+                  border-t-cyan-600
+                  animate-spin
+                "
+              />
+              <div
+                className="
+                  w-24
+                  h-24
+                  rounded-full
+                  bg-white
+                  flex
+                  items-center
+                  justify-center
+                  p-2
+                "
+              >
+                <img
+                  src="/logo2.png"
+                  alt="Instituto"
+                  className="w-20 h-20 object-contain"
+                />
+              </div>
+            </div>
+            <h2 className="mt-8 text-2xl font-bold text-slate-900">
+              Cargando tareas...
+            </h2>
+            <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
           </div>
         )}
 

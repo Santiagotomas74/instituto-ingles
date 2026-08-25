@@ -5,14 +5,14 @@ import AdminSidebar from "../dashboard/components/AdminSidebar";
 export default function CalendarPage() {
   return (
     <main className="min-h-screen bg-slate-100 flex">
-      {/* Oculto en mobile, visible desde pantallas medianas (768px+) */}
-      <div className="hidden md:flex">
+      {/* SIDEBAR FIJO DESKTOP (z-30) */}
+      <aside className="sticky top-0 h-screen shrink-0 z-30">
         <AdminSidebar />
-      </div>
+      </aside>
 
       <div className="flex-1 min-w-0">
-        {/* Oculto en mobile, visible desde pantallas medianas (768px+) */}
-        <header className="hidden md:block sticky top-0 z-45">
+        {/* NAVBAR STICKY (z-40 para superponerse al calendario) */}
+        <header className="sticky top-0 z-40">
           <Navbar />
         </header>
 
@@ -24,6 +24,8 @@ export default function CalendarPage() {
             sm:px-6
             lg:px-8
             py-8
+            relative
+            z-0
           "
         >
           <Calendar />

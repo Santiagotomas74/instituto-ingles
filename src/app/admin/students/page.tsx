@@ -46,9 +46,12 @@ export default async function StudentsPage() {
 
   return (
     <main className="min-h-screen flex bg-slate-100">
-      <AdminSidebar />
+      {/* SIDEBAR FIJO */}
+      <aside className="sticky top-0 h-screen shrink-0">
+        <AdminSidebar />
+      </aside>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* HEADER FIJO */}
         <header className="sticky top-0 z-10">
           <Navbar />
