@@ -1,18 +1,23 @@
 import ChatLayout from "@/components/chat/ChatLayout";
-
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { cookies } from "next/headers";
+
 export default async function StudentChatPage() {
   const cookieStore = await cookies();
   const nombre = cookieStore.get("student_name")?.value;
   const apellido = cookieStore.get("student_lastname")?.value;
+
   return (
     <div className="flex h-screen bg-slate-100">
-      <Sidebar />
+      {/* Oculto en mobile, visible como flex en md+ */}
+      <div className="hidden md:flex">
+        <Sidebar />
+      </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="sticky top-0 z-48">
+        {/* Oculto en mobile, visible como block en md+ */}
+        <header className="hidden md:block sticky top-0 z-48">
           <Navbar nombre={nombre} apellido={apellido} />
         </header>
 

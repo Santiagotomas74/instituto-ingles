@@ -7,6 +7,9 @@ export async function GET() {
   const userId = cookieStore.get("user_id")?.value;
   const role = cookieStore.get("role")?.value;
 
+  console.log(role);
+  console.log(userId);
+
   if (!userId || !role) {
     return NextResponse.json(
       {

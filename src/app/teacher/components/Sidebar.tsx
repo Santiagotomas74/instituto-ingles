@@ -34,15 +34,16 @@ const menu = [
     href: "/teacher/chat",
     icon: MessageSquare,
   },
-  {
-    name: "Mi Perfil",
-    href: "/teacher/profile",
-    icon: User,
-  },
+
   {
     name: "Boletines",
     href: "/teacher/boletines",
     icon: FileText,
+  },
+  {
+    name: "Mi Perfil",
+    href: "/teacher/profile",
+    icon: User,
   },
 ];
 

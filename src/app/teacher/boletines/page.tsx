@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import Navbar from "../components/Navbar"; // Ajusta la ruta si es necesario
+import Sidebar from "../components/Sidebar";
 import Link from "next/link";
 import {
   BookOpen,
@@ -87,31 +89,50 @@ export default async function TeacherBoletinesPage() {
   const boletines = teacherId ? await getBoletines(teacherId) : [];
 
   return (
-    <div className="space-y-8 p-10">
-      {/* HEADER */}
+    <div className="flex h-screen bg-slate-100 overflow-hidden">
+      {/* 2. El Sidebar no necesita 'sticky'. Al ser flex y medir h-full, se queda fijo a la izquierda.
+                  Agregamos `hidden md:flex flex-shrink-0` para ocultarlo en mobile y que no se encoja. */}
+      <div className="hidden md:flex flex-shrink-0 h-full z-50">
+        <Sidebar />
+      </div>
+      <div className="fixed inset-y-0 left-0 z-50 md:static md:flex flex-shrink-0 h-full">
+        <Sidebar />
+      </div>
+      {/* 3. Añadimos `overflow-y-auto` aquí. Solo esta columna derecha hará scroll. */}
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        {/* 4. Navbar: Se mantiene `sticky`. 
+                    Importante: Asegúrate de agregarle un fondo (ej. bg-slate-100) para que 
+                    el texto del contenido no se superponga visualmente al scrollear por debajo. */}
+        <header className="sticky top-0 z-48 bg-slate-100">
+          <Navbar />
+        </header>
 
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center">
-              <FileText className="text-cyan-600" size={24} />
-            </div>
+        <main className="flex-1">
+          <div className="space-y-8 p-10">
+            {/* HEADER */}
 
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
-                Boletines
-              </h1>
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center">
+                    <FileText className="text-cyan-600" size={24} />
+                  </div>
 
-              <p className="mt-1 text-slate-500">
-                Gestioná los boletines de tus alumnos.
-              </p>
-            </div>
-          </div>
-        </div>
+                  <div>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
+                      Boletines
+                    </h1>
 
-        <Link
-          href="/teacher/boletines/nuevo"
-          className="
+                    <p className="mt-1 text-slate-500">
+                      Gestioná los boletines de tus alumnos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/teacher/boletines/nuevo"
+                className="
             inline-flex
             items-center
             justify-center
@@ -126,94 +147,98 @@ export default async function TeacherBoletinesPage() {
             transition
             shadow-sm
           "
-        >
-          <Plus size={19} />
-          Crear boletín
-        </Link>
-      </div>
-
-      {/* RESUMEN */}
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-cyan-100 flex items-center justify-center">
-              <FileText className="text-cyan-600" size={21} />
+              >
+                <Plus size={19} />
+                Crear boletín
+              </Link>
             </div>
 
-            <div>
-              <p className="text-2xl font-bold text-slate-900">
-                {boletines.length}
-              </p>
+            {/* RESUMEN */}
 
-              <p className="text-sm text-slate-500">Boletines creados</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-cyan-100 flex items-center justify-center">
+                    <FileText className="text-cyan-600" size={21} />
+                  </div>
+
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">
+                      {boletines.length}
+                    </p>
+
+                    <p className="text-sm text-slate-500">Boletines creados</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <User className="text-blue-600" size={21} />
+                  </div>
+
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">
+                      {
+                        new Set(
+                          boletines.map(
+                            (boletin) =>
+                              `${boletin.estudiante_nombre}-${boletin.estudiante_apellido}`,
+                          ),
+                        ).size
+                      }
+                    </p>
+
+                    <p className="text-sm text-slate-500">Alumnos evaluados</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+                    <BookOpen className="text-green-600" size={21} />
+                  </div>
+
+                  <div>
+                    <p className="text-2xl font-bold text-slate-900">
+                      {
+                        new Set(
+                          boletines
+                            .map((boletin) => boletin.anio)
+                            .filter(Boolean),
+                        ).size
+                      }
+                    </p>
+
+                    <p className="text-sm text-slate-500">
+                      Períodos registrados
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
-              <User className="text-blue-600" size={21} />
-            </div>
+            {/* BUSCADOR */}
 
-            <div>
-              <p className="text-2xl font-bold text-slate-900">
-                {
-                  new Set(
-                    boletines.map(
-                      (boletin) =>
-                        `${boletin.estudiante_nombre}-${boletin.estudiante_apellido}`,
-                    ),
-                  ).size
-                }
-              </p>
-
-              <p className="text-sm text-slate-500">Alumnos evaluados</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
-              <BookOpen className="text-green-600" size={21} />
-            </div>
-
-            <div>
-              <p className="text-2xl font-bold text-slate-900">
-                {
-                  new Set(
-                    boletines.map((boletin) => boletin.anio).filter(Boolean),
-                  ).size
-                }
-              </p>
-
-              <p className="text-sm text-slate-500">Períodos registrados</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* BUSCADOR */}
-
-      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <div className="relative">
-          <Search
-            size={19}
-            className="
+            <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+              <div className="relative">
+                <Search
+                  size={19}
+                  className="
               absolute
               left-4
               top-1/2
               -translate-y-1/2
               text-slate-400
             "
-          />
+                />
 
-          <input
-            type="text"
-            placeholder="Buscar alumno..."
-            className="
+                <input
+                  type="text"
+                  placeholder="Buscar alumno..."
+                  className="
               w-full
               h-11
               rounded-xl
@@ -229,15 +254,15 @@ export default async function TeacherBoletinesPage() {
               focus:ring-2
               focus:ring-cyan-100
             "
-          />
-        </div>
-      </div>
+                />
+              </div>
+            </div>
 
-      {/* LISTADO */}
+            {/* LISTADO */}
 
-      {boletines.length === 0 ? (
-        <div
-          className="
+            {boletines.length === 0 ? (
+              <div
+                className="
             bg-white
             border
             border-slate-200
@@ -247,23 +272,23 @@ export default async function TeacherBoletinesPage() {
             text-center
             shadow-sm
           "
-        >
-          <div className="w-16 h-16 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center">
-            <FileText className="text-slate-400" size={28} />
-          </div>
+              >
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center">
+                  <FileText className="text-slate-400" size={28} />
+                </div>
 
-          <h2 className="mt-5 text-xl font-bold text-slate-900">
-            Todavía no hay boletines
-          </h2>
+                <h2 className="mt-5 text-xl font-bold text-slate-900">
+                  Todavía no hay boletines
+                </h2>
 
-          <p className="mt-2 text-slate-500 max-w-md mx-auto">
-            Cuando crees un boletín para uno de tus alumnos aparecerá en esta
-            sección.
-          </p>
+                <p className="mt-2 text-slate-500 max-w-md mx-auto">
+                  Cuando crees un boletín para uno de tus alumnos aparecerá en
+                  esta sección.
+                </p>
 
-          <Link
-            href="/teacher/boletines/nuevo"
-            className="
+                <Link
+                  href="/teacher/boletines/nuevo"
+                  className="
               inline-flex
               items-center
               gap-2
@@ -276,23 +301,23 @@ export default async function TeacherBoletinesPage() {
               text-white
               font-semibold
             "
-          >
-            <Plus size={18} />
-            Crear primer boletín
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {boletines.map((boletin) => {
-            const promedio =
-              boletin.promedio !== null && boletin.promedio !== undefined
-                ? Number(boletin.promedio)
-                : null;
+                >
+                  <Plus size={18} />
+                  Crear primer boletín
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {boletines.map((boletin) => {
+                  const promedio =
+                    boletin.promedio !== null && boletin.promedio !== undefined
+                      ? Number(boletin.promedio)
+                      : null;
 
-            return (
-              <div
-                key={boletin.id}
-                className="
+                  return (
+                    <div
+                      key={boletin.id}
+                      className="
                   bg-white
                   border
                   border-slate-200
@@ -302,14 +327,14 @@ export default async function TeacherBoletinesPage() {
                   transition
                   overflow-hidden
                 "
-              >
-                {/* HEADER CARD */}
+                    >
+                      {/* HEADER CARD */}
 
-                <div className="p-5 sm:p-6">
-                  <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex items-start gap-4 min-w-0">
-                      <div
-                        className="
+                      <div className="p-5 sm:p-6">
+                        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="flex items-start gap-4 min-w-0">
+                            <div
+                              className="
                           w-12
                           h-12
                           shrink-0
@@ -319,43 +344,43 @@ export default async function TeacherBoletinesPage() {
                           items-center
                           justify-center
                         "
-                      >
-                        <User className="text-cyan-600" size={22} />
-                      </div>
+                            >
+                              <User className="text-cyan-600" size={22} />
+                            </div>
 
-                      <div className="min-w-0">
-                        <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
-                          {boletin.estudiante_apellido},{" "}
-                          {boletin.estudiante_nombre}
-                        </h2>
+                            <div className="min-w-0">
+                              <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
+                                {boletin.estudiante_apellido},{" "}
+                                {boletin.estudiante_nombre}
+                              </h2>
 
-                        <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
-                          <span className="flex items-center gap-1.5">
-                            <BookOpen size={15} />
-                            {boletin.nivel}
-                          </span>
+                              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+                                <span className="flex items-center gap-1.5">
+                                  <BookOpen size={15} />
+                                  {boletin.nivel}
+                                </span>
 
-                          <span className="flex items-center gap-1.5">
-                            <CalendarDays size={15} />
-                            {boletin.anio}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                                <span className="flex items-center gap-1.5">
+                                  <CalendarDays size={15} />
+                                  {boletin.anio}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
 
-                    {/* PROMEDIO */}
+                          {/* PROMEDIO */}
 
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <p className="text-xs text-slate-400">Promedio</p>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <p className="text-xs text-slate-400">Promedio</p>
 
-                        <p className="text-2xl font-bold text-cyan-600">
-                          {promedio !== null ? promedio.toFixed(2) : "-"}
-                        </p>
-                      </div>
+                              <p className="text-2xl font-bold text-cyan-600">
+                                {promedio !== null ? promedio.toFixed(2) : "-"}
+                              </p>
+                            </div>
 
-                      <div
-                        className={`
+                            <div
+                              className={`
                           w-12
                           h-12
                           rounded-2xl
@@ -373,35 +398,44 @@ export default async function TeacherBoletinesPage() {
                                   : "bg-red-100 text-red-600"
                           }
                         `}
-                      >
-                        {promedio !== null ? Math.round(promedio) : "-"}
-                      </div>
-                    </div>
-                  </div>
+                            >
+                              {promedio !== null ? Math.round(promedio) : "-"}
+                            </div>
+                          </div>
+                        </div>
 
-                  {/* DATOS */}
+                        {/* DATOS */}
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                    <Info label="Nota 1" value={formatNumber(boletin.nota_1)} />
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+                          <Info
+                            label="Nota 1"
+                            value={formatNumber(boletin.nota_1)}
+                          />
 
-                    <Info label="Nota 2" value={formatNumber(boletin.nota_2)} />
+                          <Info
+                            label="Nota 2"
+                            value={formatNumber(boletin.nota_2)}
+                          />
 
-                    <Info label="Nota 3" value={formatNumber(boletin.nota_3)} />
+                          <Info
+                            label="Nota 3"
+                            value={formatNumber(boletin.nota_3)}
+                          />
 
-                    <Info
-                      label="Ausentes"
-                      value={
-                        boletin.ausentes !== null
-                          ? String(boletin.ausentes)
-                          : "-"
-                      }
-                    />
-                  </div>
+                          <Info
+                            label="Ausentes"
+                            value={
+                              boletin.ausentes !== null
+                                ? String(boletin.ausentes)
+                                : "-"
+                            }
+                          />
+                        </div>
 
-                  {/* ACTIONS */}
+                        {/* ACTIONS */}
 
-                  <div
-                    className="
+                        <div
+                          className="
                       mt-6
                       pt-5
                       border-t
@@ -413,15 +447,15 @@ export default async function TeacherBoletinesPage() {
                       sm:justify-between
                       gap-3
                     "
-                  >
-                    <span className="text-xs text-slate-400">
-                      Creado {formatDate(boletin.created_at)}
-                    </span>
+                        >
+                          <span className="text-xs text-slate-400">
+                            Creado {formatDate(boletin.created_at)}
+                          </span>
 
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Link
-                        href={`/boletin/${boletin.dni}`}
-                        className="
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <Link
+                              href={`/boletin/${boletin.dni}`}
+                              className="
                           h-10
                           px-4
                           rounded-xl
@@ -436,14 +470,14 @@ export default async function TeacherBoletinesPage() {
                           justify-center
                           gap-2
                         "
-                      >
-                        Ver boletín
-                        <ChevronRight size={17} />
-                      </Link>
+                            >
+                              Ver boletín
+                              <ChevronRight size={17} />
+                            </Link>
 
-                      <Link
-                        href={`/teacher/boletines/${boletin.id}/editar`}
-                        className="
+                            <Link
+                              href={`/teacher/boletines/${boletin.id}/editar`}
+                              className="
                           h-10
                           px-4
                           rounded-xl
@@ -456,17 +490,20 @@ export default async function TeacherBoletinesPage() {
                           items-center
                           justify-center
                         "
-                      >
-                        Editar
-                      </Link>
+                            >
+                              Editar
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-      )}
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
