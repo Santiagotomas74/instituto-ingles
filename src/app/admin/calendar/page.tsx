@@ -1,15 +1,18 @@
 import Calendar from "./components/Calendar";
-
 import Navbar from "../dashboard/components/AdminNavbar";
 import AdminSidebar from "../dashboard/components/AdminSidebar";
 
 export default function CalendarPage() {
   return (
     <main className="min-h-screen bg-slate-100 flex">
-      <AdminSidebar />
+      {/* Oculto en mobile, visible desde pantallas medianas (768px+) */}
+      <div className="hidden md:flex">
+        <AdminSidebar />
+      </div>
 
       <div className="flex-1 min-w-0">
-        <header className="sticky top-0 z-45">
+        {/* Oculto en mobile, visible desde pantallas medianas (768px+) */}
+        <header className="hidden md:block sticky top-0 z-45">
           <Navbar />
         </header>
 
