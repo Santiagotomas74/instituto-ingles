@@ -302,7 +302,7 @@ export default function ChatLayout() {
   }, []);
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-slate-100">
+    <div className="flex h-screen md:h-[calc(100vh-4rem)] overflow-hidden bg-slate-100">
       <div
         className={`
           ${mobileView === "chat" ? "hidden" : "block"}
