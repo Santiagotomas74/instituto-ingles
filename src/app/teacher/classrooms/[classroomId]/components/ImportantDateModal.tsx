@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   open: boolean;
-
   setOpen: (value: boolean) => void;
-
   classroomId: string;
-
   loadDates: () => Promise<void>;
 };
 
@@ -18,21 +16,27 @@ export default function ImportantDateModal({
   classroomId,
   loadDates,
 }: Props) {
+  // =====================================================
+  // Estado de montaje para evitar errores de SSR en Next.js
+  // =====================================================
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
-
     date: "",
-
     time: "",
-
     type: "clase",
-
     description: "",
   });
 
-  if (!open) return null;
+  // Si no está montado (SSR) o no está abierto, no renderizamos nada
+  if (!mounted || !open) return null;
 
   const handleCreate = async () => {
     if (
@@ -42,7 +46,6 @@ export default function ImportantDateModal({
       !form.description.trim()
     ) {
       alert("Completa todos los campos");
-
       return;
     }
 
@@ -51,22 +54,15 @@ export default function ImportantDateModal({
 
       const res = await fetch("/api/teacher/classrooms/important-dates", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           classroom_id: classroomId,
-
           titulo: form.title,
-
           descripcion: form.description,
-
           fecha: form.date,
-
           hora: form.time,
-
           tipo: form.type,
         }),
       });
@@ -79,13 +75,9 @@ export default function ImportantDateModal({
 
       setForm({
         title: "",
-
         date: "",
-
         time: "",
-
         type: "clase",
-
         description: "",
       });
 
@@ -94,51 +86,51 @@ export default function ImportantDateModal({
       await loadDates();
     } catch (error) {
       console.error(error);
-
       alert("Error creando fecha importante");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
+  // Renderizamos a través de createPortal
+  return createPortal(
     <div
       className="
-fixed
-inset-0
-bg-black/40
-backdrop-blur-sm
-flex
-items-center
-justify-center
-z-50
-"
+        fixed
+        inset-0
+        bg-black/40
+        backdrop-blur-sm
+        flex
+        items-center
+        justify-center
+        z-[9999]
+      "
     >
       <div
         className="
-bg-white
-rounded-3xl
-w-full
-max-w-xl
-p-8
-shadow-2xl
-"
+          bg-white
+          rounded-3xl
+          w-full
+          max-w-xl
+          p-8
+          shadow-2xl
+        "
       >
         <h2
           className="
-text-2xl
-font-bold
-text-gray-700
-mb-6
-"
+            text-2xl
+            font-bold
+            text-gray-700
+            mb-6
+          "
         >
           Nueva fecha importante
         </h2>
 
         <div
           className="
-space-y-5
-"
+            space-y-5
+          "
         >
           <input
             type="text"
@@ -151,12 +143,12 @@ space-y-5
               })
             }
             className="
-w-full
-border
-rounded-xl
-p-3
-text-gray-700
-"
+              w-full
+              border
+              rounded-xl
+              p-3
+              text-gray-700
+            "
           />
 
           <input
@@ -169,12 +161,12 @@ text-gray-700
               })
             }
             className="
-w-full
-border
-rounded-xl
-p-3
-text-gray-700
-"
+              w-full
+              border
+              rounded-xl
+              p-3
+              text-gray-700
+            "
           />
 
           <input
@@ -187,12 +179,12 @@ text-gray-700
               })
             }
             className="
-w-full
-border
-rounded-xl
-p-3
-text-gray-700
-"
+              w-full
+              border
+              rounded-xl
+              p-3
+              text-gray-700
+            "
           />
 
           <select
@@ -204,19 +196,16 @@ text-gray-700
               })
             }
             className="
-w-full
-border
-rounded-xl
-p-3
-text-gray-700
-"
+              w-full
+              border
+              rounded-xl
+              p-3
+              text-gray-700
+            "
           >
             <option value="clase">Clase</option>
-
             <option value="examen">Examen</option>
-
             <option value="evento">Evento</option>
-
             <option value="reunion">Reunión</option>
           </select>
 
@@ -231,32 +220,32 @@ text-gray-700
               })
             }
             className="
-w-full
-border
-rounded-xl
-p-3
-text-gray-700
-"
+              w-full
+              border
+              rounded-xl
+              p-3
+              text-gray-700
+            "
           />
         </div>
 
         <div
           className="
-flex
-justify-end
-gap-3
-mt-8
-"
+            flex
+            justify-end
+            gap-3
+            mt-8
+          "
         >
           <button
             onClick={() => setOpen(false)}
             className="
-px-5
-py-3
-rounded-xl
-border
-text-gray-700
-"
+              px-5
+              py-3
+              rounded-xl
+              border
+              text-gray-700
+            "
           >
             Cancelar
           </button>
@@ -265,19 +254,20 @@ text-gray-700
             onClick={handleCreate}
             disabled={loading}
             className="
-px-5
-py-3
-rounded-xl
-bg-cyan-500
-text-white
-hover:bg-cyan-600
-disabled:opacity-60
-"
+              px-5
+              py-3
+              rounded-xl
+              bg-cyan-500
+              text-white
+              hover:bg-cyan-600
+              disabled:opacity-60
+            "
           >
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

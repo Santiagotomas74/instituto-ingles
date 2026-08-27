@@ -1,58 +1,51 @@
 "use client";
 
 import { X } from "lucide-react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 type Props = {
   open: boolean;
-
   setOpen: (value: boolean) => void;
-
   editingId: string | null;
-
   setEditingId: (value: string | null) => void;
-
   form: {
     title: string;
-
     content: string;
-
     is_important: boolean;
   };
-
   setForm: (value: any) => void;
-
   classroomId: string;
-
   loadClassroom: () => void;
 };
 
 export default function CreateAnnouncementModal({
   open,
-
   setOpen,
-
   editingId,
-
   setEditingId,
-
   form,
-
   setForm,
-
   classroomId,
-
   loadClassroom,
 }: Props) {
+  // =====================================================
+  // Estado de montaje para evitar errores de SSR en Next.js
+  // =====================================================
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [loading, setLoading] = useState(false);
 
-  if (!open) return null;
+  // Si no está montado (SSR) o no está abierto, no renderizamos nada
+  if (!mounted || !open) return null;
 
   const handleSubmit = async () => {
     if (!form.title.trim() || !form.content.trim()) {
       alert("Completa título y contenido");
-
       return;
     }
 
@@ -60,25 +53,19 @@ export default function CreateAnnouncementModal({
       setLoading(true);
 
       const method = editingId ? "PUT" : "POST";
-
       const url = editingId
         ? `/api/teacher/classrooms/announcements/${editingId}`
         : "/api/teacher/classrooms/announcements";
 
       const res = await fetch(url, {
         method,
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           classroom_id: classroomId,
-
           titulo: form.title,
-
           contenido: form.content,
-
           is_important: form.is_important,
         }),
       });
@@ -86,63 +73,59 @@ export default function CreateAnnouncementModal({
       if (!res.ok) throw new Error();
 
       setOpen(false);
-
       setEditingId(null);
-
       setForm({
         title: "",
-
         content: "",
-
         is_important: false,
       });
 
       loadClassroom();
     } catch (error) {
       console.error(error);
-
       alert("Error guardando anuncio");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
+  // Renderizamos a través de createPortal
+  return createPortal(
     <div
       className="
-fixed
-inset-0
-bg-black/40
-flex
-items-center
-justify-center
-z-50
-p-4
-"
+        fixed
+        inset-0
+        bg-black/40
+        flex
+        items-center
+        justify-center
+        z-[9999]
+        p-4
+      "
     >
       <div
         className="
-bg-white
-rounded-[28px]
-w-full
-max-w-2xl
-p-6
-"
+          bg-white
+          rounded-[28px]
+          w-full
+          max-w-2xl
+          p-6
+        "
       >
         <div
           className="
-flex
-justify-between
-items-center
-mb-6
-"
+            flex
+            justify-between
+            items-center
+            mb-6
+          "
         >
           <h3
             className="
-text-2xl
-font-bold
-text-slate-900
-"
+              text-2xl
+              font-bold
+              text-slate-900
+            "
           >
             {editingId ? "Editar anuncio" : "Crear anuncio"}
           </h3>
@@ -157,9 +140,9 @@ text-slate-900
 
         <div
           className="
-space-y-4
-text-gray-700
-"
+            space-y-4
+            text-gray-700
+          "
         >
           <input
             type="text"
@@ -168,17 +151,16 @@ text-gray-700
             onChange={(e) =>
               setForm({
                 ...form,
-
                 title: e.target.value,
               })
             }
             className="
-w-full
-h-14
-px-5
-rounded-2xl
-border
-"
+              w-full
+              h-14
+              px-5
+              rounded-2xl
+              border
+            "
           />
 
           <textarea
@@ -188,24 +170,23 @@ border
             onChange={(e) =>
               setForm({
                 ...form,
-
                 content: e.target.value,
               })
             }
             className="
-w-full
-p-5
-rounded-2xl
-border
-"
+              w-full
+              p-5
+              rounded-2xl
+              border
+            "
           />
 
           <label
             className="
-flex
-gap-3
-items-center
-"
+              flex
+              gap-3
+              items-center
+            "
           >
             <input
               type="checkbox"
@@ -213,7 +194,6 @@ items-center
               onChange={(e) =>
                 setForm({
                   ...form,
-
                   is_important: e.target.checked,
                 })
               }
@@ -224,21 +204,21 @@ items-center
 
         <div
           className="
-flex
-justify-end
-gap-3
-mt-8
-"
+            flex
+            justify-end
+            gap-3
+            mt-8
+          "
         >
           <button
             onClick={() => setOpen(false)}
             className="
-px-5
-h-12
-rounded-2xl
-bg-red-500
-text-white
-"
+              px-5
+              h-12
+              rounded-2xl
+              bg-red-500
+              text-white
+            "
           >
             Cancelar
           </button>
@@ -247,13 +227,13 @@ text-white
             onClick={handleSubmit}
             disabled={loading}
             className="
-px-6
-h-12
-rounded-2xl
-bg-cyan-500
-text-white
-font-semibold
-"
+              px-6
+              h-12
+              rounded-2xl
+              bg-cyan-500
+              text-white
+              font-semibold
+            "
           >
             {loading
               ? "Guardando..."
@@ -263,6 +243,7 @@ font-semibold
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

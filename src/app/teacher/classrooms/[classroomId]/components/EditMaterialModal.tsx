@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Upload, Save } from "lucide-react";
 
 import type { Material } from "@/types/material";
@@ -16,26 +17,27 @@ export default function EditMaterialModal({
   onClose,
   onUpdated,
 }: Props) {
-  const [loading, setLoading] = useState(false);
+  // =====================================================
+  // Estado de montaje para evitar errores de SSR en Next.js
+  // =====================================================
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     titulo: material.titulo ?? "",
     descripcion: material.descripcion ?? "",
-
     tipo: material.tipo ?? "file",
-
     material_category: material.material_category ?? "grammar",
-
     sub_category: material.sub_category ?? "",
-
     contenido_texto: material.contenido_texto ?? "",
-
     url: material.url ?? "",
-
     is_published: material.is_published ?? true,
-
     orden: material.orden ?? 0,
   });
 
@@ -77,7 +79,6 @@ export default function EditMaterialModal({
 
       if (formData.tipo === "file" && file) {
         const uploadData = new FormData();
-
         uploadData.append("file", file);
 
         const uploadRes = await fetch("/api/upload", {
@@ -89,7 +90,6 @@ export default function EditMaterialModal({
 
         if (!uploadRes.ok || !uploadResult.success) {
           alert(uploadResult.message || "Error subiendo archivo");
-
           return;
         }
 
@@ -110,26 +110,16 @@ export default function EditMaterialModal({
         body: JSON.stringify({
           titulo: formData.titulo,
           descripcion: formData.descripcion,
-
           tipo: formData.tipo,
-
           material_category: formData.material_category,
-
           sub_category: formData.sub_category || null,
-
           contenido_texto:
             formData.tipo === "text" ? formData.contenido_texto : null,
-
           url: formData.tipo === "link" ? formData.url : null,
-
           archivo_url: formData.tipo === "file" ? archivo_url : null,
-
           archivo_nombre: formData.tipo === "file" ? archivo_nombre : null,
-
           archivo_size: formData.tipo === "file" ? archivo_size : null,
-
           is_published: formData.is_published,
-
           orden: Number(formData.orden),
         }),
       });
@@ -138,7 +128,6 @@ export default function EditMaterialModal({
 
       if (!response.ok || !result.success) {
         alert(result.message || "Error actualizando material");
-
         return;
       }
 
@@ -149,19 +138,22 @@ export default function EditMaterialModal({
       onUpdated(result.material);
     } catch (error) {
       console.error("Error actualizando material:", error);
-
       alert("Error actualizando material");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
+  // Prevenir renderizado en servidor donde document.body no existe
+  if (!mounted) return null;
+
+  // Renderizamos a través de createPortal
+  return createPortal(
     <div
       className="
         fixed
         inset-0
-        z-[100]
+        z-[9999]
         flex
         items-center
         justify-center
@@ -203,7 +195,6 @@ export default function EditMaterialModal({
             <h2 className="text-2xl font-bold text-slate-900">
               Editar material
             </h2>
-
             <p className="text-sm text-slate-500 mt-1">
               Modificá la información del material.
             </p>
@@ -249,7 +240,6 @@ export default function EditMaterialModal({
             >
               Título
             </label>
-
             <input
               type="text"
               name="titulo"
@@ -286,7 +276,6 @@ export default function EditMaterialModal({
             >
               Descripción
             </label>
-
             <textarea
               name="descripcion"
               value={formData.descripcion}
@@ -313,7 +302,6 @@ export default function EditMaterialModal({
 
           <div className="grid md:grid-cols-2 gap-5">
             {/* CATEGORÍA */}
-
             <div>
               <label
                 className="
@@ -325,7 +313,6 @@ export default function EditMaterialModal({
               >
                 Categoría
               </label>
-
               <select
                 name="material_category"
                 value={formData.material_category}
@@ -345,25 +332,17 @@ export default function EditMaterialModal({
                 "
               >
                 <option value="grammar">Grammar</option>
-
                 <option value="vocabulary">Vocabulary</option>
-
                 <option value="reading">Reading</option>
-
                 <option value="listening">Listening</option>
-
                 <option value="speaking">Speaking</option>
-
                 <option value="writing">Writing</option>
-
                 <option value="homework">Homework</option>
-
                 <option value="exam">Exam</option>
               </select>
             </div>
 
             {/* SUBCATEGORÍA */}
-
             <div>
               <label
                 className="
@@ -375,7 +354,6 @@ export default function EditMaterialModal({
               >
                 Subcategoría
               </label>
-
               <select
                 name="sub_category"
                 value={formData.sub_category}
@@ -395,27 +373,16 @@ export default function EditMaterialModal({
                 "
               >
                 <option value="">Sin subcategoría</option>
-
                 <option value="imagen">Imagen</option>
-
                 <option value="video">Video</option>
-
                 <option value="audio">Audio</option>
-
                 <option value="libro">Libro</option>
-
                 <option value="documento">Documento</option>
-
                 <option value="presentacion">Presentación</option>
-
                 <option value="ficha">Ficha</option>
-
                 <option value="ejercicio">Ejercicio</option>
-
                 <option value="guia">Guía</option>
-
                 <option value="quiz">Quiz</option>
-
                 <option value="otro">Otro</option>
               </select>
             </div>
@@ -436,7 +403,6 @@ export default function EditMaterialModal({
             >
               Tipo
             </label>
-
             <select
               name="tipo"
               value={formData.tipo}
@@ -456,9 +422,7 @@ export default function EditMaterialModal({
               "
             >
               <option value="file">Archivo</option>
-
               <option value="link">Link</option>
-
               <option value="text">Texto</option>
             </select>
           </div>
@@ -479,7 +443,6 @@ export default function EditMaterialModal({
               >
                 Archivo
               </label>
-
               {material.archivo_nombre && (
                 <div
                   className="
@@ -492,13 +455,11 @@ export default function EditMaterialModal({
                   "
                 >
                   <p className="text-sm text-slate-500">Archivo actual</p>
-
                   <p className="font-medium text-slate-800 mt-1">
                     {material.archivo_nombre}
                   </p>
                 </div>
               )}
-
               <input
                 type="file"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
@@ -508,7 +469,6 @@ export default function EditMaterialModal({
                   text-slate-600
                 "
               />
-
               <p className="text-xs text-slate-400 mt-2">
                 Si no seleccionás un archivo nuevo, se conservará el actual.
               </p>
@@ -531,7 +491,6 @@ export default function EditMaterialModal({
               >
                 URL
               </label>
-
               <input
                 type="url"
                 name="url"
@@ -570,7 +529,6 @@ export default function EditMaterialModal({
               >
                 Contenido
               </label>
-
               <textarea
                 name="contenido_texto"
                 value={formData.contenido_texto}
@@ -625,7 +583,6 @@ export default function EditMaterialModal({
                 </span>
               </div>
             </label>
-
             <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
 
             {/* ORDEN */}
@@ -685,7 +642,6 @@ export default function EditMaterialModal({
             >
               Cancelar
             </button>
-
             <button
               type="submit"
               disabled={loading}
@@ -719,6 +675,7 @@ export default function EditMaterialModal({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
