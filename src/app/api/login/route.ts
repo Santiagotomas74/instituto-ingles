@@ -2,11 +2,27 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
+import { createAuthToken } from "@/lib/auth";
+
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: COOKIE_MAX_AGE,
+};
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
     const { username, password } = body;
+
+    // =====================================================
+    // VALIDAR CREDENCIALES
+    // =====================================================
 
     if (!username || !password) {
       return NextResponse.json(
@@ -14,7 +30,9 @@ export async function POST(req: Request) {
           success: false,
           message: "Faltan credenciales",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
       );
     }
 
@@ -26,26 +44,44 @@ export async function POST(req: Request) {
       username === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
+      const userId = "11f0517a-9766-411e-a990-3b4e6c917a35";
+      const role = "admin" as const;
+
+      // ===================================================
+      // CREAR JWT
+      // ===================================================
+
+      const token = await createAuthToken({
+        userId,
+        role,
+      });
+
+      // ===================================================
+      // RESPUESTA
+      // ===================================================
+
       const response = NextResponse.json({
         success: true,
-        role: "admin",
+        role,
+        user: {
+          id: userId,
+          role,
+        },
       });
 
-      response.cookies.set("role", "admin", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      // ===================================================
+      // JWT
+      // ===================================================
 
-      response.cookies.set("user_id", "11f0517a-9766-411e-a990-3b4e6c917a35", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      response.cookies.set("auth_token", token, cookieOptions);
+
+      // ===================================================
+      // COOKIES AUXILIARES
+      // ===================================================
+
+      response.cookies.set("role", role, cookieOptions);
+
+      response.cookies.set("user_id", userId, cookieOptions);
 
       return response;
     }
@@ -56,16 +92,20 @@ export async function POST(req: Request) {
 
     const teacherResult = await query(
       `
-      SELECT *
-      FROM teachers
-      WHERE LOWER(CONCAT(nombre, ' ', apellido)) = LOWER($1)
-      LIMIT 1
+        SELECT *
+        FROM teachers
+        WHERE LOWER(CONCAT(nombre, ' ', apellido)) = LOWER($1)
+        LIMIT 1
       `,
       [username],
     );
 
     if (teacherResult.rows.length > 0) {
       const teacher = teacherResult.rows[0];
+
+      // ===================================================
+      // VALIDAR PASSWORD
+      // ===================================================
 
       const validPassword = await bcrypt.compare(password, teacher.password);
 
@@ -75,13 +115,37 @@ export async function POST(req: Request) {
             success: false,
             message: "Credenciales inválidas",
           },
-          { status: 401 },
+          {
+            status: 401,
+          },
         );
       }
 
+      const userId = teacher.id;
+      const role = "teacher" as const;
+
+      // ===================================================
+      // CREAR JWT
+      // ===================================================
+
+      const token = await createAuthToken({
+        userId,
+        role,
+      });
+
+      // ===================================================
+      // RESPUESTA
+      // ===================================================
+
       const response = NextResponse.json({
         success: true,
-        role: "teacher",
+        role,
+
+        user: {
+          id: teacher.id,
+          role,
+        },
+
         teacher: {
           id: teacher.id,
           nombre: teacher.nombre,
@@ -89,37 +153,23 @@ export async function POST(req: Request) {
         },
       });
 
-      response.cookies.set("user_id", teacher.id, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      // ===================================================
+      // JWT
+      // ===================================================
 
-      response.cookies.set("teacher_name", teacher.nombre, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      response.cookies.set("auth_token", token, cookieOptions);
 
-      response.cookies.set("teacher_lastname", teacher.apellido, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      // ===================================================
+      // COOKIES AUXILIARES
+      // ===================================================
 
-      response.cookies.set("role", "teacher", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      response.cookies.set("user_id", teacher.id, cookieOptions);
+
+      response.cookies.set("role", role, cookieOptions);
+
+      response.cookies.set("teacher_name", teacher.nombre, cookieOptions);
+
+      response.cookies.set("teacher_lastname", teacher.apellido, cookieOptions);
 
       return response;
     }
@@ -130,16 +180,20 @@ export async function POST(req: Request) {
 
     const studentResult = await query(
       `
-      SELECT *
-      FROM students
-      WHERE LOWER(CONCAT(nombre, ' ', apellido)) = LOWER($1)
-      LIMIT 1
+        SELECT *
+        FROM students
+        WHERE LOWER(CONCAT(nombre, ' ', apellido)) = LOWER($1)
+        LIMIT 1
       `,
       [username],
     );
 
     if (studentResult.rows.length > 0) {
       const student = studentResult.rows[0];
+
+      // ===================================================
+      // VALIDAR PASSWORD
+      // ===================================================
 
       const validPassword = await bcrypt.compare(password, student.password);
 
@@ -149,13 +203,37 @@ export async function POST(req: Request) {
             success: false,
             message: "Credenciales inválidas",
           },
-          { status: 401 },
+          {
+            status: 401,
+          },
         );
       }
 
+      const userId = student.id;
+      const role = "student" as const;
+
+      // ===================================================
+      // CREAR JWT
+      // ===================================================
+
+      const token = await createAuthToken({
+        userId,
+        role,
+      });
+
+      // ===================================================
+      // RESPUESTA
+      // ===================================================
+
       const response = NextResponse.json({
         success: true,
-        role: "student",
+        role,
+
+        user: {
+          id: student.id,
+          role,
+        },
+
         student: {
           id: student.id,
           nombre: student.nombre,
@@ -163,37 +241,23 @@ export async function POST(req: Request) {
         },
       });
 
-      response.cookies.set("user_id", student.id, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      // ===================================================
+      // JWT
+      // ===================================================
 
-      response.cookies.set("student_name", student.nombre, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      response.cookies.set("auth_token", token, cookieOptions);
 
-      response.cookies.set("student_lastname", student.apellido, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      // ===================================================
+      // COOKIES AUXILIARES
+      // ===================================================
 
-      response.cookies.set("role", "student", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      response.cookies.set("user_id", student.id, cookieOptions);
+
+      response.cookies.set("role", role, cookieOptions);
+
+      response.cookies.set("student_name", student.nombre, cookieOptions);
+
+      response.cookies.set("student_lastname", student.apellido, cookieOptions);
 
       return response;
     }
@@ -207,17 +271,21 @@ export async function POST(req: Request) {
         success: false,
         message: "Credenciales inválidas",
       },
-      { status: 401 },
+      {
+        status: 401,
+      },
     );
   } catch (error) {
-    console.error(error);
+    console.error("ERROR LOGIN:", error);
 
     return NextResponse.json(
       {
         success: false,
         message: "Error interno",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
   }
 }

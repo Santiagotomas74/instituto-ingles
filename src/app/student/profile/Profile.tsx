@@ -141,7 +141,6 @@ export default function Profile() {
     <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <ProfileHeader profile={profile} />
       {/* Asumo que ProfileStats lo tienes en otro archivo, mantenlo aquí */}
-      <ProfileStats profile={profile} />
       <PersonalInfoCard profile={profile} />
       <PaymentReceiptsCard profile={profile} />
     </div>

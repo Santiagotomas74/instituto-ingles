@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import Navbar from "../components/Navbar"; // Ajusta la ruta si es necesario
+import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Link from "next/link";
 import {
@@ -14,54 +14,42 @@ import {
 
 type Boletin = {
   id: string;
-
   dni: number;
-
   estudiante_nombre: string;
   estudiante_apellido: string;
-
   es_mayor_edad: boolean;
-
   anio: number;
   nivel: string;
-
   profesor_nombre: string;
   profesor_apellido: string;
-
   nota_1: number | null;
   nota_2: number | null;
   nota_3: number | null;
   promedio: number | null;
-
   behavior_1: string | null;
   behavior_2: string | null;
   behavior_3: string | null;
-
   ausentes: number | null;
-
   observaciones_1: string | null;
   observaciones_2: string | null;
   observaciones_3: string | null;
-
   firma_teacher: string | null;
   firma_coordinator: string | null;
-
   aclaracion_padre: string | null;
   aclaracion_estudiante: string | null;
-
   created_at: string;
   updated_at: string;
 };
 
 async function getBoletines(teacherId: string): Promise<Boletin[]> {
   try {
-    const cookieStore = await cookies(); // 👈 Leemos el store de cookies de la petición entrante
+    const cookieStore = await cookies();
 
     const res = await fetch(
       `${process.env.BACKEND_URL}/api/teacher/boletines/${teacherId}`,
       {
         headers: {
-          cookie: cookieStore.toString(), // 👈 Reenviamos todas las cookies a tu endpoint de la API
+          cookie: cookieStore.toString(),
         },
         cache: "no-store",
       },
@@ -73,7 +61,6 @@ async function getBoletines(teacherId: string): Promise<Boletin[]> {
     }
 
     const data = await res.json();
-
     return data.boletines || [];
   } catch (error) {
     console.error("Error obteniendo boletines:", error);
@@ -83,136 +70,104 @@ async function getBoletines(teacherId: string): Promise<Boletin[]> {
 
 export default async function TeacherBoletinesPage() {
   const cookieStore = await cookies();
-
   const teacherId = cookieStore.get("user_id")?.value;
-
   const boletines = teacherId ? await getBoletines(teacherId) : [];
 
   return (
     <div className="flex h-screen bg-slate-100 overflow-hidden">
-      {/* 2. El Sidebar no necesita 'sticky'. Al ser flex y medir h-full, se queda fijo a la izquierda.
-                  Agregamos `hidden md:flex flex-shrink-0` para ocultarlo en mobile y que no se encoja. */}
-      <div className="hidden md:flex flex-shrink-0 h-full z-50">
+      {/* Sidebar de escritorio */}
+      <aside className="hidden md:flex flex-shrink-0 h-full z-50">
         <Sidebar />
-      </div>
-      <div className="fixed inset-y-0 left-0 z-50 md:static md:flex flex-shrink-0 h-full">
-        <Sidebar />
-      </div>
-      {/* 3. Añadimos `overflow-y-auto` aquí. Solo esta columna derecha hará scroll. */}
+      </aside>
+
+      {/* Contenedor principal con scroll independiente */}
       <div className="flex-1 flex flex-col overflow-y-auto">
-        {/* 4. Navbar: Se mantiene `sticky`. 
-                    Importante: Asegúrate de agregarle un fondo (ej. bg-slate-100) para que 
-                    el texto del contenido no se superponga visualmente al scrollear por debajo. */}
-        <header className="sticky top-0 z-48 bg-slate-100">
+        <header className="sticky top-0 z-30 bg-slate-100">
           <Navbar />
         </header>
 
         <main className="flex-1">
-          <div className="space-y-8 p-10">
+          <div className="space-y-6 sm:space-y-8 p-4 sm:p-6 md:p-8 lg:p-10">
             {/* HEADER */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-cyan-100 flex items-center justify-center shrink-0">
+                  <FileText className="text-cyan-600 w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
 
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center">
-                    <FileText className="text-cyan-600" size={24} />
-                  </div>
-
-                  <div>
-                    <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">
-                      Boletines
-                    </h1>
-
-                    <p className="mt-1 text-slate-500">
-                      Gestioná los boletines de tus alumnos.
-                    </p>
-                  </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900">
+                    Boletines
+                  </h1>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                    Gestioná los boletines de tus alumnos.
+                  </p>
                 </div>
               </div>
 
               <Link
                 href="/teacher/boletines/nuevo"
-                className="
-            inline-flex
-            items-center
-            justify-center
-            gap-2
-            h-11
-            px-5
-            rounded-xl
-            bg-cyan-600
-            hover:bg-cyan-700
-            text-white
-            font-semibold
-            transition
-            shadow-sm
-          "
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold transition shadow-sm"
               >
                 <Plus size={19} />
-                Crear boletín
+                <span>Crear boletín</span>
               </Link>
             </div>
 
-            {/* RESUMEN */}
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+            {/* RESUMEN METRICAS */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-cyan-100 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-cyan-100 flex items-center justify-center shrink-0">
                     <FileText className="text-cyan-600" size={21} />
                   </div>
-
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-xl sm:text-2xl font-bold text-slate-900">
                       {boletines.length}
                     </p>
-
-                    <p className="text-sm text-slate-500">Boletines creados</p>
+                    <p className="text-xs sm:text-sm text-slate-500">
+                      Boletines creados
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm">
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
                     <User className="text-blue-600" size={21} />
                   </div>
-
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-xl sm:text-2xl font-bold text-slate-900">
                       {
                         new Set(
                           boletines.map(
-                            (boletin) =>
-                              `${boletin.estudiante_nombre}-${boletin.estudiante_apellido}`,
+                            (b) =>
+                              `${b.estudiante_nombre}-${b.estudiante_apellido}`,
                           ),
                         ).size
                       }
                     </p>
-
-                    <p className="text-sm text-slate-500">Alumnos evaluados</p>
+                    <p className="text-xs sm:text-sm text-slate-500">
+                      Alumnos evaluados
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
                     <BookOpen className="text-green-600" size={21} />
                   </div>
-
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-xl sm:text-2xl font-bold text-slate-900">
                       {
-                        new Set(
-                          boletines
-                            .map((boletin) => boletin.anio)
-                            .filter(Boolean),
-                        ).size
+                        new Set(boletines.map((b) => b.anio).filter(Boolean))
+                          .size
                       }
                     </p>
-
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs sm:text-sm text-slate-500">
                       Períodos registrados
                     </p>
                   </div>
@@ -221,86 +176,36 @@ export default async function TeacherBoletinesPage() {
             </div>
 
             {/* BUSCADOR */}
-
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-sm">
               <div className="relative">
                 <Search
                   size={19}
-                  className="
-              absolute
-              left-4
-              top-1/2
-              -translate-y-1/2
-              text-slate-400
-            "
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
                 />
-
                 <input
                   type="text"
                   placeholder="Buscar alumno..."
-                  className="
-              w-full
-              h-11
-              rounded-xl
-              border
-              border-slate-200
-              bg-slate-50
-              pl-11
-              pr-4
-              text-sm
-              text-slate-700
-              outline-none
-              focus:border-cyan-400
-              focus:ring-2
-              focus:ring-cyan-100
-            "
+                  className="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm text-slate-700 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition"
                 />
               </div>
             </div>
 
             {/* LISTADO */}
-
             {boletines.length === 0 ? (
-              <div
-                className="
-            bg-white
-            border
-            border-slate-200
-            rounded-3xl
-            p-10
-            sm:p-16
-            text-center
-            shadow-sm
-          "
-              >
-                <div className="w-16 h-16 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center">
+              <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-16 text-center shadow-sm">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center">
                   <FileText className="text-slate-400" size={28} />
                 </div>
-
-                <h2 className="mt-5 text-xl font-bold text-slate-900">
+                <h2 className="mt-4 sm:mt-5 text-lg sm:text-xl font-bold text-slate-900">
                   Todavía no hay boletines
                 </h2>
-
-                <p className="mt-2 text-slate-500 max-w-md mx-auto">
+                <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">
                   Cuando crees un boletín para uno de tus alumnos aparecerá en
                   esta sección.
                 </p>
-
                 <Link
                   href="/teacher/boletines/nuevo"
-                  className="
-              inline-flex
-              items-center
-              gap-2
-              mt-6
-              px-5
-              h-11
-              rounded-xl
-              bg-cyan-600
-              hover:bg-cyan-700
-              text-white
-              font-semibold
-            "
+                  className="inline-flex items-center justify-center gap-2 mt-6 px-5 h-11 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-sm w-full sm:w-auto"
                 >
                   <Plus size={18} />
                   Crear primer boletín
@@ -317,111 +222,76 @@ export default async function TeacherBoletinesPage() {
                   return (
                     <div
                       key={boletin.id}
-                      className="
-                  bg-white
-                  border
-                  border-slate-200
-                  rounded-3xl
-                  shadow-sm
-                  hover:shadow-md
-                  transition
-                  overflow-hidden
-                "
+                      className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl shadow-sm hover:shadow-md transition overflow-hidden"
                     >
-                      {/* HEADER CARD */}
-
-                      <div className="p-5 sm:p-6">
-                        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="flex items-start gap-4 min-w-0">
-                            <div
-                              className="
-                          w-12
-                          h-12
-                          shrink-0
-                          rounded-2xl
-                          bg-cyan-100
-                          flex
-                          items-center
-                          justify-center
-                        "
-                            >
-                              <User className="text-cyan-600" size={22} />
+                      <div className="p-4 sm:p-6">
+                        {/* HEADER CARD */}
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                          <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-2xl bg-cyan-100 flex items-center justify-center">
+                              <User className="text-cyan-600 w-5 h-5 sm:w-6 sm:h-6" />
                             </div>
 
                             <div className="min-w-0">
-                              <h2 className="text-lg sm:text-xl font-bold text-slate-900 truncate">
+                              <h2 className="text-base sm:text-xl font-bold text-slate-900 truncate">
                                 {boletin.estudiante_apellido},{" "}
                                 {boletin.estudiante_nombre}
                               </h2>
 
-                              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
-                                <span className="flex items-center gap-1.5">
-                                  <BookOpen size={15} />
+                              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-slate-500">
+                                <span className="flex items-center gap-1">
+                                  <BookOpen size={14} />
                                   {boletin.nivel}
                                 </span>
-
-                                <span className="flex items-center gap-1.5">
-                                  <CalendarDays size={15} />
+                                <span className="flex items-center gap-1">
+                                  <CalendarDays size={14} />
                                   {boletin.anio}
                                 </span>
                               </div>
                             </div>
                           </div>
 
-                          {/* PROMEDIO */}
-
-                          <div className="flex items-center gap-3">
-                            <div className="text-right">
-                              <p className="text-xs text-slate-400">Promedio</p>
-
-                              <p className="text-2xl font-bold text-cyan-600">
+                          {/* PROMEDIO BADGE */}
+                          <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-0 border-slate-100">
+                            <div className="text-left sm:text-right">
+                              <p className="text-[10px] sm:text-xs text-slate-400 font-medium">
+                                Promedio
+                              </p>
+                              <p className="text-xl sm:text-2xl font-bold text-cyan-600">
                                 {promedio !== null ? promedio.toFixed(2) : "-"}
                               </p>
                             </div>
 
                             <div
-                              className={`
-                          w-12
-                          h-12
-                          rounded-2xl
-                          flex
-                          items-center
-                          justify-center
-                          font-bold
-                          ${
-                            promedio === null
-                              ? "bg-slate-100 text-slate-400"
-                              : promedio >= 7
-                                ? "bg-green-100 text-green-600"
-                                : promedio >= 4
-                                  ? "bg-yellow-100 text-yellow-600"
-                                  : "bg-red-100 text-red-600"
-                          }
-                        `}
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-bold text-sm sm:text-base shrink-0 ${
+                                promedio === null
+                                  ? "bg-slate-100 text-slate-400"
+                                  : promedio >= 7
+                                    ? "bg-green-100 text-green-600"
+                                    : promedio >= 4
+                                      ? "bg-yellow-100 text-yellow-600"
+                                      : "bg-red-100 text-red-600"
+                              }`}
                             >
                               {promedio !== null ? Math.round(promedio) : "-"}
                             </div>
                           </div>
                         </div>
 
-                        {/* DATOS */}
-
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+                        {/* DATOS / NOTAS */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 sm:mt-6">
                           <Info
                             label="Nota 1"
                             value={formatNumber(boletin.nota_1)}
                           />
-
                           <Info
                             label="Nota 2"
                             value={formatNumber(boletin.nota_2)}
                           />
-
                           <Info
                             label="Nota 3"
                             value={formatNumber(boletin.nota_3)}
                           />
-
                           <Info
                             label="Ausentes"
                             value={
@@ -432,64 +302,24 @@ export default async function TeacherBoletinesPage() {
                           />
                         </div>
 
-                        {/* ACTIONS */}
-
-                        <div
-                          className="
-                      mt-6
-                      pt-5
-                      border-t
-                      border-slate-100
-                      flex
-                      flex-col
-                      sm:flex-row
-                      sm:items-center
-                      sm:justify-between
-                      gap-3
-                    "
-                        >
-                          <span className="text-xs text-slate-400">
+                        {/* ACCIONES */}
+                        <div className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <span className="text-xs text-slate-400 order-2 sm:order-1">
                             Creado {formatDate(boletin.created_at)}
                           </span>
 
-                          <div className="flex flex-col sm:flex-row gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto order-1 sm:order-2">
                             <Link
                               href={`/boletin/${boletin.dni}`}
-                              className="
-                          h-10
-                          px-4
-                          rounded-xl
-                          border
-                          border-slate-200
-                          hover:bg-slate-50
-                          text-slate-600
-                          font-medium
-                          text-sm
-                          flex
-                          items-center
-                          justify-center
-                          gap-2
-                        "
+                              className="h-10 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 font-medium text-sm flex items-center justify-center gap-1.5 transition w-full sm:w-auto"
                             >
                               Ver boletín
-                              <ChevronRight size={17} />
+                              <ChevronRight size={16} />
                             </Link>
 
                             <Link
                               href={`/teacher/boletines/${boletin.id}/editar`}
-                              className="
-                          h-10
-                          px-4
-                          rounded-xl
-                          bg-cyan-600
-                          hover:bg-cyan-700
-                          text-white
-                          font-medium
-                          text-sm
-                          flex
-                          items-center
-                          justify-center
-                        "
+                              className="h-10 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-medium text-sm flex items-center justify-center transition w-full sm:w-auto"
                             >
                               Editar
                             </Link>
@@ -510,10 +340,13 @@ export default async function TeacherBoletinesPage() {
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-slate-50 border border-slate-100 p-3">
-      <p className="text-xs text-slate-400">{label}</p>
-
-      <p className="mt-1 font-semibold text-slate-700">{value}</p>
+    <div className="rounded-xl bg-slate-50 border border-slate-100 p-2.5 sm:p-3">
+      <p className="text-[11px] sm:text-xs text-slate-400 font-medium">
+        {label}
+      </p>
+      <p className="mt-0.5 sm:mt-1 font-semibold text-slate-700 text-sm sm:text-base">
+        {value}
+      </p>
     </div>
   );
 }
@@ -522,13 +355,11 @@ function formatNumber(value: number | null) {
   if (value === null || value === undefined) {
     return "-";
   }
-
   return Number(value).toFixed(2);
 }
 
 function formatDate(value: string) {
   if (!value) return "-";
-
   return new Date(value).toLocaleDateString("es-AR", {
     day: "numeric",
     month: "short",

@@ -5,7 +5,8 @@ import {
   FolderOpen,
   Megaphone,
   ChevronRight,
-  ArrowLeft,
+  ArrowRight,
+  Clock,
 } from "lucide-react";
 import { cookies } from "next/headers";
 
@@ -112,181 +113,181 @@ export default async function Aulas() {
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {classrooms.map((classroom: any) => (
               <Link
                 key={classroom.id}
                 href={`/teacher/classrooms/${classroom.id}`}
                 className="
-        group
-        relative
-        bg-white
-        rounded-[32px]
-        border
-        border-slate-200
-        shadow-sm
-        hover:shadow-2xl
-        hover:-translate-y-1
-        transition-all
-        duration-300
-        overflow-hidden
-      "
+            group
+            relative
+            flex
+            flex-col
+            justify-between
+            bg-white
+            rounded-2xl
+            sm:rounded-3xl
+            border
+            border-slate-200/80
+            shadow-sm
+            hover:shadow-xl
+            hover:border-cyan-200
+            hover:-translate-y-1
+            transition-all
+            duration-300
+            overflow-hidden
+          "
               >
-                {/* Barra superior */}
-                <div
-                  className="
-          h-2
-          bg-gradient-to-r
-          from-cyan-500
-          to-blue-600
-        "
-                />
+                {/* Accent top border */}
+                <div className="h-1.5 w-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500" />
 
-                <div className="p-8">
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                   {/* Header */}
-                  <div className="flex justify-between items-start">
-                    <div>
+                  <div>
+                    <div className="flex items-start justify-between gap-3">
                       <span
                         className="
-                inline-flex
-                items-center
-                px-4
-                py-1.5
-                rounded-full
-                bg-cyan-50
-                text-cyan-700
-                text-sm
-                font-semibold
-                border
-                border-cyan-100
-              "
+                    inline-flex
+                    items-center
+                    px-3
+                    py-1
+                    rounded-full
+                    bg-cyan-50
+                    text-cyan-700
+                    text-xs
+                    font-semibold
+                    border
+                    border-cyan-100
+                  "
                       >
                         {classroom.nivel}
                       </span>
 
-                      <h3
-                        className="
-                mt-5
-                text-3xl
-                font-bold
-                text-slate-900
-                group-hover:text-cyan-600
-                transition
-              "
-                      >
-                        {classroom.nombre}
-                      </h3>
-
                       <div
                         className="
-                mt-3
-                flex
-                items-center
-                gap-2
-                text-slate-500
-              "
+                    w-9
+                    h-9
+                    rounded-xl
+                    bg-slate-50
+                    border
+                    border-slate-100
+                    flex
+                    items-center
+                    justify-center
+                    text-slate-400
+                    group-hover:bg-cyan-50
+                    group-hover:border-cyan-100
+                    group-hover:text-cyan-600
+                    transition-colors
+                  "
                       >
-                        <span className="text-lg">🕒</span>
-
-                        <span>{classroom.horario}</span>
+                        <ChevronRight
+                          size={18}
+                          className="group-hover:translate-x-0.5 transition-transform"
+                        />
                       </div>
                     </div>
 
-                    <div
+                    <h3
                       className="
-              w-12
-              h-12
-              rounded-2xl
-              bg-slate-100
-              flex
-              items-center
-              justify-center
-              group-hover:bg-cyan-100
-              transition
-            "
+                  mt-3.5
+                  text-lg
+                  sm:text-xl
+                  font-bold
+                  text-slate-900
+                  group-hover:text-cyan-600
+                  transition-colors
+                  line-clamp-1
+                "
                     >
-                      <ChevronRight
-                        className="
-                text-slate-400
-                group-hover:text-cyan-600
-                transition
-              "
-                      />
+                      {classroom.nombre}
+                    </h3>
+
+                    <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-sm text-slate-500">
+                      <Clock size={15} className="text-slate-400 shrink-0" />
+                      <span>{classroom.horario}</span>
                     </div>
                   </div>
 
                   {/* Estadísticas */}
-                  <div
-                    className="
-            mt-8
-            grid
-            grid-cols-2
-            gap-4
-          "
-                  >
+                  <div className="mt-6 grid grid-cols-2 gap-3">
                     <div
                       className="
-              rounded-2xl
-              bg-blue-50
-              p-4
-              flex
-              items-center
-              gap-3
-            "
+                  rounded-xl
+                  bg-slate-50/80
+                  border
+                  border-slate-100
+                  p-3
+                  flex
+                  items-center
+                  gap-3
+                  group-hover:bg-blue-50/50
+                  group-hover:border-blue-100/60
+                  transition-colors
+                "
                     >
                       <div
                         className="
-                w-10
-                h-10
-                rounded-xl
-                bg-blue-100
-                flex
-                items-center
-                justify-center
-              "
+                    w-9
+                    h-9
+                    rounded-lg
+                    bg-blue-100/80
+                    flex
+                    items-center
+                    justify-center
+                    text-blue-600
+                    shrink-0
+                  "
                       >
-                        <Users size={20} className="text-blue-600" />
+                        <Users size={18} />
                       </div>
 
-                      <div>
-                        <p className="font-bold text-slate-900">
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm sm:text-base leading-none">
                           {classroom.alumnos}
                         </p>
-
-                        <span className="text-sm text-slate-500">alumnos</span>
+                        <span className="text-xs text-slate-500 font-medium">
+                          alumnos
+                        </span>
                       </div>
                     </div>
 
                     <div
                       className="
-              rounded-2xl
-              bg-orange-50
-              p-4
-              flex
-              items-center
-              gap-3
-            "
+                  rounded-xl
+                  bg-slate-50/80
+                  border
+                  border-slate-100
+                  p-3
+                  flex
+                  items-center
+                  gap-3
+                  group-hover:bg-amber-50/50
+                  group-hover:border-amber-100/60
+                  transition-colors
+                "
                     >
                       <div
                         className="
-                w-10
-                h-10
-                rounded-xl
-                bg-orange-100
-                flex
-                items-center
-                justify-center
-              "
+                    w-9
+                    h-9
+                    rounded-lg
+                    bg-amber-100/80
+                    flex
+                    items-center
+                    justify-center
+                    text-amber-600
+                    shrink-0
+                  "
                       >
-                        <FolderOpen size={20} className="text-orange-600" />
+                        <FolderOpen size={18} />
                       </div>
 
-                      <div>
-                        <p className="font-bold text-slate-900">
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm sm:text-base leading-none">
                           {classroom.materiales}
                         </p>
-
-                        <span className="text-sm text-slate-500">
+                        <span className="text-xs text-slate-500 font-medium">
                           materiales
                         </span>
                       </div>
@@ -294,35 +295,17 @@ export default async function Aulas() {
                   </div>
 
                   {/* Footer */}
-                  <div
-                    className="
-            mt-8
-            pt-5
-            border-t
-            border-slate-100
-            flex
-            justify-between
-            items-center
-          "
-                  >
-                    <span
-                      className="
-              text-sm
-              text-slate-400
-            "
-                    >
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs sm:text-sm">
+                    <span className="text-slate-400 font-medium">
                       Aula asignada
                     </span>
 
-                    <span
-                      className="
-              text-cyan-600
-              font-semibold
-              group-hover:translate-x-1
-              transition
-            "
-                    >
-                      Ver aula →
+                    <span className="inline-flex items-center gap-1 text-cyan-600 font-semibold group-hover:text-cyan-700">
+                      Ver aula
+                      <ArrowRight
+                        size={15}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
                     </span>
                   </div>
                 </div>

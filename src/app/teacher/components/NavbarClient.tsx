@@ -20,11 +20,19 @@ export default function NavbarClient({
   useSocket(userId);
 
   async function handleLogout() {
-    await fetch("/api/logout", {
-      method: "POST",
-    });
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+      });
 
-    window.location.href = "/login";
+      if (!response.ok) {
+        console.error("Error cerrando sesión");
+      }
+    } catch (error) {
+      console.error("Error en logout:", error);
+    } finally {
+      window.location.href = "/login";
+    }
   }
 
   return (

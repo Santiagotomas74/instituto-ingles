@@ -34,16 +34,7 @@ export default function PersonalInfoCard({ profile }: Props) {
       label: "Correo electrónico",
       value: profile.email,
     },
-    {
-      icon: Phone,
-      label: "Teléfono",
-      value: profile.telefono || "-",
-    },
-    {
-      icon: MapPin,
-      label: "Dirección",
-      value: profile.direccion || "-",
-    },
+
     {
       icon: Calendar,
       label: "Fecha de nacimiento",
@@ -51,11 +42,7 @@ export default function PersonalInfoCard({ profile }: Props) {
         ? new Date(profile.fecha_nacimiento).toLocaleDateString("es-AR")
         : "-",
     },
-    {
-      icon: BookOpen,
-      label: "Legajo",
-      value: profile.legajo || "-",
-    },
+
     {
       icon: GraduationCap,
       label: "Nivel",

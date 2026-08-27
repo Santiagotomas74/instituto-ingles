@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import {
   BookOpen,
   FolderOpen,
-  ClipboardList,
-  Megaphone,
+  Clock,
+  ArrowRight,
   Users,
   ChevronRight,
 } from "lucide-react";
@@ -84,16 +84,16 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {classrooms.length === 0 ? (
-            <div className="lg:col-span-2 bg-white rounded-3xl p-10 text-center border border-slate-200">
-              <BookOpen className="mx-auto text-slate-300" size={42} />
-
-              <h3 className="mt-4 text-xl font-bold text-slate-900">
+            <div className="md:col-span-2 bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 text-center shadow-sm">
+              <div className="mx-auto w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 mb-4">
+                <BookOpen size={28} />
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900">
                 No estás inscripto en ninguna aula
               </h3>
-
-              <p className="mt-2 text-slate-500">
+              <p className="mt-1.5 text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
                 Cuando un administrador te asigne a un aula, aparecerá aquí.
               </p>
             </div>
@@ -103,137 +103,99 @@ export default async function Dashboard() {
                 key={classroom.id}
                 href={`/student/classroom/${classroom.id}`}
                 className="
-            group
-            relative
-            overflow-hidden
-            rounded-3xl
-            bg-white
-            border
-            border-slate-200
-            p-7
-            shadow-sm
-            hover:shadow-xl
-            hover:-translate-y-1
-            transition-all
-            duration-300
-          "
-              >
-                {/* Accent */}
-                <div
-                  className="
-              absolute
-              top-0
-              left-0
-              w-full
-              h-1
-              bg-gradient-to-r
-              from-cyan-500
-              to-blue-600
+              group
+              relative
+              flex
+              flex-col
+              justify-between
+              bg-white
+              rounded-2xl
+              border
+              border-slate-200/80
+              p-5
+              sm:p-6
+              shadow-sm
+              hover:shadow-xl
+              hover:border-cyan-200
+              hover:-translate-y-1
+              transition-all
+              duration-300
+              overflow-hidden
             "
-                />
+              >
+                {/* Accent top border */}
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500" />
 
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 flex flex-col justify-between pt-1">
+                  {/* Header */}
                   <div>
-                    <span
-                      className="
-                  inline-flex
-                  px-3
-                  py-1
-                  rounded-full
-                  bg-cyan-50
-                  text-cyan-700
-                  text-xs
-                  font-bold
-                "
-                    >
-                      {classroom.nivel}
-                    </span>
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-semibold border border-cyan-100">
+                        {classroom.nivel}
+                      </span>
 
-                    <h3
-                      className="
-                  mt-4
-                  text-2xl
-                  font-bold
-                  text-slate-900
-                  group-hover:text-cyan-600
-                  transition
-                "
-                    >
+                      <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-cyan-500 group-hover:border-cyan-500 group-hover:text-white transition-colors">
+                        <ChevronRight
+                          size={18}
+                          className="group-hover:translate-x-0.5 transition-transform"
+                        />
+                      </div>
+                    </div>
+
+                    <h3 className="mt-3 text-lg sm:text-xl font-bold text-slate-900 group-hover:text-cyan-600 transition-colors line-clamp-1">
                       {classroom.nombre}
                     </h3>
 
-                    <p className="mt-2 text-sm text-slate-500">
-                      🕒 {classroom.horario}
-                    </p>
+                    <div className="mt-2 flex items-center gap-1.5 text-xs sm:text-sm text-slate-500">
+                      <Clock size={15} className="text-slate-400 shrink-0" />
+                      <span>{classroom.horario}</span>
+                    </div>
                   </div>
 
-                  <div
-                    className="
-                w-11
-                h-11
-                rounded-2xl
-                bg-cyan-50
-                flex
-                items-center
-                justify-center
-                group-hover:bg-cyan-500
-                transition
-              "
-                  >
-                    <ChevronRight
-                      size={20}
-                      className="
-                  text-cyan-600
-                  group-hover:text-black
-                  transition
-                "
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 mt-7">
-                  <div className="rounded-2xl bg-blue-50 p-4">
-                    <div className="flex items-center gap-3">
-                      <Users size={19} className="text-blue-600" />
-
-                      <div>
-                        <p className="font-bold text-slate-900">
+                  {/* Estadísticas */}
+                  <div className="mt-6 grid grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-50/80 border border-slate-100 p-3 flex items-center gap-3 group-hover:bg-blue-50/50 group-hover:border-blue-100/60 transition-colors">
+                      <div className="w-9 h-9 rounded-lg bg-blue-100/80 flex items-center justify-center text-blue-600 shrink-0">
+                        <Users size={18} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm sm:text-base leading-none">
                           {classroom.alumnos}
                         </p>
-
-                        <p className="text-xs text-slate-500">compañeros</p>
+                        <span className="text-xs text-slate-500 font-medium truncate block">
+                          compañeros
+                        </span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="rounded-2xl bg-orange-50 p-4">
-                    <div className="flex items-center gap-3">
-                      <FolderOpen size={19} className="text-orange-600" />
-
-                      <div>
-                        <p className="font-bold text-slate-900">
+                    <div className="rounded-xl bg-slate-50/80 border border-slate-100 p-3 flex items-center gap-3 group-hover:bg-amber-50/50 group-hover:border-amber-100/60 transition-colors">
+                      <div className="w-9 h-9 rounded-lg bg-amber-100/80 flex items-center justify-center text-amber-600 shrink-0">
+                        <FolderOpen size={18} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-slate-900 text-sm sm:text-base leading-none">
                           {classroom.materiales}
                         </p>
-
-                        <p className="text-xs text-slate-500">materiales</p>
+                        <span className="text-xs text-slate-500 font-medium truncate block">
+                          materiales
+                        </span>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-6 pt-5 border-t border-slate-100">
-                  <span
-                    className="
-                text-sm
-                font-semibold
-                text-cyan-600
-                group-hover:translate-x-1
-                inline-block
-                transition
-              "
-                  >
-                    Ingresar al aula →
-                  </span>
+                  {/* Footer */}
+                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs sm:text-sm">
+                    <span className="text-slate-400 font-medium">
+                      Inscripto
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-cyan-600 font-semibold group-hover:text-cyan-700">
+                      Ingresar al aula
+                      <ArrowRight
+                        size={15}
+                        className="group-hover:translate-x-1 transition-transform"
+                      />
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))

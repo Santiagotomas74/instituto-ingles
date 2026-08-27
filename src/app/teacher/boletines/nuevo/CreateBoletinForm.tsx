@@ -34,9 +34,9 @@ type FormData = {
   nota_2: string;
   nota_3: string;
 
-  behavoir_1: string;
-  behavoir_2: string;
-  behavoir_3: string;
+  behaviour_1: string;
+  behaviour_2: string;
+  behaviour_3: string;
 
   ausentes: string;
   ausentes_2: string;
@@ -46,7 +46,7 @@ type FormData = {
   observaciones_2: string;
   observaciones_3: string;
 
-  behavoir_final: string;
+  behaviour_final: string;
   observaciones_final: string;
 };
 
@@ -62,9 +62,9 @@ const initialForm: FormData = {
   nota_2: "",
   nota_3: "",
 
-  behavoir_1: "",
-  behavoir_2: "",
-  behavoir_3: "",
+  behaviour_1: "",
+  behaviour_2: "",
+  behaviour_3: "",
 
   ausentes: "",
   ausentes_2: "",
@@ -74,7 +74,7 @@ const initialForm: FormData = {
   observaciones_2: "",
   observaciones_3: "",
 
-  behavoir_final: "",
+  behaviour_final: "",
   observaciones_final: "",
 };
 
@@ -240,13 +240,18 @@ export default function CreateBoletinForm() {
     setSuccess("");
 
     /*
-    =====================================
-    VALIDACIONES
-    =====================================
-    */
+  =====================================
+  VALIDACIONES
+  =====================================
+  */
 
     if (!form.student_id) {
       setError("Debes seleccionar un alumno.");
+      return;
+    }
+
+    if (!selectedStudent) {
+      setError("No se pudo obtener la información del alumno seleccionado.");
       return;
     }
 
@@ -259,16 +264,13 @@ export default function CreateBoletinForm() {
       setSaving(true);
 
       /*
-      =====================================
-      ENVIAR DATOS
-      =====================================
+    =====================================
+    ENVIAR DATOS
+    =====================================
 
-      Las firmas NO se envían.
-
-      El backend obtiene:
-      - firma del profesor desde teachers
-      - firma del coordinador desde administrators
-      */
+    El DNI se obtiene del alumno seleccionado
+    y se envía explícitamente al backend.
+    */
 
       const res = await fetch("/api/teacher/boletines", {
         method: "POST",
@@ -277,7 +279,12 @@ export default function CreateBoletinForm() {
           "Content-Type": "application/json",
         },
 
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+
+          // DNI del alumno seleccionado
+          dni: selectedStudent.dni,
+        }),
       });
 
       const data = await res.json();
@@ -289,10 +296,10 @@ export default function CreateBoletinForm() {
       setSuccess("Boletín creado correctamente.");
 
       /*
-      =====================================
-      RESET
-      =====================================
-      */
+    =====================================
+    RESET
+    =====================================
+    */
 
       setForm({
         ...initialForm,
@@ -308,7 +315,6 @@ export default function CreateBoletinForm() {
       setSaving(false);
     }
   }
-
   return (
     <form onSubmit={handleSubmit} className="space-y-8 pb-10">
       {/* =====================================
@@ -663,7 +669,7 @@ export default function CreateBoletinForm() {
 
         <div className="p-6 grid md:grid-cols-3 gap-6">
           {[1, 2, 3].map((period) => {
-            const field = `behavoir_${period}` as keyof FormData;
+            const field = `behaviour_${period}` as keyof FormData;
 
             return (
               <div key={period}>
@@ -780,8 +786,8 @@ export default function CreateBoletinForm() {
             </label>
 
             <select
-              value={form.behavoir_final}
-              onChange={(e) => updateField("behavoir_final", e.target.value)}
+              value={form.behaviour_final}
+              onChange={(e) => updateField("behaviour_final", e.target.value)}
               className="
                 w-full
                 h-12

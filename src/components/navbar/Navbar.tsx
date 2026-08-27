@@ -339,28 +339,28 @@ export default function MobileNavbar() {
                     description="Accede a tus calificaciones y progreso académico"
                   />
                   <DropdownIconItem
-                    href="/student/campus"
+                    href="/student/dashboard"
                     icon={<GraduationCap className="w-5 h-5" />}
                     title="Campus virtual"
                     description="Accede a clases y materiales"
                   />
 
                   <DropdownIconItem
-                    href="/student/calendar"
+                    href="/student/dashboard/calendar"
                     icon={<Calendar className="w-5 h-5" />}
                     title="Calendario académico"
                     description="Fechas y horarios"
                   />
 
                   <DropdownIconItem
-                    href="/student/tasks"
+                    href="/student/dashboard/homework"
                     icon={<ClipboardCheck className="w-5 h-5" />}
                     title="Tareas y ejercicios"
                     description="Actividades y evaluaciones"
                   />
 
                   <DropdownIconItem
-                    href="/student/messages"
+                    href="/student/chat"
                     icon={<MessageSquare className="w-5 h-5" />}
                     title="Mensajes"
                     description="Comunicación con profesores"
@@ -406,28 +406,28 @@ export default function MobileNavbar() {
               "
                 >
                   <DropdownIconItem
-                    href="/teacher/classes"
+                    href="/teacher/dashboard"
                     icon={<Users className="w-5 h-5" />}
                     title="Gestión de clases"
                     description="Administra tus cursos"
                   />
 
                   <DropdownIconItem
-                    href="/teacher/materials"
+                    href="/teacher/dashboard"
                     icon={<Upload className="w-5 h-5" />}
                     title="Subir materiales"
                     description="Comparte contenido académico"
                   />
 
                   <DropdownIconItem
-                    href="/teacher/messages"
+                    href="/teacher/chat"
                     icon={<MessageSquare className="w-5 h-5" />}
                     title="Mensajes"
                     description="Comunicación institucional"
                   />
 
                   <DropdownIconItem
-                    href="/teacher/calendario"
+                    href="/teacher/calendar"
                     icon={<BarChart3 className="w-5 h-5" />}
                     title="Calendario Academico"
                     description="Fechas y eventos del año"
@@ -635,33 +635,27 @@ export default function MobileNavbar() {
               label="Boletín de notas"
             />
             <MobileIconLink
-              href="/student/campus"
+              href="/student/dashboard"
               icon={<GraduationCap className="w-4 h-4" />}
               label="Campus virtual"
             />
 
             <MobileIconLink
-              href="/student/calendar"
+              href="/student/dashboard/calendar"
               icon={<Calendar className="w-4 h-4" />}
               label="Calendario"
             />
 
             <MobileIconLink
-              href="/student/tasks"
+              href="/student/dashboard/homework"
               icon={<ClipboardCheck className="w-4 h-4" />}
               label="Tareas"
             />
 
             <MobileIconLink
-              href="/student/messages"
+              href="/student/chat"
               icon={<MessageSquare className="w-4 h-4" />}
               label="Mensajes"
-            />
-
-            <MobileIconLink
-              href="/student/certificates"
-              icon={<FileText className="w-4 h-4" />}
-              label="Certificados"
             />
           </MobileDropdown>
 
@@ -672,33 +666,26 @@ export default function MobileNavbar() {
             onClick={() => toggleDropdown("teachers")}
           >
             <MobileIconLink
-              href="/teacher/classes"
+              href="/teacher/dashboard"
               icon={<Users className="w-4 h-4" />}
               label="Gestión de clases"
             />
 
             <MobileIconLink
-              href="/teacher/materials"
+              href="/teacher/dashboard"
               icon={<Upload className="w-4 h-4" />}
               label="Materiales"
             />
 
             <MobileIconLink
-              href="/teacher/attendance"
-              icon={<ClipboardCheck className="w-4 h-4" />}
-              label="Asistencia"
-            />
-
-            <MobileIconLink
-              href="/teacher/messages"
+              href="/teacher/chat"
               icon={<MessageSquare className="w-4 h-4" />}
               label="Mensajes"
             />
-
             <MobileIconLink
-              href="/teacher/reports"
-              icon={<BarChart3 className="w-4 h-4" />}
-              label="Reportes"
+              href="/teacher/calendar"
+              icon={<Calendar className="w-4 h-4" />}
+              label="Calendario"
             />
           </MobileDropdown>
 

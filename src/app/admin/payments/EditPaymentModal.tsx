@@ -8,6 +8,9 @@ import {
   CalendarDays,
   DollarSign,
   FileText,
+  Pencil,
+  FileCheck,
+  ExternalLink,
 } from "lucide-react";
 
 import { Payment } from "./StudentPayments";
@@ -41,11 +44,8 @@ export default function EditPaymentModal({
     );
 
     setDueDate(payment.due_date ? formatDateForInput(payment.due_date) : "");
-
     setPaidAt(payment.paid_at ? formatDateForInput(payment.paid_at) : "");
-
     setStatus(payment.status);
-
     setObservations(payment.observations ?? "");
   }, [payment]);
 
@@ -120,60 +120,59 @@ export default function EditPaymentModal({
       className="
         fixed
         inset-0
-        z-[100]
+        z-50
         flex
         items-center
         justify-center
         p-4
-        bg-slate-950/50
-        backdrop-blur-sm
+        bg-slate-900/60
+        backdrop-blur-xs
+        overflow-y-auto
+        animate-in
+        fade-in
+        duration-200
       "
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          if (!loading) {
-            onClose();
-          }
-        }
+      onClick={() => {
+        if (!loading) onClose();
       }}
     >
       <div
         className="
           w-full
           max-w-2xl
-          max-h-[90vh]
-          overflow-y-auto
-          rounded-3xl
           bg-white
+          rounded-3xl
           shadow-2xl
+          border
+          border-slate-100
+          overflow-hidden
+          relative
+          my-auto
+          animate-in
+          zoom-in-95
+          duration-200
         "
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* HEADER */}
+        {/* ENCABEZADO */}
+        <div className="px-6 sm:px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 shrink-0">
+              <Pencil size={18} />
+            </div>
 
-        <div
-          className="
-            sticky
-            top-0
-            z-10
-            flex
-            items-start
-            justify-between
-            gap-4
-            border-b
-            border-slate-200
-            bg-white
-            px-5
-            py-5
-            sm:px-7
-          "
-        >
-          <div className="min-w-0">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-              Editar comprobante
-            </h2>
+            <div className="min-w-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight truncate">
+                Editar factura / cuota
+              </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              {monthName} {payment.year}
-            </p>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+                Período:{" "}
+                <span className="text-slate-800 font-semibold">
+                  {monthName} {payment.year}
+                </span>
+              </p>
+            </div>
           </div>
 
           <button
@@ -181,41 +180,38 @@ export default function EditPaymentModal({
             disabled={loading}
             onClick={onClose}
             className="
-              shrink-0
+              w-9
+              h-9
+              sm:w-10
+              sm:h-10
+              rounded-xl
+              hover:bg-slate-200/60
+              text-slate-400
+              hover:text-slate-700
               flex
-              h-10
-              w-10
               items-center
               justify-center
-              rounded-xl
-              text-slate-500
-              hover:bg-slate-100
-              hover:text-slate-700
-              transition
+              transition-colors
+              shrink-0
               disabled:opacity-50
             "
-            aria-label="Cerrar"
+            aria-label="Cerrar modal"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* FORM */}
-
-        <form onSubmit={handleSubmit} className="p-5 sm:p-7">
+        {/* FORMULARIO */}
+        <form
+          onSubmit={handleSubmit}
+          className="p-6 sm:p-8 space-y-5 max-h-[80vh] overflow-y-auto"
+        >
           <div className="grid gap-5 sm:grid-cols-2">
             {/* IMPORTE */}
-
             <div>
               <label
                 htmlFor="payment-amount"
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-semibold
-                  text-slate-700
-                "
+                className="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-700"
               >
                 Importe
               </label>
@@ -223,13 +219,7 @@ export default function EditPaymentModal({
               <div className="relative">
                 <DollarSign
                   size={18}
-                  className="
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-slate-400
-                  "
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                 />
 
                 <input
@@ -242,14 +232,17 @@ export default function EditPaymentModal({
                   disabled={loading}
                   className="
                     w-full
-                    h-12
+                    h-11
+                    sm:h-12
                     rounded-xl
                     border
                     border-slate-200
                     bg-white
                     pl-10
                     pr-4
-                    text-slate-800
+                    text-sm
+                    font-medium
+                    text-slate-900
                     outline-none
                     transition
                     focus:border-cyan-500
@@ -263,17 +256,10 @@ export default function EditPaymentModal({
             </div>
 
             {/* ESTADO */}
-
             <div>
               <label
                 htmlFor="payment-status"
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-semibold
-                  text-slate-700
-                "
+                className="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-700"
               >
                 Estado
               </label>
@@ -287,13 +273,16 @@ export default function EditPaymentModal({
                 disabled={loading}
                 className="
                   w-full
-                  h-12
+                  h-11
+                  sm:h-12
                   rounded-xl
                   border
                   border-slate-200
                   bg-white
                   px-4
-                  text-slate-800
+                  text-sm
+                  font-medium
+                  text-slate-900
                   outline-none
                   transition
                   focus:border-cyan-500
@@ -303,25 +292,16 @@ export default function EditPaymentModal({
                 "
               >
                 <option value="paid">Pagado</option>
-
                 <option value="pending">Pendiente</option>
-
                 <option value="expired">Vencido</option>
               </select>
             </div>
 
-            {/* VENCIMIENTO */}
-
+            {/* FECHA DE VENCIMIENTO */}
             <div>
               <label
                 htmlFor="payment-due-date"
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-semibold
-                  text-slate-700
-                "
+                className="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-700"
               >
                 Fecha de vencimiento
               </label>
@@ -329,14 +309,7 @@ export default function EditPaymentModal({
               <div className="relative">
                 <CalendarDays
                   size={18}
-                  className="
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-slate-400
-                    pointer-events-none
-                  "
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                 />
 
                 <input
@@ -347,14 +320,17 @@ export default function EditPaymentModal({
                   disabled={loading}
                   className="
                     w-full
-                    h-12
+                    h-11
+                    sm:h-12
                     rounded-xl
                     border
                     border-slate-200
                     bg-white
                     pl-10
                     pr-4
-                    text-slate-800
+                    text-sm
+                    font-medium
+                    text-slate-900
                     outline-none
                     transition
                     focus:border-cyan-500
@@ -367,17 +343,10 @@ export default function EditPaymentModal({
             </div>
 
             {/* FECHA DE PAGO */}
-
             <div>
               <label
                 htmlFor="payment-paid-at"
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-semibold
-                  text-slate-700
-                "
+                className="mb-1.5 block text-xs sm:text-sm font-semibold text-slate-700"
               >
                 Fecha de pago
               </label>
@@ -385,14 +354,7 @@ export default function EditPaymentModal({
               <div className="relative">
                 <CalendarDays
                   size={18}
-                  className="
-                    absolute
-                    left-3
-                    top-1/2
-                    -translate-y-1/2
-                    text-slate-400
-                    pointer-events-none
-                  "
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                 />
 
                 <input
@@ -403,14 +365,17 @@ export default function EditPaymentModal({
                   disabled={loading}
                   className="
                     w-full
-                    h-12
+                    h-11
+                    sm:h-12
                     rounded-xl
                     border
                     border-slate-200
                     bg-white
                     pl-10
                     pr-4
-                    text-slate-800
+                    text-sm
+                    font-medium
+                    text-slate-900
                     outline-none
                     transition
                     focus:border-cyan-500
@@ -424,21 +389,12 @@ export default function EditPaymentModal({
           </div>
 
           {/* OBSERVACIONES */}
-
-          <div className="mt-5">
+          <div>
             <label
               htmlFor="payment-observations"
-              className="
-                mb-2
-                flex
-                items-center
-                gap-2
-                text-sm
-                font-semibold
-                text-slate-700
-              "
+              className="mb-1.5 flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-700"
             >
-              <FileText size={17} />
+              <FileText size={16} className="text-slate-400" />
               Observaciones
             </label>
 
@@ -447,16 +403,17 @@ export default function EditPaymentModal({
               value={observations}
               onChange={(event) => setObservations(event.target.value)}
               disabled={loading}
-              rows={4}
+              rows={3}
               className="
                 w-full
                 rounded-xl
                 border
                 border-slate-200
                 bg-white
-                px-4
-                py-3
-                text-slate-800
+                p-3.5
+                text-sm
+                font-medium
+                text-slate-900
                 outline-none
                 resize-none
                 transition
@@ -465,31 +422,24 @@ export default function EditPaymentModal({
                 focus:ring-cyan-100
                 disabled:bg-slate-50
               "
-              placeholder="Agregar observaciones..."
+              placeholder="Agregar observaciones opcionales..."
             />
           </div>
 
           {/* COMPROBANTE ACTUAL */}
-
           {payment.receipt_name && (
-            <div
-              className="
-                mt-5
-                rounded-2xl
-                border
-                border-slate-200
-                bg-slate-50
-                p-4
-              "
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                Comprobante actual
+            <div className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-4">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Comprobante adjunto
               </p>
 
               <div className="mt-2 flex items-center justify-between gap-3">
-                <p className="min-w-0 truncate text-sm font-medium text-slate-700">
-                  {payment.receipt_name}
-                </p>
+                <div className="flex items-center gap-2 min-w-0">
+                  <FileCheck size={18} className="text-emerald-600 shrink-0" />
+                  <span className="truncate text-xs sm:text-sm font-medium text-slate-700">
+                    {payment.receipt_name}
+                  </span>
+                </div>
 
                 {payment.receipt_url && (
                   <a
@@ -498,45 +448,47 @@ export default function EditPaymentModal({
                     rel="noopener noreferrer"
                     className="
                       shrink-0
-                      text-sm
+                      inline-flex
+                      items-center
+                      gap-1
+                      text-xs
+                      sm:text-sm
                       font-semibold
                       text-cyan-600
                       hover:text-cyan-700
+                      hover:underline
+                      transition-colors
                     "
                   >
-                    Ver
+                    <span>Ver</span>
+                    <ExternalLink size={14} />
                   </a>
                 )}
               </div>
             </div>
           )}
 
-          {/* FOOTER */}
-
-          <div
-            className="
-              mt-7
-              flex
-              flex-col-reverse
-              gap-3
-              sm:flex-row
-              sm:justify-end
-            "
-          >
+          {/* BOTONES DE ACCIÓN */}
+          <div className="pt-2 flex flex-col-reverse sm:flex-row items-center justify-end gap-3">
             <button
               type="button"
               disabled={loading}
               onClick={onClose}
               className="
+                w-full
+                sm:w-auto
                 h-11
+                px-5
                 rounded-xl
                 border
                 border-slate-200
-                px-5
                 font-semibold
+                text-xs
+                sm:text-sm
                 text-slate-600
                 hover:bg-slate-50
-                transition
+                active:bg-slate-100
+                transition-colors
                 disabled:opacity-50
               "
             >
@@ -547,30 +499,36 @@ export default function EditPaymentModal({
               type="submit"
               disabled={loading}
               className="
+                w-full
+                sm:w-auto
                 h-11
+                px-5
                 rounded-xl
                 bg-cyan-600
-                px-5
+                hover:bg-cyan-700
+                active:bg-cyan-800
                 font-semibold
+                text-xs
+                sm:text-sm
                 text-white
                 flex
                 items-center
                 justify-center
                 gap-2
-                hover:bg-cyan-700
-                transition
+                shadow-xs
+                transition-all
                 disabled:opacity-60
               "
             >
               {loading ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Guardando...
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Guardando...</span>
                 </>
               ) : (
                 <>
-                  <Save size={18} />
-                  Guardar cambios
+                  <Save size={16} />
+                  <span>Guardar cambios</span>
                 </>
               )}
             </button>

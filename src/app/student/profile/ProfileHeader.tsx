@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Camera, Mail, UserCircle2, BookOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  UserCircle2,
+  BookOpen,
+  GraduationCap,
+} from "lucide-react";
 import { StudentProfile } from "./Profile";
 
 type Props = {
@@ -10,83 +16,117 @@ type Props = {
 
 export default function ProfileHeader({ profile }: Props) {
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-8 relative overflow-hidden">
-      {/* Fondo decorativo sutil */}
-      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-blue-50 to-indigo-50/50 -z-10" />
+    <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+      {/* Banner de portada decorativo */}
+      <div className="h-28 sm:h-36 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 w-full relative">
+        <div className="absolute inset-0 bg-black/5" />
+      </div>
 
-      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 sm:gap-8 z-10">
-        {/* Contenedor Perfil */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6 text-center sm:text-left">
-          {/* Avatar */}
-          <div className="relative shrink-0">
-            {profile.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt={`${profile.nombre} ${profile.apellido}`}
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white shadow-sm"
-              />
-            ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-blue-100 flex items-center justify-center border-4 border-white shadow-sm">
-                <UserCircle2 className="w-12 h-12 sm:w-16 sm:h-16 text-blue-600" />
-              </div>
-            )}
-
-            <button className="absolute bottom-0 right-0 sm:-bottom-1 sm:-right-1 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white flex items-center justify-center shadow-lg transition-colors border-2 border-white">
-              <Camera size={16} className="sm:w-5 sm:h-5" />
-            </button>
-          </div>
-
-          {/* Info principal */}
-          <div className="mt-2 sm:mt-0">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
-              {profile.nombre} {profile.apellido}
-            </h1>
-
-            <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3">
-              <span className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-xs sm:text-sm font-semibold">
-                Alumno activo
-              </span>
-
-              {profile.nivel && (
-                <span className="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-blue-50 border border-blue-200/60 text-blue-700 text-xs sm:text-sm font-semibold">
-                  Nivel {profile.nivel}
-                </span>
+      <div className="p-5 sm:p-8 pt-0 relative">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          {/* Avatar e Información Principal */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 sm:gap-6 -mt-12 sm:-mt-16 text-center sm:text-left">
+            {/* Avatar con borde flotante */}
+            <div className="relative shrink-0">
+              {profile.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={`${profile.nombre} ${profile.apellido}`}
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl object-cover border-4 border-white shadow-md bg-white"
+                />
+              ) : (
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl sm:rounded-3xl bg-slate-100 border-4 border-white shadow-md flex items-center justify-center text-slate-400">
+                  <UserCircle2 className="w-16 h-16 sm:w-20 sm:h-20 text-slate-300" />
+                </div>
               )}
+
+              {/* Punto de estado activo */}
+              <span
+                className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full shadow-xs"
+                title="Alumno activo"
+              />
             </div>
 
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm sm:text-base text-slate-600">
-              <div className="flex items-center justify-center sm:justify-start gap-2">
-                <Mail size={16} className="text-slate-400" />
-                <span>{profile.email}</span>
+            {/* Datos Personales */}
+            <div className="pb-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Alumno activo
+                </span>
+
+                {profile.nivel && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-50 border border-cyan-200/80 text-cyan-700 text-xs font-semibold">
+                    <GraduationCap size={14} />
+                    Nivel {profile.nivel}
+                  </span>
+                )}
               </div>
 
-              {profile.teacher && (
-                <>
-                  <span className="hidden sm:inline text-slate-300">•</span>
-                  <div className="flex items-center justify-center sm:justify-start gap-2">
-                    <BookOpen size={16} className="text-slate-400" />
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                {profile.nombre} {profile.apellido}
+              </h1>
+
+              {/* Metadatos (Email, Profesor) */}
+              <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-y-2 gap-x-3 text-xs sm:text-sm text-slate-600">
+                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                  <Mail size={15} className="text-slate-400 shrink-0" />
+                  <span className="font-medium text-slate-700">
+                    {profile.email}
+                  </span>
+                </div>
+
+                {profile.teacher && (
+                  <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                    <BookOpen size={15} className="text-slate-400 shrink-0" />
                     <span>
                       Profesor:{" "}
-                      <strong className="font-semibold text-slate-800">
+                      <strong className="font-semibold text-slate-900">
                         {profile.teacher}
                       </strong>
                     </span>
                   </div>
-                </>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Acciones */}
-        <div className="flex w-full lg:w-auto shrink-0 mt-2 lg:mt-0">
-          <Link
-            href="/student/dashboard"
-            className="w-full lg:w-auto h-11 sm:h-12 px-5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center gap-2 transition-colors text-slate-700 font-semibold text-sm shadow-xs"
-          >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            Volver al panel
-          </Link>
+          {/* Botón de acción */}
+          <div className="shrink-0 w-full lg:w-auto pt-2 lg:pt-0">
+            <Link
+              href="/student/dashboard"
+              className="
+                w-full lg:w-auto
+                h-11 sm:h-12
+                px-5
+                rounded-xl
+                border
+                border-slate-200
+                bg-white
+                hover:bg-slate-50
+                active:bg-slate-100
+                flex
+                items-center
+                justify-center
+                gap-2.5
+                transition-all
+                text-slate-700
+                font-semibold
+                text-xs
+                sm:text-sm
+                shadow-xs
+                hover:shadow-sm
+                hover:border-slate-300
+                group
+              "
+            >
+              <ArrowLeft
+                size={18}
+                className="text-slate-400 group-hover:-translate-x-1 group-hover:text-slate-600 transition-transform"
+              />
+              <span>Volver al panel</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
