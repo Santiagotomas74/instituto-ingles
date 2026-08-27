@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 import {
   CalendarDays,
@@ -26,10 +27,15 @@ type Props = {
 
 export default function TaskCard({ task, classroomId, onReload }: Props) {
   const [openSubmissions, setOpenSubmissions] = useState(false);
-
   const [openEdit, setOpenEdit] = useState(false);
-
   const [loadingDelete, setLoadingDelete] = useState(false);
+
+  // Estado para evitar errores de hidratación al usar document.body en Next.js
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const due =
     task.due_date &&
@@ -77,7 +83,6 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
         "
       >
         {/* Header */}
-
         <div className="flex items-start justify-between gap-3 sm:gap-4">
           <div className="min-w-0">
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 break-words">
@@ -114,7 +119,6 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
         </div>
 
         {/* Información */}
-
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-5 sm:mt-6">
           <div className="flex gap-2.5 sm:gap-3 items-center min-w-0">
             <CalendarDays className="text-cyan-600 shrink-0" size={20} />
@@ -170,7 +174,6 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
         </div>
 
         {/* Botones */}
-
         <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-6 sm:mt-8">
           <button
             onClick={() => setOpenSubmissions(true)}
@@ -260,18 +263,31 @@ export default function TaskCard({ task, classroomId, onReload }: Props) {
         </div>
       </div>
 
-      <TaskSubmissionsModal
-        open={openSubmissions}
-        onClose={() => setOpenSubmissions(false)}
-        taskId={task.id}
-      />
+      {/* RENDERIZADO FUERA DEL ÁRBOL DOM MEDIANTE PORTAL */}
+      {mounted && (
+        <>
+          {openSubmissions &&
+            createPortal(
+              <TaskSubmissionsModal
+                open={openSubmissions}
+                onClose={() => setOpenSubmissions(false)}
+                taskId={task.id}
+              />,
+              document.body,
+            )}
 
-      <EditTaskModal
-        open={openEdit}
-        task={task}
-        onClose={() => setOpenEdit(false)}
-        onSuccess={onReload}
-      />
+          {openEdit &&
+            createPortal(
+              <EditTaskModal
+                open={openEdit}
+                task={task}
+                onClose={() => setOpenEdit(false)}
+                onSuccess={onReload}
+              />,
+              document.body,
+            )}
+        </>
+      )}
     </>
   );
 }
