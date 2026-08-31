@@ -1,11 +1,8 @@
 "use client";
 
 import Image from "next/image";
-
-import { Loader2 } from "lucide-react";
-
+import { Loader2, CalendarDays } from "lucide-react";
 import { useTeacherCalendar } from "./hooks/useTeacherCalendar";
-
 import CalendarView from "./components/CalendarView";
 
 export default function CalendarClient() {
@@ -57,24 +54,32 @@ export default function CalendarClient() {
   }
 
   return (
-    <main
-      className="
-      min-h-screen
-      bg-slate-50
-      p-8
-      "
-    >
-      <h1
-        className="
-        text-4xl
-        font-bold
-        mb-8
-        text-slate-700
-        "
-      >
-        Calendario
-      </h1>
+    <main className="min-h-screen bg-slate-50 p-6 md:p-8 space-y-6">
+      {/* Header Principal para Docente */}
+      <div className="bg-white rounded-[28px] border border-slate-200/80 p-6 md:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 shrink-0">
+            <CalendarDays className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+              Calendario Docente
+            </h1>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Gestiona tu cronograma de clases, entregas y fechas importantes.
+            </p>
+          </div>
+        </div>
 
+        {/* Badge de estado de eventos */}
+        <div className="inline-flex items-center gap-2 self-start sm:self-center bg-slate-50 border border-slate-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600">
+          <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+          {events.length}{" "}
+          {events.length === 1 ? "evento programado" : "eventos programados"}
+        </div>
+      </div>
+
+      {/* Componente del Calendario */}
       <CalendarView events={events} />
     </main>
   );

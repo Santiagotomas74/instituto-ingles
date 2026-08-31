@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, UserX } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { UserX } from "lucide-react";
 
 import ProfileHeader from "./ProfileHeader";
-import ProfileStats from "./ProfileStats";
 import PersonalInfoCard from "./PersonalInfoCard";
 import PaymentReceiptsCard from "./PaymentReceiptsCard";
 
@@ -43,19 +43,23 @@ export type StudentProfile = {
 };
 
 export default function Profile() {
+  const { t } = useTranslation();
+
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<StudentProfile | null>(null);
 
   async function loadProfile() {
     try {
       setLoading(true);
+
       const res = await fetch("/api/student/profile");
       const data = await res.json();
 
       if (!data.success) return;
+
       setProfile(data.profile);
     } catch (error) {
-      console.error("Error cargando el perfil", error);
+      console.error("Error loading profile", error);
     } finally {
       setLoading(false);
     }
@@ -69,53 +73,58 @@ export default function Profile() {
     return (
       <div
         className="
-              bg-white
-              rounded-[32px]
-              border
-              border-slate-200
-              shadow-sm
-              p-16
-              flex
-              flex-col
-              items-center
-              justify-center
-            "
+          bg-white
+          rounded-[32px]
+          border
+          border-slate-200
+          shadow-sm
+          p-16
+          flex
+          flex-col
+          items-center
+          justify-center
+        "
       >
         <div className="relative">
           <div
             className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  border-4
-                  border-cyan-200
-                  border-t-cyan-600
-                  animate-spin
-                "
+              absolute
+              inset-0
+              rounded-full
+              border-4
+              border-cyan-200
+              border-t-cyan-600
+              animate-spin
+            "
           />
+
           <div
             className="
-                  w-24
-                  h-24
-                  rounded-full
-                  bg-white
-                  flex
-                  items-center
-                  justify-center
-                  p-2
-                "
+              w-24
+              h-24
+              rounded-full
+              bg-white
+              flex
+              items-center
+              justify-center
+              p-2
+            "
           >
             <img
               src="/logo2.png"
-              alt="Instituto"
+              alt={t("profile.institution")}
               className="w-20 h-20 object-contain"
             />
           </div>
         </div>
+
         <h2 className="mt-8 text-2xl font-bold text-slate-900">
-          Cargando tu perfil...
+          {t("profile.loading.title")}
         </h2>
-        <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
+
+        <p className="mt-3 text-slate-500">
+          {t("profile.loading.description")}
+        </p>
       </div>
     );
   }
@@ -126,13 +135,12 @@ export default function Profile() {
         <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mb-2">
           <UserX size={32} />
         </div>
+
         <h2 className="text-xl font-bold text-slate-800">
-          Perfil no encontrado
+          {t("profile.not_found.title")}
         </h2>
-        <p className="text-sm max-w-md">
-          Hubo un problema al intentar cargar la información. Por favor, intenta
-          recargar la página.
-        </p>
+
+        <p className="text-sm max-w-md">{t("profile.not_found.description")}</p>
       </div>
     );
   }
@@ -140,7 +148,6 @@ export default function Profile() {
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <ProfileHeader profile={profile} />
-      {/* Asumo que ProfileStats lo tienes en otro archivo, mantenlo aquí */}
       <PersonalInfoCard profile={profile} />
       <PaymentReceiptsCard profile={profile} />
     </div>

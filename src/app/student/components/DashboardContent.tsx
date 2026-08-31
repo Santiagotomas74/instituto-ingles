@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Users,
   ChevronRight,
+  GraduationCap,
 } from "lucide-react";
 
 export type Classroom = {
@@ -35,16 +36,31 @@ export default function DashboardContent({
 
   return (
     <div className="space-y-10">
-      {/* Header */}
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900">
-          {t("dashboard.greeting", {
-            name: studentName,
-            lastname: studentLastname,
-          })}
-        </h1>
+      {/* Header Principal del Campus */}
+      <div className="bg-white rounded-[28px] border border-slate-200/80 p-6 md:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 shrink-0">
+            <GraduationCap className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+              {t("dashboard.greeting", {
+                name: studentName,
+                lastname: studentLastname,
+              })}
+            </h1>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {t("dashboard.welcome")}
+            </p>
+          </div>
+        </div>
 
-        <p className="mt-2 text-slate-500">{t("dashboard.welcome")}</p>
+        {/* Badge del total de aulas */}
+        <div className="inline-flex items-center gap-2 self-start sm:self-center bg-slate-50 border border-slate-200/80 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600">
+          <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+          {classrooms.length}{" "}
+          {classrooms.length === 1 ? "aula activa" : "aulas activas"}
+        </div>
       </div>
 
       {/* Mis aulas */}

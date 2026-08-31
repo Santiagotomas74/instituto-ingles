@@ -357,6 +357,72 @@ const resources = {
             "El profesor no dejó ninguna observación adicional.",
         },
       },
+      profile: {
+        loading: {
+          title: "Cargando tu perfil...",
+          subtitle: "Aguarde unos segundos.",
+        },
+
+        not_found: {
+          title: "Perfil no encontrado",
+          description:
+            "Hubo un problema al intentar cargar la información. Por favor, intenta recargar la página.",
+        },
+
+        header: {
+          active_student: "Alumno activo",
+          level: "Nivel {{level}}",
+          teacher: "Profesor",
+          back_to_panel: "Volver al panel",
+        },
+
+        personal_info: {
+          title: "Información personal",
+          description:
+            "Datos de contacto e institucionales registrados en la plataforma.",
+
+          full_name: "Nombre completo",
+          dni: "DNI",
+          email: "Correo electrónico",
+          birth_date: "Fecha de nacimiento",
+          level: "Nivel",
+
+          assigned_teacher: "Profesor asignado",
+        },
+
+        payments: {
+          title: "Comprobantes de pago",
+          description: "Historial de cuotas y recibos registrados.",
+
+          empty_title: "No hay comprobantes",
+          empty_description:
+            "Aún no se ha registrado ninguna cuota o recibo de pago en tu historial.",
+
+          paid: "Abonado",
+          expired: "Vencido",
+          pending: "Pendiente",
+
+          due_date: "Vencimiento",
+          paid_at: "Pagado el",
+
+          observations: "Observaciones",
+
+          view_receipt: "Ver comprobante",
+
+          no_date: "Sin registrar",
+        },
+      },
+      calendar: {
+        loading_title: "Cargando calendario...",
+        loading_subtitle: "Aguarde unos segundos.",
+
+        title: "Calendario Académico",
+        description:
+          "Consulta tus clases, exámenes y fechas límite programadas.",
+
+        event_one: "evento registrado",
+        event_other: "eventos registrados",
+      },
     },
   },
   en: {
@@ -715,6 +781,71 @@ const resources = {
           no_teacher_feedback:
             "The teacher did not leave any additional feedback.",
         },
+      },
+      profile: {
+        loading: {
+          title: "Loading your profile...",
+          subtitle: "Please wait a few seconds.",
+        },
+
+        not_found: {
+          title: "Profile not found",
+          description:
+            "There was a problem loading your information. Please try refreshing the page.",
+        },
+
+        header: {
+          active_student: "Active student",
+          level: "Level {{level}}",
+          teacher: "Teacher",
+          back_to_panel: "Back to dashboard",
+        },
+
+        personal_info: {
+          title: "Personal information",
+          description:
+            "Contact and institutional information registered on the platform.",
+
+          full_name: "Full name",
+          dni: "ID number",
+          email: "Email address",
+          birth_date: "Date of birth",
+          level: "Level",
+
+          assigned_teacher: "Assigned teacher",
+        },
+
+        payments: {
+          title: "Payment receipts",
+          description: "History of registered fees and payment receipts.",
+
+          empty_title: "No payment receipts",
+          empty_description:
+            "No payment installment or receipt has been registered in your history yet.",
+
+          paid: "Paid",
+          expired: "Expired",
+          pending: "Pending",
+
+          due_date: "Due date",
+          paid_at: "Paid on",
+
+          observations: "Observations",
+
+          view_receipt: "View receipt",
+
+          no_date: "Not registered",
+        },
+      },
+      calendar: {
+        loading_title: "Loading calendar...",
+        loading_subtitle: "Please wait a few seconds.",
+
+        title: "Academic Calendar",
+        description: "Check your classes, exams, and scheduled deadlines.",
+
+        event_one: "registered event",
+        event_other: "registered events",
       },
     },
   },
