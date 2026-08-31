@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CalendarPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type ImportantDate = {
   id: string;
@@ -17,6 +18,8 @@ type Props = {
 };
 
 export default function Events({ classroomId }: Props) {
+  const { t, i18n } = useTranslation();
+
   const [dates, setDates] = useState<ImportantDate[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,45 +51,76 @@ export default function Events({ classroomId }: Props) {
     }
   }, [classroomId]);
 
+  /*
+  =====================================================
+  FORMATEAR FECHA
+  =====================================================
+  */
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return "-";
+
+    const locale = i18n.language === "en" ? "en-US" : "es-AR";
+
+    return new Date(dateStr).toLocaleDateString(locale);
+  };
+
+  /*
+  =====================================================
+  TIPO DE FECHA
+  =====================================================
+  */
+
+  const getTypeLabel = (tipo: ImportantDate["tipo"]) => {
+    return t(`events.types.${tipo}`);
+  };
+
+  /*
+  =====================================================
+  LOADING
+  =====================================================
+  */
+
   if (loading) {
     return (
       <div
         className="
-              bg-white
-              rounded-[32px]
-              border
-              border-slate-200
-              shadow-sm
-              p-16
-              flex
-              flex-col
-              items-center
-              justify-center
-            "
+          bg-white
+          rounded-[32px]
+          border
+          border-slate-200
+          shadow-sm
+          p-16
+          flex
+          flex-col
+          items-center
+          justify-center
+        "
       >
         <div className="relative">
           <div
             className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  border-4
-                  border-cyan-200
-                  border-t-cyan-600
-                  animate-spin
-                "
+              absolute
+              inset-0
+              rounded-full
+              border-4
+              border-cyan-200
+              border-t-cyan-600
+              animate-spin
+            "
           />
+
           <div
             className="
-                  w-24
-                  h-24
-                  rounded-full
-                  bg-white
-                  flex
-                  items-center
-                  justify-center
-                  p-2
-                "
+              w-24
+              h-24
+              rounded-full
+              bg-white
+              flex
+              items-center
+              justify-center
+              p-2
+            "
           >
             <img
               src="/logo2.png"
@@ -95,13 +129,21 @@ export default function Events({ classroomId }: Props) {
             />
           </div>
         </div>
+
         <h2 className="mt-8 text-2xl font-bold text-slate-900">
-          Cargando fechas importantes...
+          {t("events.loading_title")}
         </h2>
-        <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
+
+        <p className="mt-3 text-slate-500">{t("events.loading_subtitle")}</p>
       </div>
     );
   }
+
+  /*
+  =====================================================
+  SIN FECHAS
+  =====================================================
+  */
 
   if (dates.length === 0) {
     return (
@@ -109,15 +151,19 @@ export default function Events({ classroomId }: Props) {
         <CalendarPlus size={48} className="mx-auto text-slate-300" />
 
         <h3 className="mt-4 text-xl font-semibold">
-          No hay fechas importantes
+          {t("events.empty_title")}
         </h3>
 
-        <p className="text-slate-500 mt-2">
-          El profesor todavía no agregó fechas importantes.
-        </p>
+        <p className="text-slate-500 mt-2">{t("events.empty_description")}</p>
       </div>
     );
   }
+
+  /*
+  =====================================================
+  RENDER
+  =====================================================
+  */
 
   return (
     <div className="space-y-5">
@@ -141,16 +187,14 @@ export default function Events({ classroomId }: Props) {
                           : "bg-yellow-100 text-yellow-700"
                   }`}
                 >
-                  {date.tipo}
+                  {getTypeLabel(date.tipo)}
                 </span>
               </div>
 
               <p className="mt-3 text-slate-600">{date.descripcion}</p>
 
               <div className="mt-5 flex gap-6 text-sm text-slate-500">
-                <span>
-                  📅 {new Date(date.fecha).toLocaleDateString("es-AR")}
-                </span>
+                <span>📅 {formatDate(date.fecha)}</span>
 
                 <span>🕒 {date.hora}</span>
               </div>

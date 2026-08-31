@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { LogOut, UserCircle2 } from "lucide-react";
+import { LogOut, UserCircle2, Languages } from "lucide-react";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import { useSocket } from "@/components/chat/hooks/useSocket";
-import Sidebar from "./Sidebar"; // O @/components/Sidebar según tu estructura
+import Sidebar from "./Sidebar";
+import { useTranslation } from "react-i18next";
 
 type NavbarProps = {
   nombre?: string;
@@ -13,6 +14,8 @@ type NavbarProps = {
 };
 
 export default function Navbar({ nombre, apellido }: NavbarProps) {
+  const { t, i18n } = useTranslation();
+
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
@@ -50,6 +53,10 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
     }
   }
 
+  function changeLanguage(language: string) {
+    i18n.changeLanguage(language);
+  }
+
   return (
     <header
       className="
@@ -69,14 +76,14 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
         shadow-sm
       "
     >
-      {/* Lado Izquierdo: Sidebar (solo en mobile) + Logo */}
+      {/* Lado izquierdo */}
       <div className="flex items-center gap-3 md:gap-6">
-        {/* Sidebar visible únicamente en pantallas mobile/tablet (lg:hidden) */}
+        {/* Sidebar mobile/tablet */}
         <div className="lg:hidden flex items-center">
           <Sidebar />
         </div>
 
-        {/* Logo del colegio/instituto */}
+        {/* Logo */}
         <div className="hidden md:block">
           <Image
             src="/logo3.png"
@@ -89,10 +96,57 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
         </div>
       </div>
 
-      {/* Lado Derecho: Notificaciones + Usuario + Logout */}
+      {/* Lado derecho */}
       <div className="flex items-center gap-3 sm:gap-4">
+        {/* Idioma */}
+        <div className="flex items-center gap-1">
+          <Languages size={20} className="text-slate-500 hidden sm:block" />
+
+          <button
+            type="button"
+            onClick={() => changeLanguage("es")}
+            className={`
+              px-2.5
+              py-1.5
+              rounded-lg
+              text-sm
+              font-semibold
+              transition
+              ${
+                i18n.language?.startsWith("es")
+                  ? "bg-blue-100 text-blue-700"
+                  : "text-slate-500 hover:bg-slate-100"
+              }
+            `}
+          >
+            ES
+          </button>
+
+          <button
+            type="button"
+            onClick={() => changeLanguage("en")}
+            className={`
+              px-2.5
+              py-1.5
+              rounded-lg
+              text-sm
+              font-semibold
+              transition
+              ${
+                i18n.language?.startsWith("en")
+                  ? "bg-blue-100 text-blue-700"
+                  : "text-slate-500 hover:bg-slate-100"
+              }
+            `}
+          >
+            EN
+          </button>
+        </div>
+
+        {/* Notificaciones */}
         <NotificationBell />
 
+        {/* Usuario */}
         <div className="flex items-center gap-2 sm:gap-3">
           <UserCircle2 className="text-blue-600 shrink-0" size={38} />
 
@@ -100,14 +154,30 @@ export default function Navbar({ nombre, apellido }: NavbarProps) {
             <p className="font-semibold text-slate-900 leading-tight">
               {nombre}
             </p>
+
             <p className="text-sm text-slate-500 leading-tight">{apellido}</p>
           </div>
         </div>
 
+        {/* Logout */}
         <button
           onClick={handleLogout}
-          aria-label="Cerrar sesión"
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-red-50 hover:bg-red-100 transition flex items-center justify-center shrink-0"
+          aria-label={t("navbar.logout")}
+          title={t("navbar.logout")}
+          className="
+            w-10
+            h-10
+            sm:w-11
+            sm:h-11
+            rounded-2xl
+            bg-red-50
+            hover:bg-red-100
+            transition
+            flex
+            items-center
+            justify-center
+            shrink-0
+          "
         >
           <LogOut size={20} className="text-red-600" />
         </button>

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Navbar from "@/app/student/components/Navbar";
 import Sidebar from "@/app/student/components/Sidebar";
+import I18nProvider from "@/i18n/provider";
 import { cookies } from "next/headers";
 interface Props {
   children: ReactNode;
@@ -13,15 +14,17 @@ export default async function StudentClassroomLayout({ children }: Props) {
 
   return (
     <div className="flex h-screen bg-slate-100">
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
+      <I18nProvider>
+        <div className="hidden lg:block">
+          <Sidebar />
+        </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar nombre={nombre} apellido={apellido} />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Navbar nombre={nombre} apellido={apellido} />
 
-        <main className="flex-1 overflow-y-auto">{children}</main>
-      </div>
+          <main className="flex-1 overflow-y-auto">{children}</main>
+        </div>
+      </I18nProvider>
     </div>
   );
 }

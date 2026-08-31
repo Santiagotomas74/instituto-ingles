@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X, Loader2, HelpCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -16,6 +17,8 @@ export default function CreateQuestionModal({
   onClose,
   onCreated,
 }: Props) {
+  const { t } = useTranslation();
+
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -30,6 +33,7 @@ export default function CreateQuestionModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     if (!title.trim() || !content.trim() || loading) return;
 
     try {
@@ -50,16 +54,17 @@ export default function CreateQuestionModal({
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Error al publicar la consulta.");
+        throw new Error(data.message || t("questions.create.error_publish"));
       }
 
       setTitle("");
       setContent("");
+
       onClose();
       onCreated();
     } catch (err) {
       console.error(err);
-      alert("No se pudo publicar la consulta.");
+      alert(t("questions.create.error_alert"));
     } finally {
       setLoading(false);
     }
@@ -78,12 +83,14 @@ export default function CreateQuestionModal({
             <div className="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center shrink-0">
               <HelpCircle size={20} />
             </div>
+
             <div>
               <h2 className="text-lg sm:text-xl font-bold text-slate-800">
-                Nueva consulta
+                {t("questions.create.title")}
               </h2>
+
               <p className="text-xs sm:text-sm text-slate-500">
-                Escribí tu duda para que el profesor pueda responderla.
+                {t("questions.create.subtitle")}
               </p>
             </div>
           </div>
@@ -91,7 +98,7 @@ export default function CreateQuestionModal({
           <button
             onClick={onClose}
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors shrink-0"
-            aria-label="Cerrar modal"
+            aria-label={t("questions.create.close")}
           >
             <X size={20} />
           </button>
@@ -105,25 +112,27 @@ export default function CreateQuestionModal({
           <div className="p-5 sm:p-8 space-y-5 flex-1">
             <div>
               <label className="block mb-1.5 text-xs sm:text-sm font-semibold text-slate-700">
-                Título de la consulta
+                {t("questions.create.title_label")}
               </label>
+
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Ej: Duda sobre el ejercicio de Present Perfect"
+                placeholder={t("questions.create.title_placeholder")}
                 className="w-full h-11 sm:h-12 text-xs sm:text-sm text-slate-800 bg-slate-50/50 rounded-xl border border-slate-200 px-4 outline-none focus:bg-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-slate-400"
               />
             </div>
 
             <div>
               <label className="block mb-1.5 text-xs sm:text-sm font-semibold text-slate-700">
-                Detalle de la consulta
+                {t("questions.create.content_label")}
               </label>
+
               <textarea
                 rows={5}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="Explicá tu duda de manera clara..."
+                placeholder={t("questions.create.content_placeholder")}
                 className="w-full text-xs sm:text-sm text-slate-800 bg-slate-50/50 rounded-xl border border-slate-200 p-4 resize-none outline-none focus:bg-white focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-slate-400"
               />
             </div>
@@ -136,7 +145,7 @@ export default function CreateQuestionModal({
               onClick={onClose}
               className="px-4 sm:px-5 h-10 sm:h-11 rounded-xl border border-slate-200 hover:bg-white text-slate-600 font-semibold text-xs sm:text-sm transition-colors"
             >
-              Cancelar
+              {t("questions.create.cancel")}
             </button>
 
             <button
@@ -147,10 +156,10 @@ export default function CreateQuestionModal({
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  <span>Publicando...</span>
+                  <span>{t("questions.create.publishing")}</span>
                 </>
               ) : (
-                <span>Publicar consulta</span>
+                <span>{t("questions.create.publish")}</span>
               )}
             </button>
           </div>

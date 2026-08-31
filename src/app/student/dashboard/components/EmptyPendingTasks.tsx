@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import { CheckCircle2, PartyPopper } from "lucide-react";
 
 export default function EmptyPendingTasks() {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-8 sm:p-12 md:p-16 text-center max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[400px]">
       {/* CONTENEDOR DEL ICONO */}
@@ -17,12 +20,11 @@ export default function EmptyPendingTasks() {
 
       {/* TEXTO */}
       <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
-        ¡No tienes tareas pendientes!
+        {t("tasks2.pending.empty_title")}
       </h2>
 
       <p className="mt-3 text-sm sm:text-base text-gray-500 max-w-sm mx-auto leading-relaxed">
-        Ya entregaste todas las actividades disponibles o aún no te asignaron
-        nuevas. ¡Buen trabajo!
+        {t("tasks2.pending.empty_description")}
       </p>
     </div>
   );

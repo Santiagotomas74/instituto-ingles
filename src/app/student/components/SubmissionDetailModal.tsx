@@ -10,6 +10,7 @@ import {
   Award,
   Clock,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -27,11 +28,15 @@ type Props = {
 };
 
 export default function SubmissionDetailModal({ open, onClose, task }: Props) {
+  const { t } = useTranslation();
+
   if (!open) return null;
 
   const formatDateTime = (dateStr: string | null) => {
     if (!dateStr) return "-";
+
     const date = new Date(dateStr);
+
     return date.toLocaleDateString("es-AR", {
       day: "2-digit",
       month: "2-digit",
@@ -48,8 +53,9 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
         <div className="px-5 sm:px-8 py-4 sm:py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
           <div className="min-w-0 pr-4">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800">
-              Mi entrega
+              {t("submission_detail.title")}
             </h2>
+
             <p className="text-xs sm:text-sm text-slate-500 truncate mt-0.5">
               {task.titulo}
             </p>
@@ -58,28 +64,33 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
           <button
             onClick={onClose}
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors shrink-0"
-            aria-label="Cerrar ventana"
+            aria-label={t("submission_detail.close_window")}
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* Creador de Contenido / Cuerpo desplazable */}
+        {/* Cuerpo desplazable */}
         <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 overflow-y-auto">
           {/* Banner de Estado de Entrega */}
           <div className="rounded-xl sm:rounded-2xl bg-emerald-50/80 border border-emerald-200/80 p-4 sm:p-5 flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
               <CheckCircle2 size={22} />
             </div>
+
             <div className="min-w-0">
               <p className="font-semibold text-emerald-900 text-xs sm:text-sm">
-                Entrega registrada con éxito
+                {t("submission_detail.submitted_success")}
               </p>
+
               {task.submitted_at && (
                 <div className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs text-emerald-700">
                   <Calendar size={13} className="shrink-0" />
+
                   <span>
-                    Entregado el {formatDateTime(task.submitted_at)} hs
+                    {t("submission_detail.submitted_at", {
+                      date: formatDateTime(task.submitted_at),
+                    })}
                   </span>
                 </div>
               )}
@@ -93,8 +104,9 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
               <div>
                 <div className="flex items-center gap-2 mb-2 text-slate-700">
                   <Award className="text-cyan-600 shrink-0" size={18} />
+
                   <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
-                    Calificación
+                    {t("submission_detail.grade.title")}
                   </h3>
                 </div>
 
@@ -104,22 +116,26 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
                       <span className="text-3xl sm:text-4xl font-black text-cyan-600">
                         {task.grade}
                       </span>
+
                       <span className="text-base sm:text-lg font-bold text-slate-400">
                         / {task.max_score}
                       </span>
                     </div>
+
                     <p className="text-slate-500 text-xs mt-1">
-                      Nota evaluada por el profesor.
+                      {t("submission_detail.grade.evaluated")}
                     </p>
                   </div>
                 ) : (
                   <div className="mt-2">
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-100/70 text-amber-800 text-xs font-semibold">
                       <Clock size={14} />
-                      <span>Pendiente de corrección</span>
+
+                      <span>{t("submission_detail.grade.pending")}</span>
                     </div>
+
                     <p className="text-slate-500 text-xs mt-2">
-                      El docente aún no ha asignado puntaje a esta entrega.
+                      {t("submission_detail.grade.pending_description")}
                     </p>
                   </div>
                 )}
@@ -130,8 +146,9 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
             <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-5 bg-slate-50/50">
               <div className="flex items-center gap-2 mb-2 text-slate-700">
                 <MessageSquare className="text-cyan-600 shrink-0" size={18} />
+
                 <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
-                  Devolución
+                  {t("submission_detail.feedback.title")}
                 </h3>
               </div>
 
@@ -141,7 +158,7 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
                 </p>
               ) : (
                 <p className="text-slate-400 text-xs sm:text-sm italic mt-2">
-                  Sin comentarios del profesor por el momento.
+                  {t("submission_detail.feedback.empty")}
                 </p>
               )}
             </div>
@@ -152,10 +169,12 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-slate-700">
                 <FileText className="text-cyan-600 shrink-0" size={18} />
+
                 <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">
-                  Tu respuesta o comentario
+                  {t("submission_detail.student_comment.title")}
                 </h3>
               </div>
+
               <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 whitespace-pre-wrap leading-relaxed text-xs sm:text-sm text-slate-700">
                 {task.comentario}
               </div>
@@ -166,7 +185,7 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
           {task.archivo_url && (
             <div className="space-y-2">
               <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider text-slate-700">
-                Archivo adjunto
+                {t("submission_detail.attachment.title")}
               </h3>
 
               <a
@@ -179,12 +198,15 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
                   <div className="w-9 h-9 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
                     <FileText size={18} />
                   </div>
+
                   <div className="min-w-0">
                     <p className="font-semibold text-xs sm:text-sm text-cyan-950 truncate">
-                      {task.archivo_nombre || "Documento adjunto"}
+                      {task.archivo_nombre ||
+                        t("submission_detail.attachment.default_name")}
                     </p>
+
                     <p className="text-[11px] sm:text-xs text-cyan-700">
-                      Haz clic para abrir o descargar
+                      {t("submission_detail.attachment.open_download")}
                     </p>
                   </div>
                 </div>
@@ -203,7 +225,7 @@ export default function SubmissionDetailModal({ open, onClose, task }: Props) {
             onClick={onClose}
             className="w-full sm:w-auto h-10 sm:h-11 px-6 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-medium text-xs sm:text-sm transition-colors shadow-sm"
           >
-            Cerrar
+            {t("submission_detail.close")}
           </button>
         </div>
       </div>

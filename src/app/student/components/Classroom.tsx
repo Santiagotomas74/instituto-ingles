@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   BookOpen,
@@ -33,24 +34,44 @@ type Classroom = {
   teacher: string;
 };
 
-// Arreglo centralizado de las pestañas para reutilizarlo en Mobile y Desktop
-const TABS = [
-  { id: "materials", label: "Materiales", icon: BookOpen },
-  { id: "tasks", label: "Tareas", icon: ClipboardList },
-  { id: "announcements", label: "Anuncios", icon: MessageSquare },
-  { id: "events", label: "Fechas importantes", icon: CalendarDays },
-  { id: "questions", label: "Preguntas", icon: CircleHelp },
-] as const;
-
 export default function Classroom({ classroomId }: Props) {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
-  const params = useParams();
 
   const selectedTaskId = searchParams.get("task");
   const tab = searchParams.get("tab");
 
   const [activeTab, setActiveTab] = useState<Tab>((tab as Tab) || "materials");
   const [classroom, setClassroom] = useState<Classroom | null>(null);
+
+  // Lista de pestañas dinámica traducida
+  const TABS = [
+    {
+      id: "materials" as const,
+      label: t("classroom.tabs.materials"),
+      icon: BookOpen,
+    },
+    {
+      id: "tasks" as const,
+      label: t("classroom.tabs.tasks"),
+      icon: ClipboardList,
+    },
+    {
+      id: "announcements" as const,
+      label: t("classroom.tabs.announcements"),
+      icon: MessageSquare,
+    },
+    {
+      id: "events" as const,
+      label: t("classroom.tabs.events"),
+      icon: CalendarDays,
+    },
+    {
+      id: "questions" as const,
+      label: t("classroom.tabs.questions"),
+      icon: CircleHelp,
+    },
+  ];
 
   const loadClassroom = async () => {
     try {
@@ -81,7 +102,22 @@ export default function Classroom({ classroomId }: Props) {
 
   if (!classroom) {
     return (
-      <div className="py-20 text-center text-slate-500">Cargando aula...</div>
+      <div className="shadow-sm p-16 flex flex-col items-center justify-center">
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full border-4 border-cyan-200 border-t-cyan-600 animate-spin" />
+          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center p-2">
+            <img
+              src="/logo2.png"
+              alt="Instituto"
+              className="w-20 h-20 object-contain"
+            />
+          </div>
+        </div>
+        <h2 className="mt-8 text-2xl font-bold text-slate-900">
+          {t("classroom.loading")}
+        </h2>
+        <p className="mt-3 text-slate-500">{t("classroom.loading_wait")}</p>
+      </div>
     );
   }
 
@@ -92,7 +128,7 @@ export default function Classroom({ classroomId }: Props) {
         className="inline-flex items-center gap-2 text-cyan-600 hover:text-cyan-700 font-medium transition-colors"
       >
         <ArrowLeft size={18} />
-        Volver a mis aulas
+        {t("classroom.back")}
       </Link>
 
       <div className="mt-8">
@@ -109,19 +145,18 @@ export default function Classroom({ classroomId }: Props) {
             <div className="flex flex-wrap items-center gap-2 mt-2 text-slate-500 text-sm sm:text-base">
               <GraduationCap size={18} />
               <span>
-                Prof. {classroom.teacher} • {classroom.horario}
+                {t("classroom.teacher_prefix")} {classroom.teacher} •{" "}
+                {classroom.horario}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ========================================================
-          1. VISTA MÓVIL: Select desplegable (se oculta en `md:hidden`)
-         ======================================================== */}
+      {/* 1. VISTA MÓVIL: Select desplegable */}
       <div className="mt-6 md:hidden">
         <label htmlFor="tabs-select" className="sr-only">
-          Seleccionar sección
+          {t("classroom.select_section")}
         </label>
         <select
           id="tabs-select"
@@ -138,9 +173,7 @@ export default function Classroom({ classroomId }: Props) {
         </select>
       </div>
 
-      {/* ========================================================
-          2. VISTA DESKTOP: Pestañas en fila (se oculta en móvil con `hidden md:block`)
-         ======================================================== */}
+      {/* 2. VISTA DESKTOP: Pestañas en fila */}
       <div className="hidden md:block mt-10 border-b border-slate-200">
         <div className="flex gap-10">
           {TABS.map(({ id, label, icon: Icon }) => (

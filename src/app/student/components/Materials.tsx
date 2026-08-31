@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Search,
@@ -52,57 +53,57 @@ CONFIGURACIÓN DE SUBCATEGORÍAS
 const subCategories = [
   {
     id: "all",
-    label: "Todos",
+    translationKey: "materials.subcategories.all",
     icon: FileText,
   },
   {
     id: "libro",
-    label: "Libros",
+    translationKey: "materials.subcategories.book",
     icon: BookOpen,
   },
   {
     id: "documento",
-    label: "Documentos",
+    translationKey: "materials.subcategories.document",
     icon: FileText,
   },
   {
     id: "video",
-    label: "Videos",
+    translationKey: "materials.subcategories.video",
     icon: Video,
   },
   {
     id: "imagen",
-    label: "Imágenes",
+    translationKey: "materials.subcategories.image",
     icon: ImageIcon,
   },
   {
     id: "audio",
-    label: "Audios",
+    translationKey: "materials.subcategories.audio",
     icon: Headphones,
   },
   {
     id: "presentacion",
-    label: "Presentaciones",
+    translationKey: "materials.subcategories.presentation",
     icon: Presentation,
   },
   {
     id: "ejercicio",
-    label: "Ejercicios",
+    translationKey: "materials.subcategories.exercise",
     icon: Dumbbell,
   },
   {
     id: "guia",
-    label: "Guías",
+    translationKey: "materials.subcategories.guide",
     icon: File,
   },
   {
     id: "quiz",
-    label: "Quizzes",
+    translationKey: "materials.subcategories.quiz",
     icon: FileText,
   },
   {
     id: "texto",
-    label: "Textos",
+    translationKey: "materials.subcategories.text",
     icon: FileText,
   },
 ];
@@ -116,75 +117,45 @@ CATEGORÍAS ACADÉMICAS
 const academicCategories = [
   {
     id: "all",
-    label: "Todas",
+    translationKey: "materials.academic_categories.all",
   },
   {
     id: "grammar",
-    label: "Grammar",
+    translationKey: "materials.academic_categories.grammar",
   },
   {
     id: "vocabulary",
-    label: "Vocabulary",
+    translationKey: "materials.academic_categories.vocabulary",
   },
   {
     id: "reading",
-    label: "Reading",
+    translationKey: "materials.academic_categories.reading",
   },
   {
     id: "listening",
-    label: "Listening",
+    translationKey: "materials.academic_categories.listening",
   },
   {
     id: "speaking",
-    label: "Speaking",
+    translationKey: "materials.academic_categories.speaking",
   },
   {
     id: "writing",
-    label: "Writing",
+    translationKey: "materials.academic_categories.writing",
   },
   {
     id: "homework",
-    label: "Homework",
+    translationKey: "materials.academic_categories.homework",
   },
   {
     id: "exam",
-    label: "Exam",
+    translationKey: "materials.academic_categories.exam",
   },
 ];
 
 /*
 =====================================================
-LABELS
-=====================================================
-*/
-
-const subCategoryLabels: Record<string, string> = {
-  libro: "Libro",
-  documento: "Documento",
-  video: "Video",
-  imagen: "Imagen",
-  audio: "Audio",
-  presentacion: "Presentación",
-  ejercicio: "Ejercicio",
-  guia: "Guía",
-  quiz: "Quiz",
-  texto: "Texto",
-};
-
-const categoryLabels: Record<string, string> = {
-  grammar: "Grammar",
-  vocabulary: "Vocabulary",
-  reading: "Reading",
-  listening: "Listening",
-  speaking: "Speaking",
-  writing: "Writing",
-  homework: "Homework",
-  exam: "Exam",
-};
-
-/*
-=====================================================
-COLORES POR SUBCATEGORÍA
+ESTILOS POR SUBCATEGORÍA
 =====================================================
 */
 
@@ -264,6 +235,8 @@ COMPONENT
 */
 
 export default function Materials({ classroomId }: Props) {
+  const { t, i18n } = useTranslation();
+
   const [materials, setMaterials] = useState<Material[]>([]);
 
   const [loading, setLoading] = useState(true);
@@ -292,6 +265,10 @@ export default function Materials({ classroomId }: Props) {
           },
         );
 
+        if (!res.ok) {
+          throw new Error("Error cargando materiales");
+        }
+
         const data = await res.json();
 
         if (data.success) {
@@ -319,33 +296,15 @@ export default function Materials({ classroomId }: Props) {
     const normalizedSearch = search.trim().toLowerCase();
 
     return materials.filter((material) => {
-      /*
-      -----------------------------------------------
-      Buscar
-      -----------------------------------------------
-      */
-
       const matchesSearch =
         !normalizedSearch ||
         material.titulo.toLowerCase().includes(normalizedSearch) ||
         material.descripcion?.toLowerCase().includes(normalizedSearch) ||
         material.created_by_name?.toLowerCase().includes(normalizedSearch);
 
-      /*
-      -----------------------------------------------
-      Subcategoría
-      -----------------------------------------------
-      */
-
       const matchesSubCategory =
         selectedSubCategory === "all" ||
         material.sub_category === selectedSubCategory;
-
-      /*
-      -----------------------------------------------
-      Categoría académica
-      -----------------------------------------------
-      */
 
       const matchesCategory =
         selectedCategory === "all" ||
@@ -357,7 +316,7 @@ export default function Materials({ classroomId }: Props) {
 
   /*
   =====================================================
-  OBTENER ICONO
+  OBTENER CONFIGURACIÓN DE SUBCATEGORÍA
   =====================================================
   */
 
@@ -367,7 +326,7 @@ export default function Materials({ classroomId }: Props) {
     return (
       config || {
         id: "default",
-        label: "Material",
+        translationKey: "",
         icon: FileText,
       }
     );
@@ -401,6 +360,18 @@ export default function Materials({ classroomId }: Props) {
     }
 
     return material.archivo_url || material.url || "#";
+  };
+
+  /*
+  =====================================================
+  FORMATEAR FECHA
+  =====================================================
+  */
+
+  const formatDate = (date: string) => {
+    const locale = i18n.language === "en" ? "en-US" : "es-AR";
+
+    return new Date(date).toLocaleDateString(locale);
   };
 
   /*
@@ -515,8 +486,9 @@ export default function Materials({ classroomId }: Props) {
                   ${style.badge}
                 `}
               >
-                {subCategoryLabels[material.sub_category] ||
-                  material.sub_category}
+                {config.translationKey
+                  ? t(config.translationKey)
+                  : material.sub_category}
               </span>
             )}
 
@@ -532,8 +504,10 @@ export default function Materials({ classroomId }: Props) {
                   text-slate-600
                 "
               >
-                {categoryLabels[material.material_category] ||
-                  material.material_category}
+                {t(
+                  `materials.academic_categories.${material.material_category}`,
+                  material.material_category,
+                )}
               </span>
             )}
           </div>
@@ -548,11 +522,11 @@ export default function Materials({ classroomId }: Props) {
               text-slate-400
             "
           >
-            <span>{material.created_by_name || "Instituto"}</span>
-
             <span>
-              {new Date(material.created_at).toLocaleDateString("es-AR")}
+              {material.created_by_name || t("materials.default_creator")}
             </span>
+
+            <span>{formatDate(material.created_at)}</span>
           </div>
         </div>
       </a>
@@ -569,41 +543,42 @@ export default function Materials({ classroomId }: Props) {
     return (
       <div
         className="
-              bg-white
-              rounded-[32px]
-              border
-              border-slate-200
-              shadow-sm
-              p-16
-              flex
-              flex-col
-              items-center
-              justify-center
-            "
+          bg-white
+          rounded-[32px]
+          border
+          border-slate-200
+          shadow-sm
+          p-16
+          flex
+          flex-col
+          items-center
+          justify-center
+        "
       >
         <div className="relative">
           <div
             className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  border-4
-                  border-cyan-200
-                  border-t-cyan-600
-                  animate-spin
-                "
+              absolute
+              inset-0
+              rounded-full
+              border-4
+              border-cyan-200
+              border-t-cyan-600
+              animate-spin
+            "
           />
+
           <div
             className="
-                  w-24
-                  h-24
-                  rounded-full
-                  bg-white
-                  flex
-                  items-center
-                  justify-center
-                  p-2
-                "
+              w-24
+              h-24
+              rounded-full
+              bg-white
+              flex
+              items-center
+              justify-center
+              p-2
+            "
           >
             <img
               src="/logo2.png"
@@ -612,10 +587,12 @@ export default function Materials({ classroomId }: Props) {
             />
           </div>
         </div>
+
         <h2 className="mt-8 text-2xl font-bold text-slate-900">
-          Cargando materiales...
+          {t("materials.loading_title")}
         </h2>
-        <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
+
+        <p className="mt-3 text-slate-500">{t("materials.loading_subtitle")}</p>
       </div>
     );
   }
@@ -662,7 +639,7 @@ export default function Materials({ classroomId }: Props) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar material por título, descripción o profesor..."
+            placeholder={t("materials.search_placeholder")}
             className="
               w-full
               h-12
@@ -689,6 +666,7 @@ export default function Materials({ classroomId }: Props) {
                 text-slate-400
                 hover:text-slate-700
               "
+              aria-label="Clear search"
             >
               <X size={18} />
             </button>
@@ -720,7 +698,7 @@ export default function Materials({ classroomId }: Props) {
             mb-3
           "
         >
-          Tipo de material
+          {t("materials.material_type")}
         </p>
 
         <div
@@ -761,7 +739,7 @@ export default function Materials({ classroomId }: Props) {
               >
                 <Icon size={16} />
 
-                {category.label}
+                {t(category.translationKey)}
               </button>
             );
           })}
@@ -803,7 +781,7 @@ export default function Materials({ classroomId }: Props) {
                 }
               `}
             >
-              {category.label}
+              {t(category.translationKey)}
             </button>
           );
         })}
@@ -815,13 +793,19 @@ export default function Materials({ classroomId }: Props) {
 
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Materiales</h2>
+          <h2 className="text-2xl font-bold text-slate-900">
+            {t("materials.title")}
+          </h2>
 
           <p className="text-sm text-slate-500 mt-1">
-            {filteredMaterials.length}{" "}
-            {filteredMaterials.length === 1
-              ? "material encontrado"
-              : "materiales encontrados"}
+            {t(
+              filteredMaterials.length === 1
+                ? "materials.found_one"
+                : "materials.found_other",
+              {
+                count: filteredMaterials.length,
+              },
+            )}
           </p>
         </div>
       </div>
@@ -857,7 +841,7 @@ export default function Materials({ classroomId }: Props) {
               text-slate-700
             "
           >
-            No encontramos materiales
+            {t("materials.no_materials_title")}
           </h3>
 
           <p
@@ -867,7 +851,7 @@ export default function Materials({ classroomId }: Props) {
               mt-1
             "
           >
-            Probá cambiando los filtros o la búsqueda.
+            {t("materials.no_materials_desc")}
           </p>
 
           {(search ||
@@ -893,7 +877,7 @@ export default function Materials({ classroomId }: Props) {
                 transition
               "
             >
-              Limpiar filtros
+              {t("materials.clear_filters")}
             </button>
           )}
         </div>

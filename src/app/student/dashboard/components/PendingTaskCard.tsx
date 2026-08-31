@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -24,14 +25,19 @@ type Props = {
 };
 
 export default function PendingTaskCard({ task }: Props) {
+  const { t } = useTranslation();
+
   const taskUrl = `/student/classroom/${task.classroom_id}?tab=tasks&task=${task.id}`;
 
   // Formateo seguro de fecha evitando desfases de zona horaria UTC
   const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return "Sin fecha";
+    if (!dateStr) return t("tasks2.pending.no_due_date");
+
     const cleanDate = dateStr.split("T")[0];
     const [year, month, day] = cleanDate.split("-");
+
     if (!year || !month || !day) return dateStr;
+
     return `${day}/${month}/${year}`;
   };
 
@@ -46,6 +52,7 @@ export default function PendingTaskCard({ task }: Props) {
       .split("T")[0]
       .split("-")
       .map(Number);
+
     const dueDate = new Date(year, month - 1, day);
 
     const diffTime = dueDate.getTime() - today.getTime();
@@ -53,22 +60,25 @@ export default function PendingTaskCard({ task }: Props) {
 
     if (diffDays < 0) {
       return {
-        label: "Atrasada",
+        label: t("tasks2.pending.status.overdue"),
         color: "bg-rose-50 text-rose-700 border-rose-200",
       };
     }
+
     if (diffDays === 0) {
       return {
-        label: "Vence hoy",
+        label: t("tasks2.pending.status.due_today"),
         color: "bg-amber-50 text-amber-800 border-amber-200",
       };
     }
+
     if (diffDays === 1) {
       return {
-        label: "Vence mañana",
+        label: t("tasks2.pending.status.due_tomorrow"),
         color: "bg-blue-50 text-blue-700 border-blue-200",
       };
     }
+
     return null;
   };
 
@@ -100,6 +110,7 @@ export default function PendingTaskCard({ task }: Props) {
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
             {task.titulo}
           </h3>
+
           {task.descripcion && (
             <p className="text-xs sm:text-sm text-gray-600 mt-1.5 line-clamp-2 leading-relaxed">
               {task.descripcion}
@@ -111,12 +122,17 @@ export default function PendingTaskCard({ task }: Props) {
       {/* METADATOS Y ACCIÓN */}
       <div className="space-y-4 pt-3 border-t border-gray-100">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs sm:text-sm text-gray-600">
+          {/* Profesor */}
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <GraduationCap className="w-4 h-4" />
             </div>
+
             <div className="min-w-0">
-              <p className="text-[11px] font-medium text-gray-400">Profesor</p>
+              <p className="text-[11px] font-medium text-gray-400">
+                {t("tasks2.pending.teacher")}
+              </p>
+
               <p
                 className="font-medium text-gray-800 truncate"
                 title={task.teacher}
@@ -126,30 +142,38 @@ export default function PendingTaskCard({ task }: Props) {
             </div>
           </div>
 
+          {/* Fecha límite */}
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <CalendarDays className="w-4 h-4" />
             </div>
+
             <div>
               <p className="text-[11px] font-medium text-gray-400">
-                Fecha límite
+                {t("tasks2.pending.due_date")}
               </p>
+
               <p className="font-medium text-gray-800">
                 {formatDate(task.due_date)}
               </p>
             </div>
           </div>
 
+          {/* Hora límite */}
           <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <Clock className="w-4 h-4" />
             </div>
+
             <div>
               <p className="text-[11px] font-medium text-gray-400">
-                Hora límite
+                {t("tasks2.pending.due_time")}
               </p>
+
               <p className="font-medium text-gray-800">
-                {task.due_time ? task.due_time.slice(0, 5) : "23:59"}
+                {task.due_time
+                  ? task.due_time.slice(0, 5)
+                  : t("tasks2.pending.default_due_time")}
               </p>
             </div>
           </div>
@@ -161,7 +185,7 @@ export default function PendingTaskCard({ task }: Props) {
             href={taskUrl}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm shadow-blue-500/10 group-hover:shadow-md"
           >
-            Ir a la tarea
+            {t("tasks2.pending.go_to_task")}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

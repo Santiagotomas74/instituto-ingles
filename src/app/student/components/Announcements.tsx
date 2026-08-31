@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Megaphone, CalendarDays, Loader2, AlertCircle } from "lucide-react";
+import { Megaphone, CalendarDays, AlertCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   classroomId: string;
@@ -16,6 +17,8 @@ interface Announcement {
 }
 
 export default function Announcements({ classroomId }: Props) {
+  const { t } = useTranslation();
+
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,7 +49,9 @@ export default function Announcements({ classroomId }: Props) {
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "-";
+
     const date = new Date(dateStr);
+
     return date.toLocaleDateString("es-AR", {
       day: "2-digit",
       month: "2-digit",
@@ -56,45 +61,52 @@ export default function Announcements({ classroomId }: Props) {
     });
   };
 
+  /*
+  =====================================================
+  LOADING
+  =====================================================
+  */
+
   if (loading) {
     return (
       <div
         className="
-              bg-white
-              rounded-[32px]
-              border
-              border-slate-200
-              shadow-sm
-              p-16
-              flex
-              flex-col
-              items-center
-              justify-center
-            "
+          bg-white
+          rounded-[32px]
+          border
+          border-slate-200
+          shadow-sm
+          p-16
+          flex
+          flex-col
+          items-center
+          justify-center
+        "
       >
         <div className="relative">
           <div
             className="
-                  absolute
-                  inset-0
-                  rounded-full
-                  border-4
-                  border-cyan-200
-                  border-t-cyan-600
-                  animate-spin
-                "
+              absolute
+              inset-0
+              rounded-full
+              border-4
+              border-cyan-200
+              border-t-cyan-600
+              animate-spin
+            "
           />
+
           <div
             className="
-                  w-24
-                  h-24
-                  rounded-full
-                  bg-white
-                  flex
-                  items-center
-                  justify-center
-                  p-2
-                "
+              w-24
+              h-24
+              rounded-full
+              bg-white
+              flex
+              items-center
+              justify-center
+              p-2
+            "
           >
             <img
               src="/logo2.png"
@@ -103,27 +115,76 @@ export default function Announcements({ classroomId }: Props) {
             />
           </div>
         </div>
-        <h2 className="mt-8 text-2xl font-bold text-slate-900">
-          Cargando anuncios...
-        </h2>
-        <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
-      </div>
-    );
-  }
 
-  if (announcements.length === 0) {
-    return (
-      <div className="rounded-2xl sm:rounded-3xl border border-dashed border-slate-300 bg-slate-50/50 p-8 sm:p-12 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-          <Megaphone size={24} />
-        </div>
-        <p className="text-base font-medium text-slate-600">No hay anuncios</p>
-        <p className="text-xs sm:text-sm text-slate-400">
-          Cuando el profesor publique un anuncio aparecerá aquí.
+        <h2 className="mt-8 text-2xl font-bold text-slate-900">
+          {t("announcements.loading_title")}
+        </h2>
+
+        <p className="mt-3 text-slate-500">
+          {t("announcements.loading_subtitle")}
         </p>
       </div>
     );
   }
+
+  /*
+  =====================================================
+  SIN ANUNCIOS
+  =====================================================
+  */
+
+  if (announcements.length === 0) {
+    return (
+      <div
+        className="
+          rounded-2xl
+          sm:rounded-3xl
+          border
+          border-dashed
+          border-slate-300
+          bg-slate-50/50
+          p-8
+          sm:p-12
+          text-center
+          text-slate-500
+          flex
+          flex-col
+          items-center
+          justify-center
+          gap-3
+        "
+      >
+        <div
+          className="
+            w-12
+            h-12
+            rounded-full
+            bg-slate-100
+            flex
+            items-center
+            justify-center
+            text-slate-400
+          "
+        >
+          <Megaphone size={24} />
+        </div>
+
+        <p className="text-base font-medium text-slate-600">
+          {t("announcements.empty_title")}
+        </p>
+
+        <p className="text-xs sm:text-sm text-slate-400">
+          {t("announcements.empty_description")}
+        </p>
+      </div>
+    );
+  }
+
+  /*
+  =====================================================
+  RENDER
+  =====================================================
+  */
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -137,6 +198,7 @@ export default function Announcements({ classroomId }: Props) {
           }`}
         >
           {/* Barra de acento superior */}
+
           <div
             className={`h-1.5 ${
               announcement.is_important
@@ -146,7 +208,8 @@ export default function Announcements({ classroomId }: Props) {
           />
 
           <div className="p-4 sm:p-6 md:p-8 space-y-4">
-            {/* Cabecera del Anuncio */}
+            {/* Cabecera del anuncio */}
+
             <div className="flex items-start gap-3.5 sm:gap-4">
               <div
                 className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${
@@ -165,21 +228,54 @@ export default function Announcements({ classroomId }: Props) {
                   </h2>
 
                   {announcement.is_important && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm animate-pulse">
+                    <span
+                      className="
+                        inline-flex
+                        items-center
+                        gap-1
+                        px-2.5
+                        py-0.5
+                        rounded-full
+                        bg-rose-600
+                        text-white
+                        text-[10px]
+                        sm:text-xs
+                        font-bold
+                        uppercase
+                        tracking-wider
+                        shadow-sm
+                        animate-pulse
+                      "
+                    >
                       <AlertCircle size={12} />
-                      Importante
+
+                      {t("announcements.important")}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-400">
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-1.5
+                    text-xs
+                    sm:text-sm
+                    text-slate-400
+                  "
+                >
                   <CalendarDays size={14} className="shrink-0" />
-                  <span>{formatDate(announcement.created_at)} hs</span>
+
+                  <span>
+                    {formatDate(announcement.created_at)}{" "}
+                    {t("announcements.time_suffix")}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Contenido del Anuncio */}
+            {/* Contenido del anuncio */}
+
             <div
               className={`rounded-xl sm:rounded-2xl p-4 sm:p-5 border ${
                 announcement.is_important
