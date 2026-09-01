@@ -231,6 +231,7 @@ export async function PATCH(request: Request, { params }: Params) {
       nota_1,
       nota_2,
       nota_3,
+      promedio,
 
       behaviour_1,
       behaviour_2,
@@ -247,7 +248,7 @@ export async function PATCH(request: Request, { params }: Params) {
       behaviour_final,
       observaciones_final,
     } = body;
-
+    console.log("Body recibido:", body);
     /*
     =====================================
     VALIDAR PROPIEDAD
@@ -296,25 +297,27 @@ export async function PATCH(request: Request, { params }: Params) {
         nota_2 = $5,
         nota_3 = $6,
 
-        behaviour_1 = $7,
-        behaviour_2 = $8,
-        behaviour_3 = $9,
+        promedio = $7,
 
-        ausentes = $10,
-        ausentes_2 = $11,
-        ausentes_3 = $12,
+        behaviour_1 = $8,
+        behaviour_2 = $9,
+        behaviour_3 = $10,
 
-        observaciones_1 = $13,
-        observaciones_2 = $14,
-        observaciones_3 = $15,
+        ausentes = $11,
+        ausentes_2 = $12,
+        ausentes_3 = $13,
 
-        behaviour_final = $16,
-        observaciones_final = $17,
+        observaciones_1 = $14,
+        observaciones_2 = $15,
+        observaciones_3 = $16,
+
+        behaviour_final = $17,
+        observaciones_final = $18,
 
         updated_at = NOW()
 
-      WHERE id = $18
-        AND teacher_id = $19
+      WHERE id = $19
+        AND teacher_id = $20
 
       RETURNING *
       `,
@@ -326,6 +329,7 @@ export async function PATCH(request: Request, { params }: Params) {
         nota_1,
         nota_2,
         nota_3,
+        promedio,
 
         behaviour_1,
         behaviour_2,

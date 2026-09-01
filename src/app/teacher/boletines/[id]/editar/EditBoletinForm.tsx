@@ -118,6 +118,7 @@ type FormData = {
   nota_1: string;
   nota_2: string;
   nota_3: string;
+  promedio: string;
 
   behaviour_1: string;
   behaviour_2: string;
@@ -176,6 +177,8 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
     nota_2: boletin.nota_2?.toString() ?? "",
 
     nota_3: boletin.nota_3?.toString() ?? "",
+
+    promedio: boletin.promedio?.toString() ?? "",
 
     /*
     COMPORTAMIENTO
@@ -330,6 +333,8 @@ export default function EditBoletinForm({ boletin }: { boletin: Boletin }) {
         nota_2: formData.nota_2 === "" ? null : Number(formData.nota_2),
 
         nota_3: formData.nota_3 === "" ? null : Number(formData.nota_3),
+
+        promedio: formData.promedio === "" ? null : Number(formData.promedio),
 
         /*
         COMPORTAMIENTO
