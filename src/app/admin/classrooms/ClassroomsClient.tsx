@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 import {
@@ -21,6 +21,16 @@ export default function ClassroomsClient({
   classrooms: any[];
 }) {
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Simulamos el tiempo de carga.
+  // Si hacés el fetch acá adentro como en profesores, reemplazalo por tu lógica de fetch.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filtered = classrooms.filter((classroom) =>
     classroom.nombre.toLowerCase().includes(search.toLowerCase()),
@@ -156,8 +166,59 @@ export default function ClassroomsClient({
           </div>
         </div>
 
-        {/* LIST OR EMPTY STATE */}
-        {filtered.length === 0 ? (
+        {/* LOADING, LIST OR EMPTY STATE */}
+        {loading ? (
+          <div
+            className="
+              bg-white
+              rounded-[32px]
+              border
+              border-slate-200
+              shadow-sm
+              p-16
+              flex
+              flex-col
+              items-center
+              justify-center
+            "
+          >
+            <div className="relative">
+              <div
+                className="
+                  absolute
+                  inset-0
+                  rounded-full
+                  border-4
+                  border-cyan-200
+                  border-t-cyan-600
+                  animate-spin
+                "
+              />
+              <div
+                className="
+                  w-24
+                  h-24
+                  rounded-full
+                  bg-white
+                  flex
+                  items-center
+                  justify-center
+                  p-2
+                "
+              >
+                <img
+                  src="/logo2.png"
+                  alt="Instituto"
+                  className="w-20 h-20 object-contain"
+                />
+              </div>
+            </div>
+            <h2 className="mt-8 text-2xl font-bold text-slate-900">
+              Cargando classrooms...
+            </h2>
+            <p className="mt-3 text-slate-500">Aguarde unos segundos.</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div
             className="
               bg-white
@@ -264,11 +325,8 @@ function ClassroomCard({ classroom }: { classroom: any }) {
       {/* HEADER CARD */}
       <div
         className="flex items-start gap-5 mb-8 bg-gradient-to-r
-
 from-slate-800
-
 via-blue-900
-
 to-cyan-900   rounded-[15px] p-8"
       >
         <div

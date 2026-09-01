@@ -6,6 +6,8 @@ import {
   FileText,
   MessageSquare,
   UserCircle2,
+  Image as ImageIcon,
+  ExternalLink,
 } from "lucide-react";
 
 import { Submission } from "./TaskSubmissionsModal";
@@ -18,6 +20,7 @@ type Props = {
 
 export default function SubmissionViewer({ submission, onUpdated }: Props) {
   const maxScore = 100;
+
   if (!submission) {
     return (
       <div className="flex-1 flex items-center justify-center text-slate-500">
@@ -27,6 +30,37 @@ export default function SubmissionViewer({ submission, onUpdated }: Props) {
   }
 
   const hasSubmission = submission.submitted_at !== null;
+
+  /*
+   * Detectar extensión del archivo
+   */
+  const fileName = submission.archivo_nombre || "";
+  const fileUrl = submission.archivo_url || "";
+
+  const extension = fileName.split(".").pop()?.toLowerCase();
+
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"];
+
+  const isImage = extension ? imageExtensions.includes(extension) : false;
+
+  const isPdf = extension === "pdf";
+
+  /*
+   * Formatear tamaño
+   */
+  function formatFileSize(size: number | null) {
+    if (!size) return null;
+
+    if (size < 1024) {
+      return `${size} B`;
+    }
+
+    if (size < 1024 * 1024) {
+      return `${(size / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+  }
 
   return (
     <div className="flex-1 overflow-y-auto bg-slate-50">
@@ -71,6 +105,8 @@ export default function SubmissionViewer({ submission, onUpdated }: Props) {
           </div>
         ) : (
           <>
+            {/* Información de la entrega */}
+
             <section className="rounded-3xl border bg-white p-6 shadow-sm">
               <div className="mb-5 flex items-center gap-3">
                 <CalendarDays className="text-cyan-600" size={22} />
@@ -81,9 +117,11 @@ export default function SubmissionViewer({ submission, onUpdated }: Props) {
               </div>
 
               <p className="font-medium text-slate-700">
-                {new Date(submission.submitted_at!).toLocaleString()}
+                {new Date(submission.submitted_at!).toLocaleString("es-AR")}
               </p>
             </section>
+
+            {/* Respuesta */}
 
             <section className="rounded-3xl border bg-white p-6 shadow-sm">
               <div className="mb-5 flex items-center gap-3">
@@ -100,37 +138,110 @@ export default function SubmissionViewer({ submission, onUpdated }: Props) {
               </div>
             </section>
 
+            {/* ARCHIVO */}
+
             {submission.archivo_url && (
               <section className="rounded-3xl border bg-white p-6 shadow-sm">
                 <div className="mb-5 flex items-center gap-3">
-                  <FileText className="text-cyan-600" size={22} />
+                  {isImage ? (
+                    <ImageIcon className="text-cyan-600" size={22} />
+                  ) : (
+                    <FileText className="text-cyan-600" size={22} />
+                  )}
 
-                  <h3 className="text-xl font-bold">Archivo entregado</h3>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-800">
+                      Archivo entregado
+                    </h3>
+
+                    <p className="text-sm text-slate-500">
+                      {fileName || "Archivo adjunto"}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl border p-5">
-                  <div>
-                    <p className="font-semibold">{submission.archivo_nombre}</p>
+                {/* =========================
+                    IMAGEN
+                   ========================= */}
 
-                    {submission.archivo_size && (
-                      <p className="mt-1 text-sm text-slate-500">
-                        {(submission.archivo_size / 1024).toFixed(1)} KB
-                      </p>
-                    )}
+                {isImage && (
+                  <div className="overflow-hidden rounded-2xl border bg-slate-100">
+                    <div className="flex min-h-[300px] items-center justify-center p-4">
+                      <img
+                        src={fileUrl}
+                        alt={fileName || "Archivo entregado por el estudiante"}
+                        className="max-h-[700px] max-w-full rounded-xl object-contain shadow-sm"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* =========================
+                    PDF
+                   ========================= */}
+
+                {isPdf && (
+                  <div className="overflow-hidden rounded-2xl border bg-slate-100">
+                    <iframe
+                      src={fileUrl}
+                      title={fileName || "PDF entregado por el estudiante"}
+                      className="h-[700px] w-full"
+                    />
+                  </div>
+                )}
+
+                {/* =========================
+                    INFORMACIÓN + ACCIONES
+                   ========================= */}
+
+                <div className="mt-5 flex flex-col gap-4 rounded-2xl border bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-slate-800">
+                      {fileName || "Archivo entregado"}
+                    </p>
+
+                    <div className="mt-1 flex items-center gap-2 text-sm text-slate-500">
+                      {extension && (
+                        <span className="uppercase">{extension}</span>
+                      )}
+
+                      {submission.archivo_size && (
+                        <>
+                          <span>•</span>
+
+                          <span>{formatFileSize(submission.archivo_size)}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
 
-                  <a
-                    href={submission.archivo_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-11 items-center gap-2 rounded-xl bg-cyan-600 px-5 text-white hover:bg-cyan-700"
-                  >
-                    <Download size={18} />
-                    Descargar
-                  </a>
+                  <div className="flex shrink-0 gap-2">
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 font-medium text-slate-700 transition hover:bg-slate-100"
+                    >
+                      <ExternalLink size={17} />
+                      Abrir
+                    </a>
+
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download={fileName || undefined}
+                      className="flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 font-medium text-white transition hover:bg-cyan-700"
+                    >
+                      <Download size={18} />
+                      Descargar
+                    </a>
+                  </div>
                 </div>
               </section>
             )}
+
+            {/* Calificación */}
 
             <GradeSubmissionForm
               submissionId={submission.id}

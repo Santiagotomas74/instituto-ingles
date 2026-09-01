@@ -584,30 +584,6 @@ export default function EditMaterialModal({
               </div>
             </label>
             <div className="hidden sm:block w-px h-10 bg-slate-200"></div>
-
-            {/* ORDEN */}
-            <div className="flex items-center gap-3">
-              <label className="font-medium text-slate-700">Orden:</label>
-              <input
-                type="number"
-                name="orden"
-                value={formData.orden}
-                onChange={handleChange}
-                className="
-                  w-20
-                  h-10
-                  px-3
-                  rounded-lg
-                  border
-                  border-slate-200
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-cyan-500
-                  text-slate-600
-                  text-center
-                "
-              />
-            </div>
           </div>
 
           {/* =================================================

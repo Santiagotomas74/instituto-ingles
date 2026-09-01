@@ -44,7 +44,6 @@ export default function Classroom({ classroomId }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>((tab as Tab) || "materials");
   const [classroom, setClassroom] = useState<Classroom | null>(null);
 
-  // Lista de pestañas dinámica traducida
   const TABS = [
     {
       id: "materials" as const,
@@ -100,27 +99,64 @@ export default function Classroom({ classroomId }: Props) {
     }
   }, [classroomId]);
 
+  // ==========================================
+  // ESTADO DE CARGA MEJORADO (Skeleton + Spinner)
+  // ==========================================
   if (!classroom) {
     return (
-      <div className="shadow-sm p-16 flex flex-col items-center justify-center">
-        <div className="relative">
-          <div className="absolute inset-0 rounded-full border-4 border-cyan-200 border-t-cyan-600 animate-spin" />
-          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center p-2">
-            <img
-              src="/logo2.png"
-              alt="Instituto"
-              className="w-20 h-20 object-contain"
-            />
+      <div className="max-w-7xl mx-auto mt-5 px-4 sm:px-6 lg:px-8 mb-10">
+        {/* Esqueleto del botón volver */}
+        <div className="w-24 h-6 bg-slate-200 rounded-md animate-pulse" />
+
+        {/* Esqueleto del Header */}
+        <div className="mt-8 flex items-center gap-4 animate-pulse">
+          <div className="w-12 h-12 rounded-full bg-slate-200 shrink-0" />
+          <div className="space-y-3 w-full max-w-sm">
+            <div className="h-8 sm:h-10 bg-slate-200 rounded-lg w-3/4" />
+            <div className="h-5 bg-slate-200 rounded-md w-full sm:w-2/3" />
           </div>
         </div>
-        <h2 className="mt-8 text-2xl font-bold text-slate-900">
-          {t("classroom.loading")}
-        </h2>
-        <p className="mt-3 text-slate-500">{t("classroom.loading_wait")}</p>
+
+        {/* Esqueleto de Pestañas (Móvil) */}
+        <div className="mt-6 md:hidden animate-pulse">
+          <div className="h-12 w-full bg-slate-200 rounded-xl" />
+        </div>
+
+        {/* Esqueleto de Pestañas (Desktop) */}
+        <div className="hidden md:flex mt-10 border-b border-slate-200 gap-10 pb-4 animate-pulse">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-6 w-28 bg-slate-200 rounded-md" />
+          ))}
+        </div>
+
+        {/* Spinner centralizado y refinado */}
+        <div className="min-h-[40vh] mt-8 flex flex-col items-center justify-center bg-slate-50/50 rounded-3xl border border-slate-100">
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            {/* Anillo exterior */}
+            <div className="absolute inset-0 rounded-full border-4 border-slate-200 border-t-cyan-600 animate-spin" />
+            {/* Logo interior con pulso */}
+            <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center p-2 shadow-sm">
+              <img
+                src="/logo2.png"
+                alt="Instituto"
+                className="w-14 h-14 object-contain animate-pulse"
+              />
+            </div>
+          </div>
+          <h2 className="mt-6 text-xl font-bold text-slate-800 animate-pulse">
+            {t("classroom.loading")}
+          </h2>
+          <p className="mt-2 text-sm text-slate-500 font-medium animate-pulse">
+            {t("classroom.loading_wait")}
+          </p>
+        </div>
       </div>
     );
   }
 
+  // ==========================================
+  // VISTA PRINCIPAL (Datos cargados)
+  // ==========================================
   return (
     <div className="max-w-7xl mx-auto mt-5 px-4 sm:px-6 lg:px-8 mb-10">
       <Link
@@ -133,7 +169,7 @@ export default function Classroom({ classroomId }: Props) {
 
       <div className="mt-8">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
+          <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
             {classroom.nivel}
           </div>
 
@@ -143,7 +179,7 @@ export default function Classroom({ classroomId }: Props) {
             </h1>
 
             <div className="flex flex-wrap items-center gap-2 mt-2 text-slate-500 text-sm sm:text-base">
-              <GraduationCap size={18} />
+              <GraduationCap size={18} className="text-slate-400" />
               <span>
                 {t("classroom.teacher_prefix")} {classroom.teacher} •{" "}
                 {classroom.horario}
@@ -163,7 +199,7 @@ export default function Classroom({ classroomId }: Props) {
           name="tabs-select"
           value={activeTab}
           onChange={(e) => setActiveTab(e.target.value as Tab)}
-          className="block w-full rounded-xl border border-slate-300 bg-white py-3 px-4 text-slate-800 font-medium shadow-sm focus:border-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-600/20"
+          className="block w-full rounded-xl border border-slate-300 bg-white py-3 px-4 text-slate-800 font-medium shadow-sm focus:border-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-600/20 transition-all cursor-pointer"
         >
           {TABS.map((tabItem) => (
             <option key={tabItem.id} value={tabItem.id}>
@@ -180,23 +216,27 @@ export default function Classroom({ classroomId }: Props) {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`pb-4 transition font-medium ${
+              className={`pb-4 transition-all font-medium relative ${
                 activeTab === id
-                  ? "border-b-2 border-cyan-600 text-cyan-600"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "text-cyan-600"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50 rounded-t-lg px-2 -ml-2"
               }`}
             >
               <div className="flex items-center gap-2">
                 <Icon size={18} />
                 {label}
               </div>
+              {/* Línea inferior activa animada */}
+              {activeTab === id && (
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyan-600 rounded-t-full" />
+              )}
             </button>
           ))}
         </div>
       </div>
 
       {/* Vistas de contenido */}
-      <div className="mt-8">
+      <div className="mt-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {activeTab === "materials" && <Materials classroomId={classroomId} />}
 
         {activeTab === "tasks" && (

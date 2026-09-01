@@ -14,45 +14,39 @@ type Props = {
 export default async function ClassroomDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const [classroomRes, materialsRes, studentsRes] = await Promise.all([
-    fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}`, {
-      cache: "no-store",
-    }),
-
-    fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}/materials`, {
-      cache: "no-store",
-    }),
-
-    fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}/students`, {
-      cache: "no-store",
-    }),
-  ]);
+  // OPTIMIZACIÓN: Las 4 llamadas en paralelo para máxima velocidad
+  const [classroomRes, materialsRes, studentsRes, announcementsRes] =
+    await Promise.all([
+      fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}`, {
+        cache: "no-store",
+      }),
+      fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}/materials`, {
+        cache: "no-store",
+      }),
+      fetch(`${process.env.BACKEND_URL}/api/admin/classrooms/${id}/students`, {
+        cache: "no-store",
+      }),
+      fetch(
+        `${process.env.BACKEND_URL}/api/admin/classrooms/${id}/announcements`,
+        { cache: "no-store" },
+      ),
+    ]);
 
   if (!classroomRes.ok) {
     notFound();
   }
 
-  const [classroomData, materialsData, studentsData] = await Promise.all([
-    classroomRes.json(),
-    materialsRes.json(),
-    studentsRes.json(),
-  ]);
+  const [classroomData, materialsData, studentsData, announcementsData] =
+    await Promise.all([
+      classroomRes.json(),
+      materialsRes.json(),
+      studentsRes.json(),
+      announcementsRes.json(),
+    ]);
 
   const classroom = classroomData.classroom;
-  console.log(classroom);
-
   const materials = materialsData.materials || [];
-
   const students = studentsData.students || [];
-  const announcementsRes = await fetch(
-    `${process.env.BACKEND_URL}/api/admin/classrooms/${id}/announcements`,
-    {
-      cache: "no-store",
-    },
-  );
-
-  const announcementsData = await announcementsRes.json();
-
   const announcements = announcementsData.announcements || [];
 
   return (
@@ -62,17 +56,16 @@ export default async function ClassroomDetailPage({ params }: Props) {
       <div className="max-w-7xl mx-auto p-6 md:p-10">
         <div className="grid xl:grid-cols-3 gap-8">
           {/* CONTENIDO PRINCIPAL */}
-          <div className="xl:col-span-2 space-y-8">
+          <div className="xl:col-span-2 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <ClassroomAnnouncements
               classroomId={id}
               announcements={announcements}
             />
-
             <ClassroomMaterials classroomId={id} materials={materials} />
           </div>
 
           {/* SIDEBAR */}
-          <div className="space-y-8">
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
             <ClassroomStudents students={students} />
           </div>
         </div>
