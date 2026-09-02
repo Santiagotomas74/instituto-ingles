@@ -13,7 +13,7 @@ export default function EditTeacherForm({ teacher }: { teacher: any }) {
     nombre: teacher.nombre,
     apellido: teacher.apellido,
     fecha_nacimiento: teacher.fecha_nacimiento?.split("T")[0],
-    email: teacher.email,
+
     password: "",
   });
 
@@ -91,15 +91,6 @@ export default function EditTeacherForm({ teacher }: { teacher: any }) {
             value={formData.fecha_nacimiento}
             onChange={handleChange}
             className="w-full h-14 px-5 rounded-2xl border text-gray-500"
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full h-14 px-5 rounded-2xl border text-gray-500 "
           />
 
           <input

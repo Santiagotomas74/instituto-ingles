@@ -24,7 +24,6 @@ export default function CreateStudentForm() {
     nombre: "",
     apellido: "",
     fecha_nacimiento: "",
-    email: "",
     password: "",
     nivel: "",
   });
@@ -175,15 +174,6 @@ export default function CreateStudentForm() {
             value={formData.fecha_nacimiento}
             onChange={handleChange}
             type="date"
-          />
-
-          <InputField
-            icon={<Mail className="w-5 h-5" />}
-            label="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            type="email"
           />
 
           <InputField

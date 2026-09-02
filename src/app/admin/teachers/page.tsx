@@ -415,22 +415,6 @@ function TeacherCard({ teacher }: { teacher: Teacher }) {
           </div>
         </div>
 
-        {teacher.email && (
-          <div className="flex items-center gap-4 text-slate-600">
-            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
-              <Mail className="w-5 h-5 text-slate-400" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-medium uppercase">
-                Email
-              </p>
-              <p className="font-semibold text-slate-700 truncate">
-                {teacher.email}
-              </p>
-            </div>
-          </div>
-        )}
-
         <div className="flex items-center gap-4 text-slate-600">
           <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
             <Calendar className="w-5 h-5 text-slate-400" />

@@ -8,8 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { dni, nombre, apellido, fecha_nacimiento, email, password, nivel } =
-      body;
+    const { dni, nombre, apellido, fecha_nacimiento, password, nivel } = body;
 
     /* HASH PASSWORD */
 
@@ -24,13 +23,12 @@ export async function POST(req: NextRequest) {
           nombre,
           apellido,
           fecha_nacimiento,
-          email,
           password,
           nivel
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        VALUES ($1, $2, $3, $4, $5, $6)
       `,
-      [dni, nombre, apellido, fecha_nacimiento, email, hashedPassword, nivel],
+      [dni, nombre, apellido, fecha_nacimiento, hashedPassword, nivel],
     );
 
     return NextResponse.json({

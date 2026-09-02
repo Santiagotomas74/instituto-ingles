@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Receipt } from "lucide-react";
 
 import { Student } from "./Payments";
@@ -18,16 +20,22 @@ export default function CreatePaymentModal({
   student,
   onCreated,
 }: Props) {
-  if (!open) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!open || !mounted) return null;
+
+  return createPortal(
     <div
       className="
         fixed
         inset-0
         bg-slate-900/60
         backdrop-blur-xs
-        z-50
+        z-[9999]
         flex
         items-center
         justify-center
@@ -83,6 +91,7 @@ export default function CreatePaymentModal({
             onClick={onClose}
             className="
               w-9
+              w-9
               h-9
               sm:w-10
               sm:h-10
@@ -113,6 +122,7 @@ export default function CreatePaymentModal({
           />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

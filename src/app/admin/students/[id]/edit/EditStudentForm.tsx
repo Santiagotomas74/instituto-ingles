@@ -84,14 +84,6 @@ export default function EditStudentForm({ student }: Props) {
           onChange={handleChange}
         />
 
-        {/* Email */}
-        <Input
-          label="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-
         {/* DNI */}
         <Input
           label="DNI"

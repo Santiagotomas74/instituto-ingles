@@ -194,28 +194,80 @@ export default function TeacherProfile({ teacher }: TeacherProfileProps) {
 
     context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Tamaño de fuente dinámico basado en la altura del canvas
-    const fontSize = Math.floor(CANVAS_HEIGHT * 0.25);
-    context.font = `italic ${fontSize}px "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive`;
+    const text = firmaNombre.trim();
+
+    if (!text) return null;
+
+    /*
+     * =====================================================
+     * CALCULAR TAMAÑO DE FUENTE DINÁMICO
+     * =====================================================
+     */
+
+    const maxWidth = CANVAS_WIDTH * 0.88;
+    const maxFontSize = Math.floor(CANVAS_HEIGHT * 0.3);
+    const minFontSize = 32;
+
+    let fontSize = maxFontSize;
+
+    const fontFamily =
+      '"Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive';
+
+    context.font = `italic ${fontSize}px ${fontFamily}`;
+
+    let textWidth = context.measureText(text).width;
+
+    /*
+     * Reducimos la fuente hasta que todo el texto entre
+     * dentro del área disponible.
+     */
+    if (textWidth > maxWidth) {
+      fontSize = Math.floor(fontSize * (maxWidth / textWidth));
+
+      fontSize = Math.max(fontSize, minFontSize);
+
+      context.font = `italic ${fontSize}px ${fontFamily}`;
+
+      textWidth = context.measureText(text).width;
+    }
+
+    /*
+     * =====================================================
+     * TEXTO
+     * =====================================================
+     */
 
     context.fillStyle = "#111827";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.fillText(firmaNombre.trim(), CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
 
-    /* Línea decorativa calculada proporcionalmente */
+    context.fillText(text, CANVAS_WIDTH / 2, CANVAS_HEIGHT * 0.43);
+
+    /*
+     * =====================================================
+     * LÍNEA DECORATIVA
+     * =====================================================
+     */
+
     context.beginPath();
     context.strokeStyle = "#111827";
     context.lineWidth = 3;
     context.lineCap = "round";
 
-    context.moveTo(CANVAS_WIDTH * 0.2, CANVAS_HEIGHT * 0.7);
+    const lineWidth = Math.min(textWidth * 0.55, CANVAS_WIDTH * 0.65);
+
+    const lineStart = (CANVAS_WIDTH - lineWidth) / 2;
+    const lineEnd = lineStart + lineWidth;
+
+    context.moveTo(lineStart, CANVAS_HEIGHT * 0.62);
+
     context.quadraticCurveTo(
-      CANVAS_WIDTH * 0.5,
-      CANVAS_HEIGHT * 0.8,
-      CANVAS_WIDTH * 0.8,
-      CANVAS_HEIGHT * 0.7,
+      CANVAS_WIDTH / 2,
+      CANVAS_HEIGHT * 0.72,
+      lineEnd,
+      CANVAS_HEIGHT * 0.62,
     );
+
     context.stroke();
 
     return canvas.toDataURL("image/png");
@@ -696,14 +748,26 @@ export default function TeacherProfile({ teacher }: TeacherProfileProps) {
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Vista previa
                 </label>
-                <div className="bg-white border border-slate-200 rounded-2xl min-h-48 p-4 flex items-center justify-center overflow-hidden">
+                <div className="bg-white border border-slate-200 rounded-2xl min-h-48 p-4 flex items-center justify-center overflow-x-auto overflow-y-hidden">
                   {firmaNombre.trim() ? (
                     <div
                       style={{
                         fontFamily:
                           '"Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive',
+                        fontSize: "clamp(2rem, 7vw, 4rem)",
                       }}
-                      className="text-4xl sm:text-5xl md:text-6xl italic text-slate-900 text-center break-words w-full"
+                      className="
+    italic
+    text-slate-900
+    text-center
+    w-full
+    max-w-full
+    px-2
+    leading-tight
+    whitespace-normal
+    break-words
+    [overflow-wrap:anywhere]
+  "
                     >
                       {firmaNombre}
                     </div>
