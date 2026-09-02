@@ -212,15 +212,6 @@ export default function TestimonialsSection() {
                   >
                     {item.name}
                   </h4>
-
-                  <p
-                    className="
-                      mt-1
-                      text-gray-500
-                    "
-                  >
-                    {item.role}
-                  </p>
                 </div>
               </div>
             </div>
