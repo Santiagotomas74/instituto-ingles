@@ -212,9 +212,9 @@ export default function ModalitiesSection() {
           <div
             className="
               bg-gradient-to-br
-              from-blue-700
-              via-blue-800
-              to-blue-950
+              from-red-600
+              via-red-800
+              to-red-900
               rounded-[32px]
               p-10
               shadow-2xl

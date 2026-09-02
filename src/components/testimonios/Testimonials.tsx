@@ -2,19 +2,19 @@ import { Star, Quote, MessageCircle } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Lucía Fernández",
-    role: "Estudiante",
-    text: "Las clases son súper dinámicas y divertidas. Perdí el miedo a hablar en inglés y mejoré muchísimo mi pronunciación.",
+    name: "Jorge Batberan",
+
+    text: "Excelente Instituto, buen nivel de enseñanza para todas las edades, totalmente recomendable 100 x 100..",
   },
   {
-    name: "Martín Gómez",
-    role: "Alumno Cambridge",
-    text: "Gracias al acompañamiento de los profesores pude rendir mi examen Cambridge con mucha seguridad.",
+    name: "Luis F Inostroza",
+
+    text: "Muy buen lugar calidad/precio para estudiar ingles, recomiendo este lugar para los chicos, adolescentes y adultos que deseen aprender este idioma universal.",
   },
   {
-    name: "Carolina Ruiz",
-    role: "Madre de alumna",
-    text: "Mi hija comenzó desde pequeña y realmente disfruta cada clase. El ambiente es excelente y muy profesional.",
+    name: "Catalino Matto",
+
+    text: "Todo perfecto.",
   },
 ];
 
@@ -234,10 +234,10 @@ export default function TestimonialsSection() {
             relative
             overflow-hidden
             rounded-[36px]
-            bg-gradient-to-r
-            from-blue-700
-            via-blue-800
-            to-blue-950
+             bg-gradient-to-br
+              from-red-600
+              via-red-800
+              to-red-900
             p-12
             shadow-2xl
           "

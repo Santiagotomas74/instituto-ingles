@@ -137,9 +137,9 @@ export default function TeachersSection() {
                   w-24
                   h-24
                   rounded-3xl
-                 bg-gradient-to-r
-      from-[#d4a72c]
-      to-[#e5b83b]
+                 bg-gradient-to-br
+                    from-blue-600
+                    to-blue-900
                   flex
                   items-center
                   justify-center
