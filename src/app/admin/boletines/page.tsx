@@ -36,6 +36,7 @@ export default async function AdminBoletinesPage() {
   }
 
   const boletinesData = await boletinesResponse.json();
+  console.log("Boletines data:", boletinesData);
 
   if (!boletinesData.success) {
     throw new Error(

@@ -10,6 +10,59 @@ export async function GET(
 
     console.log("studentId", studentId);
 
+    /*
+    =====================================================
+    OBTENER ESTADO DEL ESTUDIANTE
+    =====================================================
+    */
+    const studentResult = await query(
+      `
+      SELECT status
+      FROM students
+      WHERE id = $1
+      LIMIT 1
+      `,
+      [studentId],
+    );
+
+    if (studentResult.rows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Estudiante no encontrado.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    const studentStatus = studentResult.rows[0].status;
+
+    /*
+    =====================================================
+    ESTUDIANTE INACTIVO
+    =====================================================
+
+    No devolvemos sus aulas.
+    =====================================================
+    */
+    if (studentStatus === "inactive") {
+      return NextResponse.json({
+        success: true,
+        status: "inactive",
+        classrooms: [],
+      });
+    }
+
+    /*
+    =====================================================
+    ESTUDIANTE ACTIVO O PENDIENTE
+    =====================================================
+
+    Ambos pueden ver sus aulas.
+    =====================================================
+    */
     const result = await query(
       `
       SELECT
@@ -18,7 +71,7 @@ export async function GET(
           c.nivel,
           c.horario,
 
-          COUNT(DISTINCT cs.student_id) AS alumnos,
+          COUNT(DISTINCT cs2.student_id) AS alumnos,
 
           COUNT(DISTINCT cm.id) AS materiales
 
@@ -48,6 +101,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
+      status: studentStatus,
       classrooms: result.rows,
     });
   } catch (error) {

@@ -9,7 +9,6 @@ export async function GET() {
     AUTENTICACIÓN
     =====================================================
     */
-
     const cookieStore = await cookies();
 
     const userId = cookieStore.get("user_id")?.value;
@@ -29,10 +28,9 @@ export async function GET() {
 
     /*
     =====================================================
-    OBTENER BOLETINES
+    OBTENER BOLETINES + CONFIRMACIONES
     =====================================================
     */
-
     const result = await query(`
       SELECT
         b.id,
@@ -70,6 +68,8 @@ export async function GET() {
 
         b.behaviour_final,
         b.observaciones_final,
+        
+        b.habilitado,
 
         b.created_at,
         b.updated_at,
@@ -79,11 +79,31 @@ export async function GET() {
         DATOS DEL PROFESOR
         =================================================
         */
-
         t.nombre AS teacher_nombre,
         t.apellido AS teacher_apellido,
         t.email AS teacher_email,
-        t.firma_url AS teacher_firma_url
+        t.firma_url AS teacher_firma_url,
+
+        /*
+        =================================================
+        CONFIRMACIONES (Subconsulta a confirmaciones_boletin)
+        =================================================
+        */
+        (
+          SELECT COALESCE(
+            json_agg(
+              json_build_object(
+                'id', cb.id,
+                'nombre', cb.nombre,
+                'apellido', cb.apellido,
+                'dni', cb.dni,
+                'fecha_confirmacion', cb.fecha_confirmacion
+              )
+            ), '[]'::json
+          )
+          FROM confirmaciones_boletin cb
+          WHERE cb.boletin_id = b.id
+        ) AS confirmaciones
 
       FROM boletines b
 
@@ -98,7 +118,6 @@ export async function GET() {
     RESPUESTA
     =====================================================
     */
-
     return NextResponse.json({
       success: true,
       boletines: result.rows,

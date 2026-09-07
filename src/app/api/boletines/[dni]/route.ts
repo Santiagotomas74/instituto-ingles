@@ -66,7 +66,7 @@ export async function GET(request: Request, { params }: Props) {
             LIMIT 1
           )
 
-        WHERE b.dni = $1
+        WHERE b.dni = $1 AND b.habilitado = true
 
         LIMIT 1
       `,
@@ -75,7 +75,7 @@ export async function GET(request: Request, { params }: Props) {
 
     /*
     =====================================================
-    BOLETÍN NO ENCONTRADO
+    BOLETÍN NO ENCONTRADO O NO HABILITADO
     =====================================================
     */
 
@@ -83,7 +83,7 @@ export async function GET(request: Request, { params }: Props) {
       return NextResponse.json(
         {
           success: false,
-          message: "Boletín no encontrado",
+          message: "Boletín no encontrado o no habilitado",
         },
         {
           status: 404,
@@ -101,7 +101,6 @@ export async function GET(request: Request, { params }: Props) {
 
     return NextResponse.json({
       success: true,
-
       boletin,
     });
   } catch (error) {

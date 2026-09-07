@@ -4,7 +4,11 @@ import {
   User,
   BookOpen,
   ClipboardCheck,
+  ArrowLeft,
+  Building2,
+  Lock,
 } from "lucide-react";
+import Link from "next/link";
 
 import ConfirmacionBoletin from "./ConfirmacionBoletin";
 import Footer from "../../../components/footer/Footer";
@@ -26,18 +30,57 @@ export default async function StudentBoletinPage({ params }: Props) {
 
   if (!data.success) {
     return (
-      <main
-        className="
-          min-h-screen
-          bg-slate-950
-          flex
-          items-center
-          justify-center
-          text-white
-        "
-      >
-        No se encontró el boletín.
-      </main>
+      <>
+        <Navbar />
+        <main className="min-h-[80vh] bg-gradient-to-br from-slate-100 via-white to-blue-50 flex items-center justify-center px-4 py-16">
+          <div className="max-w-md w-full bg-white rounded-3xl border border-gray-200 shadow-xl p-8 text-center relative overflow-hidden">
+            {/* Acentos de fondo */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100 rounded-full blur-2xl opacity-60" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-100 rounded-full blur-2xl opacity-60" />
+
+            <div className="relative z-10">
+              {/* Ícono destacado */}
+              <div className="w-16 h-16 bg-amber-50 border border-amber-200 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <Lock className="w-8 h-8" />
+              </div>
+
+              <p className="text-xs uppercase font-semibold tracking-[3px] text-blue-600 mb-2">
+                Instituto de Inglés I.N.K
+              </p>
+
+              <h1 className="text-2xl font-bold text-gray-900 mb-3">
+                Boletín No Disponible
+              </h1>
+
+              <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                El boletín solicitado para el DNI{" "}
+                <span className="font-bold text-gray-800">{dni}</span> no se
+                encuentra disponible o aún no ha sido habilitado por la
+                coordinación.
+              </p>
+
+              {/* Cuadro informativo */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left text-xs text-slate-600 mb-8 flex items-start gap-3">
+                <Building2 className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
+                <span>
+                  Si tenés dudas sobre la habilitación o el estado del
+                  documento, comunicate directamente con el instituto.
+                </span>
+              </div>
+
+              {/* Botón de retorno */}
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center gap-2 w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold transition-all shadow-md shadow-blue-200"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Volver al Inicio
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
     );
   }
 
