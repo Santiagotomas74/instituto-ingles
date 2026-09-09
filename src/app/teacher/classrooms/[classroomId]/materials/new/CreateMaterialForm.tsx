@@ -77,7 +77,47 @@ export default function CreateMaterialForm({ classroomId }: Props) {
   HANDLE SUBMIT
   =====================================================
   */
+  const uploadFileDirectlyToCloudinary = async (file: File) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      throw new Error(
+        "Falta configurar Cloudinary en las variables de entorno.",
+      );
+    }
+
+    const uploadData = new FormData();
+
+    uploadData.append("file", file);
+    uploadData.append("upload_preset", uploadPreset);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+      {
+        method: "POST",
+        body: uploadData,
+      },
+    );
+
+    const data = await response.json();
+
+    console.log("Cloudinary status:", response.status);
+    console.log("Cloudinary response:", data);
+
+    if (!response.ok || !data.secure_url) {
+      throw new Error(
+        data.error?.message || "No se pudo subir el archivo a Cloudinary.",
+      );
+    }
+
+    return {
+      url: data.secure_url as string,
+      bytes: Number(data.bytes ?? file.size),
+      original_filename: data.original_filename ?? file.name,
+    };
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -125,30 +165,22 @@ export default function CreateMaterialForm({ classroomId }: Props) {
       SUBIR ARCHIVO A CLOUDINARY
       ===================================================
       */
-
       if (formData.tipo === "file" && file) {
-        const uploadData = new FormData();
+        try {
+          const uploadResult = await uploadFileDirectlyToCloudinary(file);
 
-        uploadData.append("file", file);
+          archivo_url = uploadResult.url;
+          archivo_nombre = file.name;
+          archivo_size = file.size;
+        } catch (error) {
+          console.error("Error subiendo archivo a Cloudinary:", error);
 
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadData,
-        });
-
-        const uploadResult = await uploadRes.json();
-
-        if (!uploadRes.ok || !uploadResult.success) {
-          alert(uploadResult.message || "Error subiendo archivo.");
+          alert(
+            error instanceof Error ? error.message : "Error subiendo archivo.",
+          );
 
           return;
         }
-
-        archivo_url = uploadResult.url;
-
-        archivo_nombre = file.name;
-
-        archivo_size = file.size;
       }
 
       /*
