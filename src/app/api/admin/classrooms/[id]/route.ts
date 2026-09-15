@@ -65,18 +65,21 @@ export async function PUT(req: Request, { params }: Params) {
 
     const { nombre, nivel, modalidad, horario, profesor_id } = body;
 
+    const profesorId =
+      profesor_id === "" || profesor_id === "null" ? null : profesor_id;
+
     await query(
       `
-        UPDATE classrooms
-        SET
-          nombre = $1,
-          nivel = $2,
-          modalidad = $3,
-          horario = $4,
-          profesor_id = $5
-        WHERE id = $6
-      `,
-      [nombre, nivel, modalidad, horario, profesor_id, id],
+    UPDATE classrooms
+    SET
+      nombre = $1,
+      nivel = $2,
+      modalidad = $3,
+      horario = $4,
+      profesor_id = $5
+    WHERE id = $6
+  `,
+      [nombre, nivel, modalidad, horario, profesorId, id],
     );
 
     return NextResponse.json({

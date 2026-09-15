@@ -131,7 +131,6 @@ export default function CreateTeacherPage() {
           <Input
             label="Contraseña"
             name="password"
-            type="password"
             value={formData.password}
             onChange={handleChange}
             required

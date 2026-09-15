@@ -49,7 +49,13 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          profesor_id:
+            formData.profesor_id === "" || formData.profesor_id === "null"
+              ? null
+              : formData.profesor_id,
+        }),
       });
 
       const data = await res.json();
@@ -228,7 +234,6 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
                 name="profesor_id"
                 value={formData.profesor_id}
                 onChange={handleChange}
-                required
                 className="
                   w-full
                   h-14
@@ -246,6 +251,7 @@ export default function EditClassroomForm({ classroom, teachers }: Props) {
                     {teacher.nombre} {teacher.apellido}
                   </option>
                 ))}
+
                 <option value="null">Sin profesor</option>
               </select>
             </div>

@@ -94,7 +94,6 @@ export default function EditTeacherForm({ teacher }: { teacher: any }) {
           />
 
           <input
-            type="password"
             name="password"
             placeholder="Nueva contraseña (opcional)"
             value={formData.password}
