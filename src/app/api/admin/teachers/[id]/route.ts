@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { cookies } from "next/headers";
+import { getClient } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 type Params = {
@@ -119,29 +121,192 @@ export async function PUT(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-  try {
-    const { id } = await params;
+  const { id: teacherId } = await params;
 
-    await query(
+  const client = await getClient();
+
+  try {
+    /*
+    =====================================================
+    1. AUTENTICACIÓN
+    =====================================================
+    */
+
+    const cookieStore = await cookies();
+
+    const userId = cookieStore.get("user_id")?.value;
+    const role = cookieStore.get("role")?.value;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No autenticado",
+        },
+        { status: 401 },
+      );
+    }
+
+    /*
+    =====================================================
+    2. VERIFICAR QUE SEA ADMINISTRADOR
+    =====================================================
+    */
+
+    if (role !== "admin") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No tienes permisos para eliminar profesores",
+        },
+        { status: 403 },
+      );
+    }
+
+    /*
+    =====================================================
+    3. VERIFICAR QUE EL PROFESOR EXISTA
+    =====================================================
+    */
+
+    const teacherResult = await client.query(
       `
-        DELETE FROM teachers
-        WHERE id = $1
+      SELECT
+        id,
+        nombre,
+        apellido,
+        email
+      FROM teachers
+      WHERE id = $1
       `,
-      [id],
+      [teacherId],
     );
+
+    if (teacherResult.rowCount === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "El profesor no existe",
+        },
+        { status: 404 },
+      );
+    }
+
+    const teacher = teacherResult.rows[0];
+
+    /*
+    =====================================================
+    INICIAR TRANSACCIÓN
+    =====================================================
+    */
+
+    await client.query("BEGIN");
+
+    /*
+    =====================================================
+    4. SACAR AL PROFESOR DE SUS CURSOS
+    =====================================================
+
+    No eliminamos los cursos.
+
+    Simplemente dejamos profesor_id en NULL.
+    */
+
+    await client.query(
+      `
+      UPDATE classrooms
+      SET profesor_id = NULL
+      WHERE profesor_id = $1
+      `,
+      [teacherId],
+    );
+
+    /*
+    =====================================================
+    5. ELIMINAR OTRAS RELACIONES DEL PROFESOR
+    =====================================================
+
+    Estas consultas dependen de las tablas que tengas
+    relacionadas con teachers.
+
+    Por ahora NO las agregamos sin ver tu estructura,
+    para no borrar información incorrectamente.
+    */
+
+    /*
+    =====================================================
+    6. ELIMINAR PROFESOR
+    =====================================================
+    */
+
+    const deleteTeacherResult = await client.query(
+      `
+      DELETE FROM teachers
+      WHERE id = $1
+      RETURNING id
+      `,
+      [teacherId],
+    );
+
+    if (deleteTeacherResult.rowCount === 0) {
+      throw new Error("No se pudo eliminar el profesor");
+    }
+
+    /*
+    =====================================================
+    7. CONFIRMAR TRANSACCIÓN
+    =====================================================
+    */
+
+    await client.query("COMMIT");
+
+    /*
+    =====================================================
+    RESPUESTA
+    =====================================================
+    */
 
     return NextResponse.json({
       success: true,
+      message: "Profesor eliminado correctamente",
+      teacher: {
+        id: teacher.id,
+        nombre: teacher.nombre,
+        apellido: teacher.apellido,
+        email: teacher.email,
+      },
     });
   } catch (error) {
-    console.error(error);
+    /*
+    =====================================================
+    ROLLBACK
+    =====================================================
+    */
+
+    try {
+      await client.query("ROLLBACK");
+    } catch (rollbackError) {
+      console.error("Error haciendo rollback:", rollbackError);
+    }
+
+    console.error("Error eliminando profesor:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Error eliminando profesor",
+        message: "Error eliminando el profesor",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
+  } finally {
+    /*
+    =====================================================
+    LIBERAR CLIENTE
+    =====================================================
+    */
+
+    client.release();
   }
 }

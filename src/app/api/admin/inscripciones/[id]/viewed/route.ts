@@ -10,11 +10,12 @@ type Params = {
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
+    console.log("ID recibido en la ruta PATCH:", id);
 
     await query(
       `
-      UPDATE inscripciones
-      SET visto = true
+      UPDATE inscriptions
+      SET estado = 'visto'
       WHERE id = $1
       `,
       [id],

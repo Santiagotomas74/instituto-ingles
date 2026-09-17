@@ -15,6 +15,7 @@ import {
   Calendar,
   ArrowLeft,
   IdCard,
+  Trash2,
 } from "lucide-react";
 
 type Teacher = {
@@ -53,7 +54,34 @@ export default function AdminTeachersPage() {
       .toLowerCase()
       .includes(search.toLowerCase()),
   );
+  const handleDeleteTeacher = async (teacherId: string) => {
+    const confirmed = window.confirm(
+      "¿Estás seguro de que querés eliminar este profesor?",
+    );
 
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/admin/teachers/${teacherId}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.message || "No se pudo eliminar el profesor.");
+        return;
+      }
+
+      setTeachers((currentTeachers) =>
+        currentTeachers.filter((teacher) => teacher.id !== teacherId),
+      );
+    } catch (error) {
+      console.error("Error eliminando profesor:", error);
+
+      alert("Error eliminando profesor.");
+    }
+  };
   return (
     <main className="min-h-screen bg-slate-100 flex">
       {/* SIDEBAR FIJO */}
@@ -331,7 +359,11 @@ export default function AdminTeachersPage() {
             "
             >
               {filteredTeachers.map((teacher) => (
-                <TeacherCard key={teacher.id} teacher={teacher} />
+                <TeacherCard
+                  key={teacher.id}
+                  teacher={teacher}
+                  onDelete={handleDeleteTeacher}
+                />
               ))}
             </div>
           )}
@@ -343,7 +375,13 @@ export default function AdminTeachersPage() {
 
 /* COMPONENTS */
 
-function TeacherCard({ teacher }: { teacher: Teacher }) {
+function TeacherCard({
+  teacher,
+  onDelete,
+}: {
+  teacher: Teacher;
+  onDelete: (teacherId: string) => void;
+}) {
   return (
     <div
       className="
@@ -424,39 +462,79 @@ function TeacherCard({ teacher }: { teacher: Teacher }) {
               Nacimiento
             </p>
             <p className="font-semibold text-slate-700">
-              {new Date(teacher.fecha_nacimiento).toLocaleDateString("es-AR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
+              {(() => {
+                const [year, month, day] = teacher.fecha_nacimiento
+                  .split("T")[0]
+                  .split("-");
+
+                const months = [
+                  "enero",
+                  "febrero",
+                  "marzo",
+                  "abril",
+                  "mayo",
+                  "junio",
+                  "julio",
+                  "agosto",
+                  "septiembre",
+                  "octubre",
+                  "noviembre",
+                  "diciembre",
+                ];
+
+                return `${day} de ${months[Number(month) - 1]} de ${year}`;
+              })()}
             </p>
           </div>
         </div>
       </div>
 
       {/* ACTION */}
-      <div className="pt-2 mt-auto">
+      {/* ACTION */}
+      <div className="pt-2 mt-auto grid grid-cols-2 gap-3">
         <Link
           href={`/admin/teachers/edit/${teacher.id}`}
           className="
-            w-full
-            h-14
-            rounded-2xl
-            bg-slate-900
-            hover:bg-slate-800
-            transition-colors
-            text-white
-            font-semibold
-            flex
-            items-center
-            justify-center
-            gap-3
-            shadow-md
-          "
+      h-14
+      rounded-2xl
+      bg-slate-900
+      hover:bg-slate-800
+      transition-colors
+      text-white
+      font-semibold
+      flex
+      items-center
+      justify-center
+      gap-3
+      shadow-md
+    "
         >
           <Pencil className="w-5 h-5" />
-          Editar Profesor
+          Editar
         </Link>
+
+        <button
+          type="button"
+          onClick={() => onDelete(teacher.id)}
+          className="
+      h-14
+      rounded-2xl
+      bg-red-50
+      hover:bg-red-100
+      border
+      border-red-200
+      text-red-600
+      transition-colors
+      font-semibold
+      flex
+      items-center
+      justify-center
+      gap-3
+    "
+        >
+          <Trash2 className="w-5 h-5" />
+          Eliminar
+        </button>
       </div>
     </div>
   );

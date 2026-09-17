@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
 import { Mail, Phone, Clock3, Eye, EyeOff } from "lucide-react";
@@ -11,7 +14,7 @@ type Inscription = {
   telefono: string;
   curso: string;
   mensaje: string;
-  visto: boolean;
+  estado: "pendiente" | "visto";
   created_at: string;
 };
 
@@ -20,6 +23,37 @@ type Props = {
 };
 
 export default function InscriptionCard({ inscription }: Props) {
+  const [estado, setEstado] = useState(inscription.estado);
+  const [loading, setLoading] = useState(false);
+
+  const handleMarcarComoVisto = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `/api/admin/inscripciones/${inscription.id}/viewed`,
+        {
+          method: "PATCH",
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.message || "No se pudo marcar la inscripción como vista.");
+        return;
+      }
+
+      setEstado("visto");
+    } catch (error) {
+      console.error("Error marcando inscripción como vista:", error);
+
+      alert("Error al actualizar la inscripción.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
       className="
@@ -52,7 +86,7 @@ export default function InscriptionCard({ inscription }: Props) {
             </p>
           </div>
 
-          {inscription.visto ? (
+          {estado === "visto" ? (
             <span
               className="
                 px-4
@@ -265,8 +299,12 @@ export default function InscriptionCard({ inscription }: Props) {
           </Link>
         </div>
 
-        {!inscription.visto && (
+        {/* MARCAR COMO VISTO */}
+        {estado === "pendiente" && (
           <button
+            type="button"
+            onClick={handleMarcarComoVisto}
+            disabled={loading}
             className="
               w-full
               h-12
@@ -277,9 +315,11 @@ export default function InscriptionCard({ inscription }: Props) {
               transition
               font-semibold
               text-slate-700
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
           >
-            Marcar como visto
+            {loading ? "Guardando..." : "Marcar como visto"}
           </button>
         )}
       </div>
