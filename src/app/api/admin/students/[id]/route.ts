@@ -61,7 +61,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
 
     const body = await req.json();
 
-    const { nombre, apellido, email, dni, nivel, status } = body;
+    const { nombre, apellido, dni, nivel, status } = body;
 
     await query(
       `
@@ -69,13 +69,12 @@ export async function PUT(req: NextRequest, { params }: Params) {
       SET
         nombre = $1,
         apellido = $2,
-        email = $3,
-        dni = $4,
-        nivel = $5,
-        status = $6
-      WHERE id = $7
+        dni = $3,
+        nivel = $4,
+        status = $5
+      WHERE id = $6
       `,
-      [nombre, apellido, email, dni, nivel, status, id],
+      [nombre, apellido, dni, nivel, status, id],
     );
 
     return NextResponse.json({

@@ -15,7 +15,6 @@ export default function EditStudentForm({ student }: Props) {
   const [formData, setFormData] = useState({
     nombre: student.nombre || "",
     apellido: student.apellido || "",
-    email: student.email || "",
     dni: student.dni || "",
     nivel: student.nivel || "",
     status: student.status || "active",
