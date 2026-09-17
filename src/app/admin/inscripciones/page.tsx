@@ -24,6 +24,7 @@ type Inscription = {
   mensaje: string;
   visto: boolean;
   created_at: string;
+  estado: "pendiente" | "visto";
 };
 
 export default async function InscriptionsAdminPage() {
@@ -42,9 +43,9 @@ export default async function InscriptionsAdminPage() {
   return (
     <main className="min-h-screen bg-slate-100 flex">
       {/* SIDEBAR FIJO */}
-            <aside className="sticky top-0 h-screen shrink-0">
-              <AdminSidebar />
-            </aside>
+      <aside className="sticky top-0 h-screen shrink-0">
+        <AdminSidebar />
+      </aside>
 
       <div className="flex-1 min-w-0">
         <header className="sticky top-0 z-30 ">
