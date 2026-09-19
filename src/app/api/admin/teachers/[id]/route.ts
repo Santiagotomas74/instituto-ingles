@@ -207,9 +207,9 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     4. SACAR AL PROFESOR DE SUS CURSOS
     =====================================================
 
-    No eliminamos los cursos.
+    Los cursos NO se eliminan.
 
-    Simplemente dejamos profesor_id en NULL.
+    Solamente se deja profesor_id en NULL.
     */
 
     await client.query(
@@ -223,19 +223,64 @@ export async function DELETE(req: NextRequest, { params }: Params) {
 
     /*
     =====================================================
-    5. ELIMINAR OTRAS RELACIONES DEL PROFESOR
+    5. ELIMINAR MATERIALES CREADOS POR EL PROFESOR
     =====================================================
+    */
 
-    Estas consultas dependen de las tablas que tengas
-    relacionadas con teachers.
+    await client.query(
+      `
+      DELETE FROM classroom_materials
+      WHERE created_by = $1
+      `,
+      [teacherId],
+    );
 
-    Por ahora NO las agregamos sin ver tu estructura,
-    para no borrar información incorrectamente.
+    /*
+    =====================================================
+    6. ELIMINAR ANUNCIOS CREADOS POR EL PROFESOR
+
+       await client.query(
+      `
+      DELETE FROM classroom_announcements
+      WHERE created_by = $1
+      `,
+      [teacherId],
+    );
+    =====================================================
     */
 
     /*
     =====================================================
-    6. ELIMINAR PROFESOR
+    7. ELIMINAR TAREAS CREADAS POR EL PROFESOR
+    =====================================================
+    */
+
+    await client.query(
+      `
+      DELETE FROM classroom_tasks
+      WHERE created_by = $1
+      `,
+      [teacherId],
+    );
+
+    /*
+    =====================================================
+    8. ELIMINAR FECHAS CREADAS POR EL PROFESOR
+
+     await client.query(
+      `
+      DELETE FROM classroom_dates
+      WHERE created_by = $1
+      `,
+      [teacherId],
+    );
+
+    =====================================================
+    */
+
+    /*
+    =====================================================
+    9. ELIMINAR PROFESOR
     =====================================================
     */
 
@@ -254,7 +299,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
 
     /*
     =====================================================
-    7. CONFIRMAR TRANSACCIÓN
+    10. CONFIRMAR TRANSACCIÓN
     =====================================================
     */
 

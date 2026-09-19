@@ -556,9 +556,10 @@ export default function NotificationBell() {
               )}
             </div>
 
-            {/* FOOTER */}
-
-            {notifications.length > 0 && (
+            {/* FOOTER
+            
+            
+             {notifications.length > 0 && (
               <div
                 className="
                   shrink-0
@@ -585,7 +586,7 @@ export default function NotificationBell() {
                   Ver todas las notificaciones
                 </button>
               </div>
-            )}
+            )}*/}
           </div>
         </>
       )}

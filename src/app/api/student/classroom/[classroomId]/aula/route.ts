@@ -9,6 +9,8 @@ export async function GET(
   try {
     const { classroomId } = await params;
 
+    console.log("classroomId:", classroomId);
+
     const result = await query(
       `
       SELECT
@@ -16,9 +18,13 @@ export async function GET(
         c.nombre,
         c.nivel,
         c.horario,
-        CONCAT(t.nombre, ' ', t.apellido) AS teacher
+        CASE
+          WHEN t.id IS NOT NULL
+          THEN CONCAT(t.nombre, ' ', t.apellido)
+          ELSE NULL
+        END AS teacher
       FROM classrooms c
-      INNER JOIN teachers t
+      LEFT JOIN teachers t
         ON t.id = c.profesor_id
       WHERE c.id = $1
       `,

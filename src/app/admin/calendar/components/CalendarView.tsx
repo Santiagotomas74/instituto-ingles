@@ -9,17 +9,19 @@ import {
   X,
   Clock3,
   School,
+  Trash2,
 } from "lucide-react";
 
 import { CalendarEvent } from "../types";
 
 type Props = {
   events: CalendarEvent[];
+  onEventDeleted?: (eventId: string) => void;
 };
-
-export default function CalendarView({ events }: Props) {
+export default function CalendarView({ events, onEventDeleted }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -76,6 +78,37 @@ export default function CalendarView({ events }: Props) {
   for (let i = 1; i <= totalDays; i++) {
     days.push(i);
   }
+
+  const handleDeleteEvent = async (eventId: string) => {
+    const confirmed = window.confirm(
+      "¿Estás seguro de que querés eliminar esta fecha importante?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingEventId(eventId);
+
+      const res = await fetch(`/api/admin/calendar/${eventId}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.message || "No se pudo eliminar la fecha importante.");
+        return;
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error eliminando fecha importante:", error);
+
+      alert("Error eliminando la fecha importante.");
+    } finally {
+      setDeletingEventId(null);
+    }
+  };
 
   return (
     <section className="relative border rounded-2xl sm:rounded-[32px] p-4 sm:p-6 bg-white shadow-sm">
@@ -462,12 +495,12 @@ export default function CalendarView({ events }: Props) {
                   <div className="flex items-start gap-3">
                     <div
                       className="
-                        w-2
-                        min-h-[48px]
-                        rounded-full
-                        bg-blue-500
-                        shrink-0
-                      "
+      w-2
+      min-h-[48px]
+      rounded-full
+      bg-blue-500
+      shrink-0
+    "
                     />
 
                     <div className="min-w-0 flex-1">
@@ -488,6 +521,42 @@ export default function CalendarView({ events }: Props) {
                           </span>
                         )}
                       </div>
+
+                      {/* BOTÓN ELIMINAR */}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteEvent(event.id)}
+                        disabled={deletingEventId === event.id}
+                        className="
+        mt-4
+        w-full
+        sm:w-auto
+        inline-flex
+        items-center
+        justify-center
+        gap-2
+        rounded-xl
+        border
+        border-red-200
+        bg-red-50
+        px-4
+        py-2.5
+        text-sm
+        font-semibold
+        text-red-600
+        transition
+        hover:bg-red-100
+        hover:border-red-300
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+      "
+                      >
+                        <Trash2 className="w-4 h-4" />
+
+                        {deletingEventId === event.id
+                          ? "Eliminando..."
+                          : "Eliminar fecha"}
+                      </button>
                     </div>
                   </div>
                 </div>
