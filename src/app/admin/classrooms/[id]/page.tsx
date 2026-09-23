@@ -32,16 +32,18 @@ export default async function ClassroomDetailPage({ params }: Props) {
       ),
     ]);
 
+  // Si la petición del aula falla, no podemos mostrar la página
   if (!classroomRes.ok) {
     notFound();
   }
 
+  // Parseamos a JSON de forma segura verificando res.ok para evitar el crasheo por 404 (HTML)
   const [classroomData, materialsData, studentsData, announcementsData] =
     await Promise.all([
       classroomRes.json(),
-      materialsRes.json(),
-      studentsRes.json(),
-      announcementsRes.json(),
+      materialsRes.ok ? materialsRes.json() : { materials: [] },
+      studentsRes.ok ? studentsRes.json() : { students: [] },
+      announcementsRes.ok ? announcementsRes.json() : { announcements: [] },
     ]);
 
   const classroom = classroomData.classroom;

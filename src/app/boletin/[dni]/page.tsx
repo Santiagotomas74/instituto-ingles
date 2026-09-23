@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   Building2,
   Lock,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -85,6 +86,11 @@ export default async function StudentBoletinPage({ params }: Props) {
   }
 
   const boletin = data.boletin;
+  const tieneExamenFinal =
+    boletin.mes_exam_final ||
+    boletin.written_exam_final !== null ||
+    boletin.oral_exam_final !== null ||
+    boletin.average_exam_final;
 
   return (
     <>
@@ -243,6 +249,118 @@ export default async function StudentBoletinPage({ params }: Props) {
               <InfoCard title="Promedio" value={String(boletin.promedio)} /> */}
               </div>
             </section>
+
+            {/* Examen Final */}
+            {tieneExamenFinal && (
+              <section className="mt-14">
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="
+          w-12
+          h-12
+          rounded-2xl
+          bg-violet-100
+          text-violet-700
+          flex
+          items-center
+          justify-center
+        "
+                  >
+                    <FileText className="w-6 h-6" />
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Examen final
+                    </h2>
+
+                    <p className="text-gray-500">
+                      Resultado del examen final del alumno
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                  {/* Mes */}
+                  <div
+                    className="
+          bg-violet-50
+          border
+          border-violet-100
+          rounded-3xl
+          p-6
+        "
+                  >
+                    <p className="text-sm text-violet-600 mb-2 font-medium">
+                      Mes del examen
+                    </p>
+
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {boletin.mes_exam_final || "—"}
+                    </h3>
+                  </div>
+
+                  {/* Written Exam */}
+                  <div
+                    className="
+          bg-violet-50
+          border
+          border-violet-100
+          rounded-3xl
+          p-6
+        "
+                  >
+                    <p className="text-sm text-violet-600 mb-2 font-medium">
+                      Written Exam
+                    </p>
+
+                    <h3 className="text-3xl font-bold text-gray-900">
+                      {boletin.written_exam_final ?? "—"}
+                    </h3>
+                  </div>
+
+                  {/* Oral Exam */}
+                  <div
+                    className="
+          bg-violet-50
+          border
+          border-violet-100
+          rounded-3xl
+          p-6
+        "
+                  >
+                    <p className="text-sm text-violet-600 mb-2 font-medium">
+                      Oral Exam
+                    </p>
+
+                    <h3 className="text-3xl font-bold text-gray-900">
+                      {boletin.oral_exam_final ?? "—"}
+                    </h3>
+                  </div>
+
+                  {/* Average */}
+                  <div
+                    className="
+          bg-gradient-to-br
+          from-violet-600
+          to-purple-600
+          text-white
+          rounded-3xl
+          p-6
+          shadow-lg
+        "
+                  >
+                    <p className="text-sm text-violet-100 mb-2 font-medium">
+                      Average Exam
+                    </p>
+
+                    <h3 className="text-4xl font-bold">
+                      {boletin.average_exam_final || "—"}
+                    </h3>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* Grades */}
             <section className="mt-14">

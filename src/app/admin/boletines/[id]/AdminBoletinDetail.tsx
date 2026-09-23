@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -11,6 +12,7 @@ import {
   FileText,
   UserCheck,
   CheckCircle2,
+  Save,
 } from "lucide-react";
 
 export type AdminBoletin = {
@@ -70,7 +72,14 @@ export type AdminBoletin = {
 
   behaviour_final: string | null;
   observaciones_final: string | null;
+  /*
+  EXAMEN FINAL
+  */
 
+  mes_exam_final: string | null;
+  written_exam_final: number | null;
+  oral_exam_final: number | null;
+  average_exam_final: string | null;
   /*
   FIRMA DEL PROFESOR
   */
@@ -114,6 +123,60 @@ function formatBehaviour(value: string | null | undefined) {
 export default function AdminBoletinDetail({
   boletin,
 }: AdminBoletinDetailProps) {
+  const [mesExamFinal, setMesExamFinal] = useState(
+    boletin.mes_exam_final ?? "",
+  );
+
+  const [writtenExamFinal, setWrittenExamFinal] = useState(
+    boletin.written_exam_final?.toString() ?? "",
+  );
+
+  const [oralExamFinal, setOralExamFinal] = useState(
+    boletin.oral_exam_final?.toString() ?? "",
+  );
+
+  const [averageExamFinal, setAverageExamFinal] = useState(
+    boletin.average_exam_final ?? "",
+  );
+
+  const [savingExamFinal, setSavingExamFinal] = useState(false);
+
+  const handleSaveExamFinal = async () => {
+    try {
+      setSavingExamFinal(true);
+
+      const response = await fetch(`/api/admin/boletines/${boletin.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mes_exam_final: mesExamFinal || null,
+          written_exam_final:
+            writtenExamFinal === "" ? null : Number(writtenExamFinal),
+          oral_exam_final: oralExamFinal === "" ? null : Number(oralExamFinal),
+          average_exam_final: averageExamFinal || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        alert(
+          data.message || "No se pudieron guardar los datos del examen final.",
+        );
+        return;
+      }
+
+      alert("Datos del examen final guardados correctamente.");
+    } catch (error) {
+      console.error("Error guardando examen final:", error);
+
+      alert("Ocurrió un error al guardar los datos.");
+    } finally {
+      setSavingExamFinal(false);
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-10">
       {/* =====================================================
@@ -757,6 +820,327 @@ export default function AdminBoletinDetail({
             >
               {boletin.observaciones_final || "-"}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================
+    EXAMEN FINAL
+===================================================== */}
+
+      <section
+        className="
+    bg-white
+    border
+    border-slate-200
+    rounded-3xl
+    shadow-sm
+    overflow-hidden
+  "
+      >
+        <div
+          className="
+      border-b
+      border-slate-200
+      bg-slate-50
+      px-6
+      py-5
+      flex
+      items-center
+      gap-3
+    "
+        >
+          <div
+            className="
+        w-11
+        h-11
+        rounded-2xl
+        bg-violet-100
+        flex
+        items-center
+        justify-center
+      "
+          >
+            <FileText size={22} className="text-violet-600" />
+          </div>
+
+          <div>
+            <h2 className="font-bold text-slate-900">Examen final</h2>
+
+            <p className="text-sm text-slate-500">
+              Información correspondiente al examen final del alumno.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* CAMPOS */}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* MES */}
+
+            <div>
+              <label
+                htmlFor="mes_exam_final"
+                className="
+            block
+            text-xs
+            font-semibold
+            text-slate-500
+            uppercase
+            tracking-wide
+            mb-2
+          "
+              >
+                Mes del examen
+              </label>
+
+              <select
+                id="mes_exam_final"
+                value={mesExamFinal}
+                onChange={(e) => setMesExamFinal(e.target.value)}
+                className="
+            w-full
+            h-12
+            px-4
+            rounded-xl
+            border
+            border-slate-200
+            bg-white
+            text-sm
+            text-slate-700
+            outline-none
+            focus:border-violet-400
+            focus:ring-2
+            focus:ring-violet-100
+            transition
+          "
+              >
+                <option value="">Seleccionar mes</option>
+
+                <option value="Enero">Enero</option>
+                <option value="Febrero">Febrero</option>
+                <option value="Marzo">Marzo</option>
+                <option value="Abril">Abril</option>
+                <option value="Mayo">Mayo</option>
+                <option value="Junio">Junio</option>
+                <option value="Julio">Julio</option>
+                <option value="Agosto">Agosto</option>
+                <option value="Septiembre">Septiembre</option>
+                <option value="Octubre">Octubre</option>
+                <option value="Noviembre">Noviembre</option>
+                <option value="Diciembre">Diciembre</option>
+              </select>
+            </div>
+
+            {/* WRITTEN */}
+
+            <div>
+              <label
+                htmlFor="written_exam_final"
+                className="
+            block
+            text-xs
+            font-semibold
+            text-slate-500
+            uppercase
+            tracking-wide
+            mb-2
+          "
+              >
+                Written Exam
+              </label>
+
+              <input
+                id="written_exam_final"
+                type="number"
+                step="0.01"
+                min="0"
+                value={writtenExamFinal}
+                onChange={(e) => setWrittenExamFinal(e.target.value)}
+                placeholder="Ej: 8"
+                className="
+            w-full
+            h-12
+            px-4
+            rounded-xl
+            border
+            border-slate-200
+            bg-white
+            text-sm
+            text-slate-700
+            outline-none
+            focus:border-violet-400
+            focus:ring-2
+            focus:ring-violet-100
+            transition
+          "
+              />
+            </div>
+
+            {/* ORAL */}
+
+            <div>
+              <label
+                htmlFor="oral_exam_final"
+                className="
+            block
+            text-xs
+            font-semibold
+            text-slate-500
+            uppercase
+            tracking-wide
+            mb-2
+          "
+              >
+                Oral Exam
+              </label>
+
+              <input
+                id="oral_exam_final"
+                type="number"
+                step="0.01"
+                min="0"
+                value={oralExamFinal}
+                onChange={(e) => setOralExamFinal(e.target.value)}
+                placeholder="Ej: 9"
+                className="
+            w-full
+            h-12
+            px-4
+            rounded-xl
+            border
+            border-slate-200
+            bg-white
+            text-sm
+            text-slate-700
+            outline-none
+            focus:border-violet-400
+            focus:ring-2
+            focus:ring-violet-100
+            transition
+          "
+              />
+            </div>
+
+            {/* AVERAGE */}
+
+            <div>
+              <label
+                htmlFor="average_exam_final"
+                className="
+            block
+            text-xs
+            font-semibold
+            text-slate-500
+            uppercase
+            tracking-wide
+            mb-2
+          "
+              >
+                Average Exam
+              </label>
+
+              <input
+                id="average_exam_final"
+                type="text"
+                value={averageExamFinal}
+                onChange={(e) => setAverageExamFinal(e.target.value)}
+                placeholder="Ej: Fail, Approve, etc."
+                className="
+            w-full
+            h-12
+            px-4
+            rounded-xl
+            border
+            border-slate-200
+            bg-white
+            text-sm
+            text-slate-700
+            outline-none
+            focus:border-violet-400
+            focus:ring-2
+            focus:ring-violet-100
+            transition
+          "
+              />
+            </div>
+          </div>
+
+          {/* RESUMEN */}
+
+          <div
+            className="
+        rounded-2xl
+        bg-violet-50
+        border
+        border-violet-100
+        p-5
+      "
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <p className="text-xs font-semibold text-violet-600 uppercase tracking-wide">
+                  Mes
+                </p>
+
+                <p className="text-lg font-bold text-black mt-1">
+                  {mesExamFinal || "-"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold text-violet-600 uppercase tracking-wide">
+                  Written
+                </p>
+
+                <p className="text-lg font-bold text-black mt-1">
+                  {writtenExamFinal || "-"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold text-violet-600 uppercase tracking-wide">
+                  Oral
+                </p>
+
+                <p className="text-lg font-bold text-black mt-1">
+                  {oralExamFinal || "-"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* GUARDAR */}
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleSaveExamFinal}
+              disabled={savingExamFinal}
+              className="
+          h-12
+          px-6
+          rounded-xl
+          bg-violet-600
+          hover:bg-violet-700
+          text-black
+         
+          font-semibold
+          transition
+          flex
+          items-center
+          justify-center
+          gap-2
+          shadow-sm
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+        "
+            >
+              <Save size={18} />
+
+              {savingExamFinal ? "Guardando..." : "Guardar examen final"}
+            </button>
           </div>
         </div>
       </section>

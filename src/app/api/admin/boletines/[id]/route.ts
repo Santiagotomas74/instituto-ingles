@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { query } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
 type Context = {
   params: Promise<{
@@ -158,6 +158,186 @@ export async function GET(request: Request, { params }: Context) {
       {
         status: 500,
       },
+    );
+  }
+}
+
+type Params = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export async function PATCH(req: NextRequest, { params }: Params) {
+  try {
+    const { id } = await params;
+
+    // =====================================================
+    // AUTENTICACIÓN
+    // =====================================================
+
+    const cookieStore = await cookies();
+
+    const userId = cookieStore.get("user_id")?.value;
+    const role = cookieStore.get("role")?.value;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No autenticado.",
+        },
+        { status: 401 },
+      );
+    }
+
+    if (role !== "admin") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No tienes permisos para modificar este boletín.",
+        },
+        { status: 403 },
+      );
+    }
+
+    // =====================================================
+    // BODY
+    // =====================================================
+
+    const body = await req.json();
+
+    const {
+      mes_exam_final,
+      written_exam_final,
+      oral_exam_final,
+      average_exam_final,
+    } = body;
+
+    // =====================================================
+    // VALIDACIÓN DEL BOLETÍN
+    // =====================================================
+
+    const boletinResult = await query(
+      `
+      SELECT id
+      FROM boletines
+      WHERE id = $1
+      `,
+      [id],
+    );
+
+    if (boletinResult.rows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Boletín no encontrado.",
+        },
+        { status: 404 },
+      );
+    }
+
+    // =====================================================
+    // NORMALIZACIÓN
+    // =====================================================
+
+    const mesExamFinal =
+      mes_exam_final === "" ? null : (mes_exam_final ?? null);
+
+    const writtenExamFinal =
+      written_exam_final === "" ||
+      written_exam_final === null ||
+      written_exam_final === undefined
+        ? null
+        : Number(written_exam_final);
+
+    const oralExamFinal =
+      oral_exam_final === "" ||
+      oral_exam_final === null ||
+      oral_exam_final === undefined
+        ? null
+        : Number(oral_exam_final);
+
+    const averageExamFinal =
+      average_exam_final === "" ? null : (average_exam_final ?? null);
+
+    // =====================================================
+    // VALIDACIÓN DE NÚMEROS
+    // =====================================================
+
+    if (writtenExamFinal !== null && Number.isNaN(writtenExamFinal)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Written Exam debe ser un número válido.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (oralExamFinal !== null && Number.isNaN(oralExamFinal)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Oral Exam debe ser un número válido.",
+        },
+        { status: 400 },
+      );
+    }
+
+    // =====================================================
+    // UPDATE
+    // =====================================================
+
+    const result = await query(
+      `
+      UPDATE boletines
+      SET
+        mes_exam_final = $1,
+        written_exam_final = $2,
+        oral_exam_final = $3,
+        average_exam_final = $4,
+        updated_at = NOW()
+      WHERE id = $5
+      RETURNING
+        id,
+        mes_exam_final,
+        written_exam_final,
+        oral_exam_final,
+        average_exam_final,
+        updated_at
+      `,
+      [mesExamFinal, writtenExamFinal, oralExamFinal, averageExamFinal, id],
+    );
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "No se pudo actualizar el boletín.",
+        },
+        { status: 500 },
+      );
+    }
+
+    // =====================================================
+    // RESPONSE
+    // =====================================================
+
+    return NextResponse.json({
+      success: true,
+      message: "Examen final actualizado correctamente.",
+      boletin: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error actualizando examen final del boletín:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error interno del servidor.",
+      },
+      { status: 500 },
     );
   }
 }

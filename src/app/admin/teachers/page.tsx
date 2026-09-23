@@ -463,7 +463,7 @@ function TeacherCard({
             </p>
             <p className="font-semibold text-slate-700">
               {(() => {
-                const [year, month, day] = teacher.fecha_nacimiento
+                const [year, month, day] = (teacher.fecha_nacimiento ?? "")
                   .split("T")[0]
                   .split("-");
 
