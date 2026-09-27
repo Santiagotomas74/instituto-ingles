@@ -56,13 +56,13 @@ export default function CalendarView({ events, onEventDeleted }: Props) {
 
   const getEventsByDay = (day: number) => {
     return events.filter((event) => {
-      const date = new Date(event.fecha);
+      if (!event.fecha) return false;
 
-      return (
-        date.getDate() === day &&
-        date.getMonth() === month &&
-        date.getFullYear() === year
-      );
+      const fecha = String(event.fecha).split("T")[0];
+
+      const [eventYear, eventMonth, eventDay] = fecha.split("-").map(Number);
+
+      return eventDay === day && eventMonth === month + 1 && eventYear === year;
     });
   };
 
