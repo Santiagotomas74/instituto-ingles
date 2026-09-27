@@ -17,15 +17,21 @@ type Props = {
   onEventClick?: (event: CalendarEvent) => void;
 };
 
-// Parsea fechas "YYYY-MM-DD" o ISO sin sufrir desfases por Zona Horaria / UTC
+// Parsea una fecha YYYY-MM-DD o ISO como fecha LOCAL,
+// evitando cualquier conversión UTC.
 function parseLocalDate(dateString: string): Date {
-  if (!dateString) return new Date();
-  if (dateString.includes("T")) return new Date(dateString.split("T")[0]);
-  const [year, month, day] = dateString.split("-").map(Number);
+  if (!dateString) {
+    return new Date();
+  }
+
+  const dateOnly = dateString.split("T")[0];
+
+  const [year, month, day] = dateOnly.split("-").map(Number);
+
   return new Date(year, month - 1, day);
 }
 
-// Genera una clave única de comparación local "YYYY-M-D"
+// Genera una clave única de comparación local: YYYY-M-D
 function getDateKey(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
