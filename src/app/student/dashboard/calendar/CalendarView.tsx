@@ -24,15 +24,18 @@ type Props = {
   onEventClick?: (event: CalendarEvent) => void;
 };
 
-// Helper para parsear fechas locales evitando desfases por UTC
 function parseLocalDate(dateString: string): Date {
-  if (!dateString) return new Date();
-  if (dateString.includes("T")) return new Date(dateString.split("T")[0]);
-  const [year, month, day] = dateString.split("-").map(Number);
+  if (!dateString) {
+    return new Date();
+  }
+
+  const dateOnly = dateString.split("T")[0];
+
+  const [year, month, day] = dateOnly.split("-").map(Number);
+
   return new Date(year, month - 1, day);
 }
 
-// Helper para formatear clave de comparación YYYY-M-D
 function getDateKey(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
