@@ -14,6 +14,8 @@ import {
   GraduationCap,
   X,
   AlertTriangle,
+  Filter,
+  ChevronDown,
 } from "lucide-react";
 
 import AssignClassroom from "./AssignClassroom";
@@ -47,6 +49,9 @@ export default function StudentsTable({
   const router = useRouter();
 
   const [search, setSearch] = useState("");
+  const [selectedNivel, setSelectedNivel] = useState("");
+  const [selectedClassroom, setSelectedClassroom] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -55,12 +60,30 @@ export default function StudentsTable({
   FILTRAR ESTUDIANTES
   =====================================================
   */
-  const filteredStudents = students.filter((student) =>
-    `${student.nombre} ${student.apellido} ${student.dni}`
-      .toLowerCase()
-      .includes(search.toLowerCase()),
-  );
 
+  const niveles = Array.from(
+    new Set(students.map((student) => student.nivel).filter(Boolean)),
+  ).sort();
+  const filteredStudents = students.filter((student) => {
+    const searchValue = search.trim().toLowerCase();
+
+    const matchesSearch =
+      !searchValue ||
+      `${student.nombre} ${student.apellido} ${student.dni}`
+        .toLowerCase()
+        .includes(searchValue);
+
+    const matchesNivel =
+      !selectedNivel ||
+      student.nivel?.toLowerCase() === selectedNivel.toLowerCase();
+
+    const matchesClassroom =
+      !selectedClassroom || student.classroom === selectedClassroom;
+
+    const matchesStatus = !selectedStatus || student.status === selectedStatus;
+
+    return matchesSearch && matchesNivel && matchesClassroom && matchesStatus;
+  });
   /*
   =====================================================
   ELIMINAR ESTUDIANTE
@@ -167,36 +190,401 @@ export default function StudentsTable({
         {/* =====================================================
             SEARCH & ACTIONS BAR
         ===================================================== */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+        {/* =====================================================
+    SEARCH & FILTERS
+===================================================== */}
+        <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm p-4 sm:p-5">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* BUSCAR */}
+            <div className="relative w-full lg:flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
 
-            <input
-              type="text"
-              placeholder="Buscar por nombre o DNI..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-11 rounded-xl border border-gray-200 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800 transition"
-            />
+              <input
+                type="text"
+                placeholder="Buscar por nombre, apellido o DNI..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="
+          w-full
+          h-11
+          rounded-xl
+          border
+          border-gray-200
+          pl-10
+          pr-10
+          text-sm
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500/20
+          focus:border-blue-500
+          text-gray-800
+          transition
+        "
+              />
 
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="
+            absolute
+            right-3
+            top-1/2
+            -translate-y-1/2
+            text-gray-400
+            hover:text-gray-600
+            p-1
+          "
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            {/* FILTRO NIVEL */}
+            <div className="relative w-full lg:w-48">
+              <GraduationCap
+                className="
+          absolute
+          left-3.5
+          top-1/2
+          -translate-y-1/2
+          text-gray-400
+          w-4
+          h-4
+          pointer-events-none
+        "
+              />
+
+              <select
+                value={selectedNivel}
+                onChange={(e) => setSelectedNivel(e.target.value)}
+                className="
+          w-full
+          h-11
+          appearance-none
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          pl-10
+          pr-10
+          text-sm
+          text-gray-700
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500/20
+          focus:border-blue-500
+          transition
+        "
               >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+                <option value="">Todos los niveles</option>
+
+                {niveles.map((nivel) => (
+                  <option key={nivel} value={nivel}>
+                    {nivel}
+                  </option>
+                ))}
+              </select>
+
+              <ChevronDown
+                className="
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          w-4
+          h-4
+          text-gray-400
+          pointer-events-none
+        "
+              />
+            </div>
+
+            {/* FILTRO CLASSROOM */}
+            <div className="relative w-full lg:w-52">
+              <Users
+                className="
+          absolute
+          left-3.5
+          top-1/2
+          -translate-y-1/2
+          text-gray-400
+          w-4
+          h-4
+          pointer-events-none
+        "
+              />
+
+              <select
+                value={selectedClassroom}
+                onChange={(e) => setSelectedClassroom(e.target.value)}
+                className="
+          w-full
+          h-11
+          appearance-none
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          pl-10
+          pr-10
+          text-sm
+          text-gray-700
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500/20
+          focus:border-blue-500
+          transition
+        "
+              >
+                <option value="">Todas las classrooms</option>
+
+                {classrooms.map((classroom) => (
+                  <option key={classroom.id} value={classroom.nombre}>
+                    {classroom.nombre}
+                  </option>
+                ))}
+              </select>
+
+              <ChevronDown
+                className="
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          w-4
+          h-4
+          text-gray-400
+          pointer-events-none
+        "
+              />
+            </div>
+
+            {/* FILTRO ESTADO */}
+            <div className="relative w-full lg:w-44">
+              <Filter
+                className="
+          absolute
+          left-3.5
+          top-1/2
+          -translate-y-1/2
+          text-gray-400
+          w-4
+          h-4
+          pointer-events-none
+        "
+              />
+
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="
+          w-full
+          h-11
+          appearance-none
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          pl-10
+          pr-10
+          text-sm
+          text-gray-700
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500/20
+          focus:border-blue-500
+          transition
+        "
+              >
+                <option value="">Todos los estados</option>
+                <option value="active">Activos</option>
+                <option value="pending">Pendientes</option>
+                <option value="inactive">Inactivos</option>
+              </select>
+
+              <ChevronDown
+                className="
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          w-4
+          h-4
+          text-gray-400
+          pointer-events-none
+        "
+              />
+            </div>
+
+            {/* CREAR */}
+            <Link
+              href="/admin/students/create"
+              className="
+        w-full
+        lg:w-auto
+        h-11
+        px-5
+        rounded-xl
+        bg-blue-600
+        hover:bg-blue-700
+        text-white
+        font-medium
+        flex
+        items-center
+        justify-center
+        gap-2
+        shadow-md
+        shadow-blue-500/20
+        transition
+        text-sm
+        shrink-0
+      "
+            >
+              <Plus className="w-4 h-4" />
+              Crear estudiante
+            </Link>
           </div>
 
-          <Link
-            href="/admin/students/create"
-            className="w-full sm:w-auto h-11 px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition text-sm shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            Crear estudiante
-          </Link>
+          {/* FILTROS ACTIVOS */}
+          {(search || selectedNivel || selectedClassroom || selectedStatus) && (
+            <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-2">
+              <span className="text-xs font-semibold text-gray-500 mr-1">
+                Filtros:
+              </span>
+
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="
+            inline-flex
+            items-center
+            gap-1.5
+            rounded-full
+            bg-blue-50
+            border
+            border-blue-100
+            px-3
+            py-1.5
+            text-xs
+            font-medium
+            text-blue-700
+            hover:bg-blue-100
+            transition
+          "
+                >
+                  Búsqueda: {search}
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+
+              {selectedNivel && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedNivel("")}
+                  className="
+            inline-flex
+            items-center
+            gap-1.5
+            rounded-full
+            bg-cyan-50
+            border
+            border-cyan-100
+            px-3
+            py-1.5
+            text-xs
+            font-medium
+            text-cyan-700
+            hover:bg-cyan-100
+            transition
+          "
+                >
+                  Nivel: {selectedNivel}
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+
+              {selectedClassroom && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedClassroom("")}
+                  className="
+            inline-flex
+            items-center
+            gap-1.5
+            rounded-full
+            bg-violet-50
+            border
+            border-violet-100
+            px-3
+            py-1.5
+            text-xs
+            font-medium
+            text-violet-700
+            hover:bg-violet-100
+            transition
+          "
+                >
+                  Classroom: {selectedClassroom}
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+
+              {selectedStatus && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedStatus("")}
+                  className="
+            inline-flex
+            items-center
+            gap-1.5
+            rounded-full
+            bg-emerald-50
+            border
+            border-emerald-100
+            px-3
+            py-1.5
+            text-xs
+            font-medium
+            text-emerald-700
+            hover:bg-emerald-100
+            transition
+          "
+                >
+                  Estado:{" "}
+                  {selectedStatus === "active"
+                    ? "Activo"
+                    : selectedStatus === "inactive"
+                      ? "Inactivo"
+                      : "Pendiente"}
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+
+              {/* Limpiar filtros */}
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  setSelectedNivel("");
+                  setSelectedClassroom("");
+                  setSelectedStatus("");
+                }}
+                className="
+          ml-1
+          text-xs
+          font-semibold
+          text-gray-500
+          hover:text-gray-800
+          transition
+        "
+              >
+                Limpiar filtros
+              </button>
+            </div>
+          )}
         </div>
 
         {/* =====================================================
