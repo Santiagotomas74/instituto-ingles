@@ -53,6 +53,69 @@ export default function InscriptionCard({ inscription }: Props) {
       setLoading(false);
     }
   };
+  const getWhatsappNumber = (telefono: string) => {
+    if (!telefono) return "";
+
+    // Dejamos solamente números
+    let number = telefono.replace(/\D/g, "");
+
+    /*
+     * Si ya viene con código de Argentina:
+     * 54...
+     */
+    if (number.startsWith("54")) {
+      // Si viene como 549..., ya está en formato WhatsApp
+      if (number.startsWith("549")) {
+        return number;
+      }
+
+      // Argentina + 9 para celulares
+      return `549${number.slice(2)}`;
+    }
+
+    /*
+     * Teléfono argentino ingresado con 0 adelante.
+     *
+     * Ejemplo:
+     * 01127157115
+     */
+    if (number.startsWith("0")) {
+      number = number.slice(1);
+    }
+
+    /*
+     * Si tiene 10 dígitos:
+     *
+     * 1127157115
+     *
+     * Lo interpretamos como celular argentino.
+     */
+    if (number.length === 10) {
+      return `549${number}`;
+    }
+
+    /*
+     * Si tiene 8 dígitos, puede ser un número
+     * local. En este caso agregamos el código
+     * de área de San Miguel / Buenos Aires.
+     *
+     * Ejemplo:
+     * 27157115
+     *
+     * => 5491127157115
+     */
+    if (number.length === 8) {
+      return `54911${number}`;
+    }
+
+    /*
+     * Si ya viene en otro formato internacional,
+     * lo dejamos como está.
+     */
+    return number;
+  };
+
+  const whatsappNumber = getWhatsappNumber(inscription.telefono);
 
   return (
     <div
@@ -276,8 +339,9 @@ export default function InscriptionCard({ inscription }: Props) {
           </Link>
 
           <Link
-            href={`https://wa.me/${inscription.telefono}`}
+            href={`https://wa.me/${whatsappNumber}`}
             target="_blank"
+            rel="noopener noreferrer"
             className="
               flex-1
               min-w-[180px]
