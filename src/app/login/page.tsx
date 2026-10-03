@@ -238,7 +238,7 @@ export default function CampusLoginPage() {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    placeholder="Nombre de usuario"
+                    placeholder="Nombre completo y con espacios"
                     className="
         w-full
         h-14
