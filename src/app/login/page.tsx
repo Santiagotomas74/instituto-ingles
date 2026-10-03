@@ -217,7 +217,7 @@ export default function CampusLoginPage() {
       block
     "
                 >
-                  Usuario o correo electrónico
+                  Usuario
                 </label>
 
                 <div className="relative">
