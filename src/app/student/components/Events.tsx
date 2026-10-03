@@ -62,9 +62,16 @@ export default function Events({ classroomId }: Props) {
 
     const locale = i18n.language === "en" ? "en-US" : "es-AR";
 
-    return new Date(dateStr).toLocaleDateString(locale);
-  };
+    const [year, month, day] = dateStr.split("T")[0].split("-");
 
+    if (!year || !month || !day) {
+      return "-";
+    }
+
+    return locale === "en-US"
+      ? `${month}/${day}/${year}`
+      : `${day}/${month}/${year}`;
+  };
   /*
   =====================================================
   TIPO DE FECHA

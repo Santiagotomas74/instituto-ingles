@@ -64,6 +64,8 @@ export default async function StudentDashboardLayout({
 
   const cuentaInactiva = studentStatus === "inactive";
 
+  console.log("Cuenta inactiva:", cuentaInactiva);
+
   return (
     <div className="min-h-screen bg-slate-100 flex">
       <I18nProvider>
