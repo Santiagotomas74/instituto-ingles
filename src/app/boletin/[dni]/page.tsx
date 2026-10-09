@@ -86,11 +86,43 @@ export default async function StudentBoletinPage({ params }: Props) {
   }
 
   const boletin = data.boletin;
-  const tieneExamenFinal =
-    boletin.mes_exam_final ||
-    boletin.written_exam_final !== null ||
-    boletin.oral_exam_final !== null ||
-    boletin.average_exam_final;
+
+  const fechaExamenRaw = boletin.fecha_exam_final;
+
+  const fechaExamen = fechaExamenRaw
+    ? (() => {
+        const valor = String(fechaExamenRaw).trim();
+        const fecha = valor.split("T")[0];
+
+        // PostgreSQL DATE: YYYY-MM-DD
+        const isoMatch = fecha.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+        if (isoMatch) {
+          return `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1]}`;
+        }
+
+        // Formato DD/MM/YYYY
+        const localMatch = fecha.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+        if (localMatch) {
+          return fecha;
+        }
+
+        // Formato ISO con barras u otros datos inesperados
+        return valor;
+      })()
+    : "";
+
+  const tieneExamenFinal = [
+    fechaExamenRaw,
+    boletin.written_exam_final,
+    boletin.oral_exam_final,
+    boletin.average_exam_final,
+    boletin.observacion_final,
+  ].some(
+    (value) =>
+      value !== null && value !== undefined && String(value).trim() !== "",
+  );
 
   return (
     <>
@@ -254,18 +286,7 @@ export default async function StudentBoletinPage({ params }: Props) {
             {tieneExamenFinal && (
               <section className="mt-14">
                 <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className="
-          w-12
-          h-12
-          rounded-2xl
-          bg-violet-100
-          text-violet-700
-          flex
-          items-center
-          justify-center
-        "
-                  >
+                  <div className="w-12 h-12 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center">
                     <FileText className="w-6 h-6" />
                   </div>
 
@@ -273,7 +294,6 @@ export default async function StudentBoletinPage({ params }: Props) {
                     <h2 className="text-2xl font-bold text-gray-900">
                       Examen final
                     </h2>
-
                     <p className="text-gray-500">
                       Resultado del examen final del alumno
                     </p>
@@ -281,84 +301,67 @@ export default async function StudentBoletinPage({ params }: Props) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-                  {/* Mes */}
-                  <div
-                    className="
-          bg-violet-50
-          border
-          border-violet-100
-          rounded-3xl
-          p-6
-        "
-                  >
-                    <p className="text-sm text-violet-600 mb-2 font-medium">
-                      Mes del examen
-                    </p>
+                  {/* Fecha del examen */}
+                  <div className="bg-violet-50 border border-violet-100 rounded-3xl p-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="w-5 h-5 text-violet-600" />
+
+                      <p className="text-sm text-violet-600 font-medium">
+                        Fecha del examen
+                      </p>
+                    </div>
 
                     <h3 className="text-xl font-bold text-gray-900">
-                      {boletin.mes_exam_final || "—"}
+                      {fechaExamen || "Fecha no informada"}
                     </h3>
                   </div>
 
                   {/* Written Exam */}
-                  <div
-                    className="
-          bg-violet-50
-          border
-          border-violet-100
-          rounded-3xl
-          p-6
-        "
-                  >
+                  <div className="bg-violet-50 border border-violet-100 rounded-3xl p-6">
                     <p className="text-sm text-violet-600 mb-2 font-medium">
                       Written Exam
                     </p>
-
                     <h3 className="text-3xl font-bold text-gray-900">
-                      {boletin.written_exam_final ?? "—"}
+                      {boletin.written_exam_final || "—"}
                     </h3>
                   </div>
 
                   {/* Oral Exam */}
-                  <div
-                    className="
-          bg-violet-50
-          border
-          border-violet-100
-          rounded-3xl
-          p-6
-        "
-                  >
+                  <div className="bg-violet-50 border border-violet-100 rounded-3xl p-6">
                     <p className="text-sm text-violet-600 mb-2 font-medium">
                       Oral Exam
                     </p>
-
                     <h3 className="text-3xl font-bold text-gray-900">
-                      {boletin.oral_exam_final ?? "—"}
+                      {boletin.oral_exam_final || "—"}
                     </h3>
                   </div>
 
                   {/* Average */}
-                  <div
-                    className="
-          bg-gradient-to-br
-          from-violet-600
-          to-purple-600
-          text-white
-          rounded-3xl
-          p-6
-          shadow-lg
-        "
-                  >
+                  <div className="bg-gradient-to-br from-violet-600 to-purple-600 text-white rounded-3xl p-6 shadow-lg">
                     <p className="text-sm text-violet-100 mb-2 font-medium">
                       Average Exam
                     </p>
-
                     <h3 className="text-4xl font-bold">
                       {boletin.average_exam_final || "—"}
                     </h3>
                   </div>
                 </div>
+
+                {/* Observación del examen final */}
+                {boletin.observacion_final?.trim() && (
+                  <div className="mt-5 bg-orange-50 border border-orange-100 rounded-3xl p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <BookOpen className="w-5 h-5 text-orange-700" />
+                      <h3 className="font-semibold text-orange-900">
+                        Observación del examen final
+                      </h3>
+                    </div>
+
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                      {boletin.observacion_final}
+                    </p>
+                  </div>
+                )}
               </section>
             )}
 

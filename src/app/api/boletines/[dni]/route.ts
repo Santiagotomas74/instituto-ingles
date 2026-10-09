@@ -92,7 +92,7 @@ export async function GET(request: Request, { params }: Props) {
     }
 
     const boletin = result.rows[0];
-
+    console.log("BOLETÍN ENCONTRADO:", boletin);
     /*
     =====================================================
     RESPUESTA
