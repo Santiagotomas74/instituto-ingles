@@ -12,6 +12,29 @@ import ImportantDateModal from "./ImportantDateModal";
 type Props = {
   classroomId: string;
 };
+function formatDate(date: string | Date): string {
+  const value = String(date);
+
+  // Para fechas SQL/ISO del tipo YYYY-MM-DD,
+  // conservar el día sin aplicar conversiones de zona horaria.
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+  if (match) {
+    const [, year, month, day] = match;
+    return `${day}/${month}/${year}`;
+  }
+
+  // Compatibilidad con fechas que incluyen otro formato o timestamp.
+  const parsed = new Date(value);
+
+  if (Number.isNaN(parsed.getTime())) {
+    return "Fecha inválida";
+  }
+
+  return parsed.toLocaleDateString("es-AR", {
+    timeZone: "America/Argentina/Buenos_Aires",
+  });
+}
 
 export default function ImportantDatesTab({ classroomId }: Props) {
   const [dates, setDates] = useState<ImportantDate[]>([]);
@@ -35,6 +58,7 @@ export default function ImportantDatesTab({ classroomId }: Props) {
       }
 
       const data = await res.json();
+      console.log("data", data);
 
       setDates(data.importantDates ?? []);
     } catch (error) {
@@ -290,9 +314,7 @@ text-sm
 text-slate-500
 "
                   >
-                    <span>
-                      📅 {new Date(date.fecha).toLocaleDateString("es-AR")}
-                    </span>
+                    <span>📅 {formatDate(date.fecha)}</span>
 
                     <span>🕒 {date.hora}</span>
                   </div>
