@@ -20,6 +20,11 @@ import {
 
 import AssignClassroom from "./AssignClassroom";
 
+type Classroom = {
+  id: string;
+  nombre: string;
+};
+
 type Student = {
   id: string;
   dni: number;
@@ -27,12 +32,7 @@ type Student = {
   apellido: string;
   status: string;
   nivel: string;
-  classroom: string | null;
-};
-
-type Classroom = {
-  id: string;
-  nombre: string;
+  classrooms: Classroom[];
 };
 
 type Props = {
@@ -78,7 +78,10 @@ export default function StudentsTable({
       student.nivel?.toLowerCase() === selectedNivel.toLowerCase();
 
     const matchesClassroom =
-      !selectedClassroom || student.classroom === selectedClassroom;
+      !selectedClassroom ||
+      student.classrooms?.some(
+        (classroom) => classroom.nombre === selectedClassroom,
+      );
 
     const matchesStatus = !selectedStatus || student.status === selectedStatus;
 
@@ -674,7 +677,7 @@ export default function StudentsTable({
                         <td className="py-4 px-4 min-w-[180px]">
                           <AssignClassroom
                             studentId={student.id}
-                            currentClassroom={student.classroom}
+                            currentClassrooms={student.classrooms ?? []}
                             classrooms={classrooms}
                           />
                         </td>
@@ -793,7 +796,7 @@ export default function StudentsTable({
                     <div className="w-full sm:w-auto">
                       <AssignClassroom
                         studentId={student.id}
-                        currentClassroom={student.classroom}
+                        currentClassrooms={student.classrooms ?? []}
                         classrooms={classrooms}
                       />
                     </div>

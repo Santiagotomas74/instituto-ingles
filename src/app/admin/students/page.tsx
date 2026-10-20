@@ -3,6 +3,11 @@ import AdminSidebar from "../dashboard/components/AdminSidebar";
 import Navbar from "../dashboard/components/AdminNavbar";
 import StudentsTable from "./StudentsTable";
 
+type Classroom = {
+  id: string;
+  nombre: string;
+};
+
 type Student = {
   id: string;
   dni: number;
@@ -11,12 +16,7 @@ type Student = {
   email: string;
   status: string;
   nivel: string;
-  classroom: string | null;
-};
-
-type Classroom = {
-  id: string;
-  nombre: string;
+  classrooms: Classroom[];
 };
 
 // 1. EXTRAEMOS LA LÓGICA DE CARGA DE DATOS A UN COMPONENTE SERVIDOR ASÍNCRONO
@@ -35,7 +35,7 @@ async function StudentsDataWrapper() {
     { cache: "no-store" },
   );
   const classroomsData = await classroomsRes.json();
-  const classrooms: Classroom[] = classroomsData.classrooms || [];
+  const classrooms: Classroom[] = classroomsData.classrooms ?? [];
 
   return <StudentsTable students={students} classrooms={classrooms} />;
 }

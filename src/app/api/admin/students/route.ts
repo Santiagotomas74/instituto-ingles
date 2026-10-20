@@ -52,20 +52,31 @@ export async function GET() {
   try {
     const result = await query(`
       SELECT
-        students.id,
-        students.dni,
-        students.nombre,
-        students.apellido,
-        students.email,
-        students.status,
-        students.nivel,
-        classrooms.nombre AS classroom
-      FROM students
-      LEFT JOIN classroom_students
-        ON classroom_students.student_id = students.id
-      LEFT JOIN classrooms
-        ON classrooms.id = classroom_students.classroom_id
-      ORDER BY students.apellido ASC
+        s.id,
+        s.dni,
+        s.nombre,
+        s.apellido,
+        s.email,
+        s.status,
+        s.nivel,
+        COALESCE(
+          (
+            SELECT json_agg(
+              json_build_object(
+                'id', c.id,
+                'nombre', c.nombre
+              )
+              ORDER BY c.nombre ASC
+            )
+            FROM classroom_students cs
+            INNER JOIN classrooms c
+              ON c.id = cs.classroom_id
+            WHERE cs.student_id = s.id
+          ),
+          '[]'::json
+        ) AS classrooms
+      FROM students s
+      ORDER BY s.apellido ASC, s.nombre ASC
     `);
 
     return NextResponse.json({
@@ -73,7 +84,7 @@ export async function GET() {
       students: result.rows,
     });
   } catch (error) {
-    console.error(error);
+    console.error("ERROR FETCHING STUDENTS:", error);
 
     return NextResponse.json(
       {
