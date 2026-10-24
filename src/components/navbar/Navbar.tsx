@@ -307,7 +307,7 @@ export default function MobileNavbar() {
         {/* ==================== BOTONES DESKTOP ==================== */}
         <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-3">
           {/* Iniciar sesión */}
-          ```tsx
+
           <Link
             href="/login"
             className="
@@ -336,7 +336,7 @@ export default function MobileNavbar() {
     "
             />
           </Link>
-          ```
+
           {/* Información sobre los cursos */}
           <Link
             href="/inscriptions"
