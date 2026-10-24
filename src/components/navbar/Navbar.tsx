@@ -7,7 +7,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  BookOpen,
   GraduationCap,
   Calendar,
   ClipboardCheck,
@@ -20,132 +19,57 @@ import {
 
 export default function MobileNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const toggleDropdown = (name: string) => {
-    setOpenDropdown(openDropdown === name ? null : name);
+    setOpenDropdown((current) => (current === name ? null : name));
+  };
+
+  const closeMobileMenu = () => {
+    setMenuOpen(false);
+    setOpenDropdown(null);
   };
 
   return (
-    <header className=" w-full border-b border-gray-100 bg-white/95 backdrop-blur sticky top-0 z-50 ">
-      <nav
-        className="
-          max-w-7xl
-          mx-auto
-          h-20
-          px-5
-          flex
-          items-center
-          justify-between
-        "
-      >
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/95 backdrop-blur">
+      {/* ==================== NAVBAR PRINCIPAL ==================== */}
+      <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-5 xl:gap-5">
         {/* Logo */}
-        <Link href="/">
+        <Link
+          href="/"
+          className="flex shrink-0 items-center"
+          aria-label="I.N.K - Inicio"
+        >
           <img
             src="/logo-ink.png"
             alt="I.N.K Logo"
-            className="
-      h-20
-      md:h-28
-      lg:h-28
-      w-auto
-      object-contain
-      cursor-pointer
-    "
+            className="h-16 w-auto cursor-pointer object-contain sm:h-[4.5rem] lg:h-[4.5rem]"
           />
         </Link>
-        {/* Mobile Button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="
-            lg:hidden
-            w-11
-            h-11
-            rounded-xl
-            border
-            border-gray-500
-            flex
-            items-center
-            justify-center
-            text-gray-500
-          "
-        >
-          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
 
-        {/* Desktop */}
-        <div className="hidden lg:flex">
-          {/* TU NAVBAR DESKTOP ACTUAL */}
+        {/* ==================== NAVEGACIÓN DESKTOP ==================== */}
+        <div className="hidden min-w-0 flex-1 items-center justify-center lg:flex">
+          <ul className="flex items-center gap-4 whitespace-nowrap text-[13px] font-medium text-gray-700 xl:gap-6 xl:text-[15px]">
+            {/* Inicio */}
+            <li>
+              <Link href="/" className="transition-colors hover:text-blue-600">
+                Inicio
+              </Link>
+            </li>
 
-          <nav
-            className="
-          max-w-7xl
-          mx-auto
-          h-20
-          px-6
-          flex
-          items-center
-          justify-between
-        "
-          >
-            {/* Navigation */}
-            <ul
-              className="
-            hidden
-            lg:flex
-            items-center
-            gap-10
-            text-[15px]
-            font-medium
-            text-gray-700
-          "
-            >
-              {/* Inicio */}
-              <li>
-                <Link href="/" className="hover:text-blue-600 transition">
-                  Inicio
-                </Link>
-              </li>
+            {/* Instituto */}
+            <li className="group relative">
+              <button
+                type="button"
+                className="flex items-center gap-1 transition-colors hover:text-blue-600"
+                aria-haspopup="true"
+              >
+                Instituto
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
 
-              {/* Instituto */}
-              <li className="relative group">
-                <button
-                  className="
-      flex
-      items-center
-      gap-1
-      hover:text-blue-600
-      transition
-    "
-                >
-                  Instituto
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-
-                <div
-                  className="
-      absolute
-      top-10
-      left-0
-      w-80
-      rounded-2xl
-      border
-      border-gray-100
-      bg-white
-      shadow-2xl
-      p-3
-      opacity-0
-      invisible
-      translate-y-2
-      group-hover:opacity-100
-      group-hover:visible
-      group-hover:translate-y-0
-      transition-all
-      duration-300
-      z-50
-    "
-                >
+              <div className="invisible absolute left-0 top-full z-50 w-80 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-2xl">
                   <DropdownItem
                     href="/#about"
                     title="Sobre I.N.K"
@@ -179,7 +103,7 @@ export default function MobileNavbar() {
                   <DropdownItem
                     href="/#teachers"
                     title="Profesores"
-                    description="Conoce nuestro equipo docente"
+                    description="Conocé nuestro equipo docente"
                   />
 
                   <DropdownItem
@@ -194,45 +118,22 @@ export default function MobileNavbar() {
                     description="Experiencias de nuestros alumnos"
                   />
                 </div>
-              </li>
-              {/* Cursos */}
-              <li className="relative group">
-                <button
-                  className="
-      flex
-      items-center
-      gap-1
-      hover:text-blue-600
-      transition
-    "
-                >
-                  Cursos
-                  <ChevronDown className="w-4 h-4" />
-                </button>
+              </div>
+            </li>
 
-                <div
-                  className="
-      absolute
-      top-10
-      left-0
-      w-80
-      rounded-2xl
-      border
-      border-gray-100
-      bg-white
-      shadow-2xl
-      p-3
-      opacity-0
-      invisible
-      translate-y-2
-      group-hover:opacity-100
-      group-hover:visible
-      group-hover:translate-y-0
-      transition-all
-      duration-300
-      z-50
-    "
-                >
+            {/* Cursos */}
+            <li className="group relative">
+              <button
+                type="button"
+                className="flex items-center gap-1 transition-colors hover:text-blue-600"
+                aria-haspopup="true"
+              >
+                Cursos
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
+
+              <div className="invisible absolute left-0 top-full z-50 w-80 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-2xl">
                   <DropdownItem
                     href="/#levels"
                     title="Kids"
@@ -293,247 +194,183 @@ export default function MobileNavbar() {
                     description="Clases individuales y personalizadas"
                   />
                 </div>
-              </li>
+              </div>
+            </li>
 
-              {/* Estudiantes */}
-              <li className="relative group">
-                <button
-                  className="
-                flex
-                items-center
-                gap-1
-                hover:text-blue-600
-                transition
-              "
-                >
-                  Estudiantes
-                  <ChevronDown className="w-4 h-4" />
-                </button>
+            {/* Estudiantes */}
+            <li className="group relative">
+              <button
+                type="button"
+                className="flex items-center gap-1 transition-colors hover:text-blue-600"
+                aria-haspopup="true"
+              >
+                Estudiantes
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
 
-                <div
-                  className="
-                absolute
-                top-10
-                left-0
-                w-80
-                rounded-2xl
-                border
-                border-gray-100
-                bg-white
-                shadow-2xl
-                p-3
-                opacity-0
-                invisible
-                translate-y-2
-                group-hover:opacity-100
-                group-hover:visible
-                group-hover:translate-y-0
-                transition-all
-                duration-300
-              "
-                >
+              <div className="invisible absolute left-0 top-full z-50 w-80 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-2xl">
                   <DropdownIconItem
                     href="/boletin"
-                    icon={<GraduationCap className="w-5 h-5" />}
+                    icon={<GraduationCap className="h-5 w-5" />}
                     title="Boletín de notas"
-                    description="Accede a tus calificaciones y progreso académico"
+                    description="Accedé a tus calificaciones y progreso académico"
                   />
+
                   <DropdownIconItem
                     href="/student/dashboard"
-                    icon={<GraduationCap className="w-5 h-5" />}
+                    icon={<GraduationCap className="h-5 w-5" />}
                     title="Campus virtual"
-                    description="Accede a clases y materiales"
+                    description="Accedé a clases y materiales"
                   />
 
                   <DropdownIconItem
                     href="/student/dashboard/calendar"
-                    icon={<Calendar className="w-5 h-5" />}
+                    icon={<Calendar className="h-5 w-5" />}
                     title="Calendario académico"
                     description="Fechas y horarios"
                   />
 
                   <DropdownIconItem
                     href="/student/dashboard/homework"
-                    icon={<ClipboardCheck className="w-5 h-5" />}
+                    icon={<ClipboardCheck className="h-5 w-5" />}
                     title="Tareas y ejercicios"
                     description="Actividades y evaluaciones"
                   />
 
                   <DropdownIconItem
                     href="/student/chat"
-                    icon={<MessageSquare className="w-5 h-5" />}
+                    icon={<MessageSquare className="h-5 w-5" />}
                     title="Mensajes"
                     description="Comunicación con profesores"
                   />
                 </div>
-              </li>
+              </div>
+            </li>
 
-              {/* Profesores */}
-              <li className="relative group">
-                <button
-                  className="
-                flex
-                items-center
-                gap-1
-                hover:text-blue-600
-                transition
-              "
-                >
-                  Profesores
-                  <ChevronDown className="w-4 h-4" />
-                </button>
+            {/* Profesores */}
+            <li className="group relative">
+              <button
+                type="button"
+                className="flex items-center gap-1 transition-colors hover:text-blue-600"
+                aria-haspopup="true"
+              >
+                Profesores
+                <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
 
-                <div
-                  className="
-                absolute
-                top-10
-                left-0
-                w-80
-                rounded-2xl
-                border
-                border-gray-100
-                bg-white
-                shadow-2xl
-                p-3
-                opacity-0
-                invisible
-                translate-y-2
-                group-hover:opacity-100
-                group-hover:visible
-                group-hover:translate-y-0
-                transition-all
-                duration-300
-              "
-                >
+              <div className="invisible absolute left-0 top-full z-50 w-80 translate-y-2 pt-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-2xl">
                   <DropdownIconItem
                     href="/teacher/dashboard"
-                    icon={<Users className="w-5 h-5" />}
+                    icon={<Users className="h-5 w-5" />}
                     title="Gestión de clases"
-                    description="Administra tus cursos"
+                    description="Administrá tus cursos"
                   />
 
                   <DropdownIconItem
                     href="/teacher/dashboard"
-                    icon={<Upload className="w-5 h-5" />}
+                    icon={<Upload className="h-5 w-5" />}
                     title="Subir materiales"
-                    description="Comparte contenido académico"
+                    description="Compartí contenido académico"
                   />
 
                   <DropdownIconItem
                     href="/teacher/chat"
-                    icon={<MessageSquare className="w-5 h-5" />}
+                    icon={<MessageSquare className="h-5 w-5" />}
                     title="Mensajes"
                     description="Comunicación institucional"
                   />
 
                   <DropdownIconItem
                     href="/teacher/calendar"
-                    icon={<BarChart3 className="w-5 h-5" />}
-                    title="Calendario Academico"
+                    icon={<BarChart3 className="h-5 w-5" />}
+                    title="Calendario académico"
                     description="Fechas y eventos del año"
                   />
                 </div>
-              </li>
+              </div>
+            </li>
 
-              {/* Contacto */}
-              <li>
-                <Link
-                  href="/#contact"
-                  className="hover:text-blue-600 transition"
-                >
-                  Contacto
-                </Link>
-              </li>
-            </ul>
-          </nav>
+            {/* Contacto */}
+            <li>
+              <Link
+                href="/#contact"
+                className="transition-colors hover:text-blue-600"
+              >
+                Contacto
+              </Link>
+            </li>
+          </ul>
         </div>
 
-        {/* Actions */}
-        <div className="hidden lg:flex items-center gap-3">
+        {/* ==================== BOTONES DESKTOP ==================== */}
+        <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-3">
+          {/* Iniciar sesión */}
+          ```tsx
           <Link
             href="/login"
             className="
-    group
-    relative
-    px-5
-    py-2.5
-    rounded-xl
-    text-blue-500
-    font-medium
-    transition-all
-    duration-300
-    hover:text-blue-700
-    hover:bg-[#d4b36a]/10
+    group relative inline-flex shrink-0
+    items-center justify-center
+    whitespace-nowrap rounded-xl
+    px-3 py-3 xl:px-4
+    text-sm font-semibold text-blue-600
+    transition-colors duration-300
+    hover:bg-blue-50 hover:text-blue-800
   "
           >
-            Iniciar sesión
-            {/* Línea animada */}
+            <span>Iniciar sesión</span>
+
+            {/* Línea animada alineada con el texto */}
             <span
+              aria-hidden="true"
               className="
-      absolute
-      bottom-0
-      left-0
-      h-[2px]
-      w-full
-      origin-left
-      scale-x-0
-      rounded-full
+      absolute bottom-2 left-3 right-3
+      h-[2px] rounded-full
+      origin-left scale-x-0
       bg-blue-600
-      transition-transform
-      duration-300
-      ease-out
+      transition-transform duration-300 ease-out
       group-hover:scale-x-100
+      xl:left-4 xl:right-4
     "
             />
           </Link>
-
+          ```
+          {/* Información sobre los cursos */}
           <Link
             href="/inscriptions"
-            className="
-      px-6
-      py-3
-      rounded-xl
-      bg-gradient-to-br
-                    from-blue-600
-                    to-blue-900
-      font-semibold
-      transition-all
-      duration-300
-      shadow-[0_6px_20px_rgba(180,130,20,0.18)]
-      hover:from-blue-700
-      hover:to-blue-950
-      hover:shadow-[0_8px_28px_rgba(180,130,20,0.28)]
-      hover:-translate-y-[1px]
-    "
+            className="inline-flex w-[180px] shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-900 px-3 py-3 text-center text-xs font-semibold leading-snug text-white shadow-md shadow-blue-900/15 transition-all duration-300 hover:-translate-y-0.5 hover:from-blue-700 hover:to-blue-950 hover:shadow-lg xl:w-[220px] xl:px-4 xl:text-sm"
           >
-            Inscribirse
+            <span>
+              Quiero recibir información
+              <br />
+              sobre los cursos
+            </span>
           </Link>
         </div>
+
+        {/* ==================== BOTÓN MENÚ MÓVIL ==================== */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((current) => !current)}
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={menuOpen}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-300 text-gray-600 transition-colors hover:border-blue-600 hover:text-blue-600 lg:hidden"
+        >
+          {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* ==================== MENÚ MÓVIL ==================== */}
       <div
-        className={`
-          lg:hidden
-          overflow-hidden
-          transition-all
-          duration-300
-          ${menuOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}
-        `}
+        className={`overflow-hidden transition-all duration-300 lg:hidden ${
+          menuOpen ? "max-h-[1200px] opacity-100" : "max-h-0 opacity-0"
+        }`}
       >
-        <div
-          className="
-            px-5
-            pb-6
-            pt-2
-            bg-white
-            border-t
-            border-gray-100
-            space-y-2
-          "
-        >
+        <div className="space-y-2 border-t border-gray-100 bg-white px-5 pb-6 pt-2">
           {/* Inicio */}
-          <MobileLink href="/" label="Inicio" />
+          <MobileLink href="/" label="Inicio" onClick={closeMobileMenu} />
 
           {/* Instituto */}
           <MobileDropdown
@@ -544,44 +381,49 @@ export default function MobileNavbar() {
             <MobileSubLink
               href="/#about"
               label="Sobre I.N.K"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#features"
               label="¿Por qué elegirnos?"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
+
             <MobileSubLink
               href="/#methodology"
               label="Metodología"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#cambridge"
               label="Certificación Cambridge"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
+
             <MobileSubLink
               href="/#modalities"
               label="Modalidades"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
+
             <MobileSubLink
               href="/#teachers"
               label="Profesores"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
+
             <MobileSubLink
               href="/#stats"
               label="Logros y estadísticas"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
+
             <MobileSubLink
               href="/#testimonials"
               label="Testimonios"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
           </MobileDropdown>
 
@@ -594,31 +436,61 @@ export default function MobileNavbar() {
             <MobileSubLink
               href="/#levels"
               label="Kids"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#levels"
               label="Teens"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#levels"
               label="Adults"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#levels"
               label="Conversation"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
             />
 
             <MobileSubLink
               href="/#levels"
               label="Cambridge Preparation"
-              onClick={() => setMenuOpen(false)}
+              onClick={closeMobileMenu}
+            />
+
+            <MobileSubLink
+              href="/#levels"
+              label="Intensive Courses"
+              onClick={closeMobileMenu}
+            />
+
+            <MobileSubLink
+              href="/#levels"
+              label="School Support"
+              onClick={closeMobileMenu}
+            />
+
+            <MobileSubLink
+              href="/#levels"
+              label="Professional English"
+              onClick={closeMobileMenu}
+            />
+
+            <MobileSubLink
+              href="/#levels"
+              label="Online Classes"
+              onClick={closeMobileMenu}
+            />
+
+            <MobileSubLink
+              href="/#levels"
+              label="Private Lessons"
+              onClick={closeMobileMenu}
             />
           </MobileDropdown>
 
@@ -630,31 +502,37 @@ export default function MobileNavbar() {
           >
             <MobileIconLink
               href="/boletin"
-              icon={<FileText className="w-4 h-4" />}
+              icon={<FileText className="h-4 w-4" />}
               label="Boletín de notas"
+              onClick={closeMobileMenu}
             />
+
             <MobileIconLink
               href="/student/dashboard"
-              icon={<GraduationCap className="w-4 h-4" />}
+              icon={<GraduationCap className="h-4 w-4" />}
               label="Campus virtual"
+              onClick={closeMobileMenu}
             />
 
             <MobileIconLink
               href="/student/dashboard/calendar"
-              icon={<Calendar className="w-4 h-4" />}
+              icon={<Calendar className="h-4 w-4" />}
               label="Calendario"
+              onClick={closeMobileMenu}
             />
 
             <MobileIconLink
               href="/student/dashboard/homework"
-              icon={<ClipboardCheck className="w-4 h-4" />}
-              label="Tareas"
+              icon={<ClipboardCheck className="h-4 w-4" />}
+              label="Tareas y ejercicios"
+              onClick={closeMobileMenu}
             />
 
             <MobileIconLink
               href="/student/chat"
-              icon={<MessageSquare className="w-4 h-4" />}
+              icon={<MessageSquare className="h-4 w-4" />}
               label="Mensajes"
+              onClick={closeMobileMenu}
             />
           </MobileDropdown>
 
@@ -666,65 +544,56 @@ export default function MobileNavbar() {
           >
             <MobileIconLink
               href="/teacher/dashboard"
-              icon={<Users className="w-4 h-4" />}
+              icon={<Users className="h-4 w-4" />}
               label="Gestión de clases"
+              onClick={closeMobileMenu}
             />
 
             <MobileIconLink
               href="/teacher/dashboard"
-              icon={<Upload className="w-4 h-4" />}
-              label="Materiales"
+              icon={<Upload className="h-4 w-4" />}
+              label="Subir materiales"
+              onClick={closeMobileMenu}
             />
 
             <MobileIconLink
               href="/teacher/chat"
-              icon={<MessageSquare className="w-4 h-4" />}
+              icon={<MessageSquare className="h-4 w-4" />}
               label="Mensajes"
+              onClick={closeMobileMenu}
             />
+
             <MobileIconLink
               href="/teacher/calendar"
-              icon={<Calendar className="w-4 h-4" />}
-              label="Calendario"
+              icon={<Calendar className="h-4 w-4" />}
+              label="Calendario académico"
+              onClick={closeMobileMenu}
             />
           </MobileDropdown>
 
           {/* Contacto */}
-          <MobileLink href="/#contact" label="Contacto" />
+          <MobileLink
+            href="/#contact"
+            label="Contacto"
+            onClick={closeMobileMenu}
+          />
 
-          {/* Buttons */}
-          <div className="pt-5 space-y-3">
+          {/* Botones móviles */}
+          <div className="space-y-3 pt-5">
             <Link
               href="/login"
-              className="
-                w-full
-                flex
-                justify-center
-                border
-                border-blue-600
-                text-blue-600
-                py-3
-                rounded-xl
-                font-medium
-              "
+              onClick={closeMobileMenu}
+              className="flex w-full items-center justify-center rounded-xl border border-blue-600 px-4 py-3 font-semibold text-blue-600 transition-colors hover:bg-blue-50"
             >
               Iniciar sesión
             </Link>
 
             <Link
               href="/inscriptions"
-              className="
-                w-full
-                flex
-                justify-center
-                bg-blue-600
-                text-white
-                py-3
-                rounded-xl
-                font-medium
-                shadow-lg
-              "
+              onClick={closeMobileMenu}
+              className="flex w-full items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-900 px-4 py-3 text-center font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-blue-950"
             >
-              Inscribirse
+              Quiero recibir información sobre los cursos
             </Link>
           </div>
         </div>
@@ -733,24 +602,20 @@ export default function MobileNavbar() {
   );
 }
 
-/* ---------------- Components ---------------- */
+/* ==================== COMPONENTES AUXILIARES ==================== */
 
 type MobileLinkProps = {
   href: string;
   label: string;
+  onClick?: () => void;
 };
 
-function MobileLink({ href, label }: MobileLinkProps) {
+function MobileLink({ href, label, onClick }: MobileLinkProps) {
   return (
     <Link
       href={href}
-      className="
-        block
-        py-3
-        text-[16px]
-        font-medium
-        text-gray-800
-      "
+      onClick={onClick}
+      className="block py-3 text-base font-medium text-gray-800 transition-colors hover:text-blue-600"
     >
       {label}
     </Link>
@@ -767,18 +632,10 @@ function DropdownItem({ href, title, description }: DropdownItemProps) {
   return (
     <Link
       href={href}
-      className="
-        block
-        px-4
-        py-3
-        rounded-xl
-        hover:bg-blue-50
-        transition
-      "
+      className="block rounded-xl px-4 py-3 transition-colors hover:bg-blue-50"
     >
       <p className="font-medium text-gray-900">{title}</p>
-
-      <p className="text-sm text-gray-500 mt-1">{description}</p>
+      <p className="mt-1 text-sm text-gray-500">{description}</p>
     </Link>
   );
 }
@@ -799,37 +656,15 @@ function DropdownIconItem({
   return (
     <Link
       href={href}
-      className="
-        flex
-        items-start
-        gap-4
-        px-4
-        py-3
-        rounded-xl
-        hover:bg-blue-50
-        transition
-      "
+      className="flex items-start gap-4 rounded-xl px-4 py-3 transition-colors hover:bg-blue-50"
     >
-      <div
-        className="
-          w-10
-          h-10
-          rounded-lg
-          bg-blue-100
-          text-blue-600
-          flex
-          items-center
-          justify-center
-          shrink-0
-        "
-      >
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
         {icon}
       </div>
 
-      <div>
+      <div className="min-w-0">
         <p className="font-medium text-gray-900">{title}</p>
-
-        <p className="text-sm text-gray-500 mt-1">{description}</p>
+        <p className="mt-1 text-sm text-gray-500">{description}</p>
       </div>
     </Link>
   );
@@ -851,39 +686,28 @@ function MobileDropdown({
   return (
     <div className="border-b border-gray-100 pb-2">
       <button
+        type="button"
         onClick={onClick}
-        className="
-          w-full
-          flex
-          items-center
-          justify-between
-          py-3
-          text-[16px]
-          font-medium
-          text-gray-800
-        "
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between py-3 text-base font-medium text-gray-800"
       >
         {title}
 
         <ChevronDown
-          className={`
-            w-5
-            h-5
-            transition-transform
-            ${isOpen ? "rotate-180" : ""}
-          `}
+          className={`h-5 w-5 shrink-0 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
+          }`}
         />
       </button>
 
       <div
-        className={`
-          overflow-hidden
-          transition-all
-          duration-300
-          ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-        `}
+        className={`grid transition-all duration-300 ${
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
       >
-        <div className="pl-2 pb-2">{children}</div>
+        <div className="overflow-hidden">
+          <div className="pb-2 pl-2">{children}</div>
+        </div>
       </div>
     </div>
   );
@@ -899,13 +723,8 @@ function MobileSubLink({ href, label, onClick }: MobileSubLinkProps) {
   return (
     <Link
       href={href}
-      className="
-        block
-        py-2
-        text-gray-600
-        text-[15px]
-      "
       onClick={onClick}
+      className="block py-2 text-[15px] text-gray-600 transition-colors hover:text-blue-600"
     >
       {label}
     </Link>
@@ -916,37 +735,21 @@ type MobileIconLinkProps = {
   href: string;
   icon: React.ReactNode;
   label: string;
+  onClick: () => void;
 };
 
-function MobileIconLink({ href, icon, label }: MobileIconLinkProps) {
+function MobileIconLink({ href, icon, label, onClick }: MobileIconLinkProps) {
   return (
     <Link
       href={href}
-      className="
-        flex
-        items-center
-        gap-3
-        py-3
-        text-gray-700
-        text-[15px]
-      "
+      onClick={onClick}
+      className="flex items-center gap-3 py-3 text-[15px] text-gray-700 transition-colors hover:text-blue-600"
     >
-      <div
-        className="
-          w-8
-          h-8
-          rounded-lg
-          bg-blue-50
-          text-blue-600
-          flex
-          items-center
-          justify-center
-        "
-      >
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
         {icon}
       </div>
 
-      {label}
+      <span>{label}</span>
     </Link>
   );
 }
