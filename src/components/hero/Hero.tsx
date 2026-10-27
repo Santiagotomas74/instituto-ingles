@@ -201,7 +201,7 @@ md:text-5xl
       hover:scale-[1.02]
     "
             >
-              Inscribirme ahora
+              Quiero recibir información
             </Link>
 
             <Link

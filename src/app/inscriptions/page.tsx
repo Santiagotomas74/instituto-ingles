@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Mail, Phone, MapPin, Clock3, MessageCircle } from "lucide-react";
 import Navbar from "@/components/navbar/Navbar";
 
@@ -8,6 +9,7 @@ export default function InscriptionsPage() {
   const [loading, setLoading] = useState(false);
 
   const [successMessage, setSuccessMessage] = useState("");
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -37,6 +39,12 @@ export default function InscriptionsPage() {
 
     setErrorMessage("");
     setSuccessMessage("");
+    if (!privacyAccepted) {
+      setErrorMessage(
+        "Debés leer y aceptar la Política de Privacidad para enviar la solicitud.",
+      );
+      return;
+    }
 
     const cleanPhone = normalizePhone(formData.phone);
 
@@ -83,6 +91,7 @@ export default function InscriptionsPage() {
         course: "",
         message: "",
       });
+      setPrivacyAccepted(false);
     } catch (error) {
       console.error(error);
 
@@ -214,11 +223,13 @@ export default function InscriptionsPage() {
             "
             >
               <h2 className="text-3xl font-bold text-gray-900">
-                Formulario de inscripción
+                Formulario de contacto
               </h2>
 
-              <p className="text-gray-500 mt-2 mb-8">
-                Respondemos consultas dentro de las próximas 24 horas.
+              <p className="text-gray-500 mt-1 mb-8">
+                (este formulario es para estudiantes nuevos, si ya sos
+                estudiante de I.N.K, por favor contactanos por mensajería
+                directa o WhatsApp).
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -398,6 +409,10 @@ export default function InscriptionsPage() {
                   "
                   />
                 </div>
+
+                <p className="text-gray-500 mt-2 ">
+                  Respondemos consultas dentro de las próximas 24 horas.
+                </p>
                 {/* SUCCESS MESSAGE */}
                 {successMessage && (
                   <div
@@ -435,7 +450,49 @@ export default function InscriptionsPage() {
                     {errorMessage}
                   </div>
                 )}
+                {/* Política de privacidad */}
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <label className="flex cursor-pointer items-start gap-3">
+                    <input
+                      type="checkbox"
+                      name="privacyAccepted"
+                      checked={privacyAccepted}
+                      onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                      required
+                      className="
+        mt-1
+        h-4
+        w-4
+        shrink-0
+        cursor-pointer
+        accent-blue-600
+      "
+                    />
 
+                    <span className="text-sm leading-relaxed text-gray-600">
+                      Leí y acepto la{" "}
+                      <Link
+                        href="/politica-de-privacidad"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="
+          font-semibold
+          text-blue-600
+          underline
+          decoration-blue-300
+          underline-offset-4
+          transition-colors
+          hover:text-blue-800
+        "
+                      >
+                        Política de Privacidad
+                      </Link>
+                      . Entiendo que mis datos personales serán utilizados para
+                      responder mi consulta y contactarme en relación con los
+                      cursos de I.N.K.
+                    </span>
+                  </label>
+                </div>
                 <button
                   type="submit"
                   disabled={loading}
