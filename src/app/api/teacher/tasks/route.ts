@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
       submission_type,
       max_score,
       is_published,
+      archivo,
     } = await req.json();
 
     if (!classroom_id || !titulo) {
@@ -39,6 +40,22 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           message: "Faltan datos obligatorios",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    if (
+      archivo !== null &&
+      archivo !== undefined &&
+      (typeof archivo !== "string" || !archivo.startsWith("https://"))
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "La URL del archivo no es válida",
         },
         {
           status: 400,
@@ -66,11 +83,13 @@ export async function POST(req: NextRequest) {
         allow_submission,
         submission_type,
         max_score,
-        is_published
+        is_published,
+        archivo
       )
       VALUES
       (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11
+        $1, $2, $3, $4, $5, $6,
+        $7, $8, $9, $10, $11, $12
       )
       RETURNING *;
       `,
@@ -86,6 +105,7 @@ export async function POST(req: NextRequest) {
         submission_type || "individual",
         max_score ?? 100,
         is_published ?? true,
+        archivo || null,
       ],
     );
 
@@ -99,10 +119,9 @@ export async function POST(req: NextRequest) {
 
     const students = await query(
       `
-      SELECT
-          student_id
+      SELECT student_id
       FROM classroom_students
-      WHERE classroom_id=$1;
+      WHERE classroom_id = $1;
       `,
       [classroom_id],
     );
@@ -113,50 +132,40 @@ export async function POST(req: NextRequest) {
     ==========================================
     */
 
-    /*
-==========================================
-Crear notificaciones
-==========================================
-*/
-
     for (const student of students.rows) {
       const notificationResult = await query(
         `
-    INSERT INTO notifications
-    (
-        user_id,
-        role,
-        type,
-        title,
-        description,
-        reference_id,
-        reference_type,
-        action_url
-    )
-    VALUES
-    (
-        $1,
-        'student',
-        'task',
-        $2,
-        $3,
-        $4,
-        'task',
-        $5
-    )
-    RETURNING *;
-    `,
+        INSERT INTO notifications
+        (
+          user_id,
+          role,
+          type,
+          title,
+          description,
+          reference_id,
+          reference_type,
+          action_url
+        )
+        VALUES
+        (
+          $1,
+          'student',
+          'task',
+          $2,
+          $3,
+          $4,
+          'task',
+          $5
+        )
+        RETURNING *;
+        `,
         [
           student.student_id,
-
           "📝 Nueva tarea disponible",
-
           due_date
             ? `El profesor publicó la tarea "${titulo}". Fecha límite: ${due_date}${due_time ? ` ${due_time}` : ""}.`
             : `El profesor publicó una nueva tarea: "${titulo}".`,
-
           task.id,
-
           `/student/classroom/${classroom_id}?tab=tasks&task=${task.id}`,
         ],
       );
@@ -175,7 +184,7 @@ Crear notificaciones
           }),
         });
       } catch (error) {
-        console.error(error);
+        console.error("Error enviando notificación:", error);
       }
     }
 
@@ -184,7 +193,7 @@ Crear notificaciones
       task,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error creando tarea:", error);
 
     return NextResponse.json(
       {

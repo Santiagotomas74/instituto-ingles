@@ -17,6 +17,7 @@ type PendingTask = {
   due_date: string | null;
   due_time: string | null;
   max_score: number;
+  archivo?: string | null;
 };
 
 export default function PendingTasks() {

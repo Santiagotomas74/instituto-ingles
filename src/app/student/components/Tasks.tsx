@@ -37,6 +37,7 @@ export type Task = {
   comentario: string | null;
 
   archivo_url: string | null;
+  archivo?: string | null;
 
   archivo_nombre: string | null;
 };

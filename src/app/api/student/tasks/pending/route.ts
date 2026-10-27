@@ -31,6 +31,7 @@ t.descripcion,
 
 t.due_date,
 t.due_time,
+t.archivo,
 
 t.max_score,
 

@@ -32,6 +32,7 @@ export type ClassroomTask = {
   max_score: number | null;
 
   created_at: string;
+  archivo?: string | null;
 
   submissions?: number;
 };

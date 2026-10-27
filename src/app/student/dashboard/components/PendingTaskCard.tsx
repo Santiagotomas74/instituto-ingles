@@ -9,6 +9,8 @@ import {
   School,
   ArrowRight,
   AlertTriangle,
+  FileText,
+  Download,
 } from "lucide-react";
 
 type Props = {
@@ -21,6 +23,8 @@ type Props = {
     teacher: string;
     due_date: string | null;
     due_time: string | null;
+    max_score: number;
+    archivo?: string | null;
   };
 };
 
@@ -87,36 +91,74 @@ export default function PendingTaskCard({ task }: Props) {
   return (
     <div className="group bg-white rounded-2xl border border-gray-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition-all duration-200 flex flex-col justify-between gap-5">
       {/* SECCIÓN SUPERIOR */}
-      <div className="space-y-3">
-        {/* Badges de Estado y Aula */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
-            <School className="w-3.5 h-3.5 text-slate-500" />
-            {task.classroom}
-          </span>
+
+      <div className="space-y-4">
+        {/* Aula y estado de la tarea */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+              <School className="h-4 w-4 text-slate-600" />
+            </div>
+
+            <div className="min-w-0">
+              <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                Aula
+              </span>
+              <span className="block max-w-[180px] truncate text-xs font-semibold text-slate-700 sm:text-sm">
+                {task.classroom}
+              </span>
+            </div>
+          </div>
 
           {status && (
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border ${status.color}`}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold ${status.color}`}
             >
-              <AlertTriangle className="w-3 h-3" />
+              <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
               {status.label}
             </span>
           )}
         </div>
 
-        {/* Título y Descripción */}
-        <div>
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+        {/* Título y descripción */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold leading-snug tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-blue-700 sm:text-xl">
             {task.titulo}
           </h3>
 
           {task.descripcion && (
-            <p className="text-xs sm:text-sm text-gray-600 mt-1.5 line-clamp-2 leading-relaxed">
+            <p className="line-clamp-3 whitespace-pre-line text-sm leading-6 text-slate-600">
               {task.descripcion}
             </p>
           )}
         </div>
+
+        {/* Archivo adjunto */}
+        {task.archivo && (
+          <a
+            href={task.archivo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/file flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-3 transition-all duration-200 hover:border-blue-200 hover:bg-blue-50 hover:shadow-sm"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm ring-1 ring-blue-100 transition-transform duration-200 group-hover/file:scale-105">
+              <FileText className="h-5 w-5" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold text-slate-800">
+                Material adjunto
+              </span>
+              <span className="block text-xs text-slate-500">
+                {t("tasks2.pending.download_file")}
+              </span>
+            </div>
+
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-blue-600 transition-colors group-hover/file:bg-white">
+              <Download className="h-4 w-4" />
+            </div>
+          </a>
+        )}
       </div>
 
       {/* METADATOS Y ACCIÓN */}

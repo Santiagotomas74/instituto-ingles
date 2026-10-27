@@ -8,24 +8,11 @@ interface Params {
   }>;
 }
 
-/*
-=====================================
-EDITAR TAREA
-=====================================
-*/
-
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
-    console.log("Editando tarea..." + JSON.stringify(await params));
     const { taskId } = await params;
-    console.log("Editando tarea con ID:", taskId);
 
-    /*
-    =====================================
-    AUTENTICACIÓN
-    =====================================
-    */
-
+    // Autenticación
     const cookieStore = await cookies();
     const teacherId = cookieStore.get("user_id")?.value;
 
@@ -35,18 +22,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           success: false,
           message: "No autenticado",
         },
-        {
-          status: 401,
-        },
+        { status: 401 },
       );
     }
 
-    /*
-    =====================================
-    BODY
-    =====================================
-    */
-
+    // Body
     const body = await req.json();
 
     const {
@@ -59,50 +39,26 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       submission_type,
       max_score,
       is_published,
+      archivo,
     } = body;
 
-    /*
-    =====================================
-    VALIDAR CAMPOS
-    =====================================
-    */
-
-    if (!titulo || !titulo.trim()) {
+    if (typeof titulo !== "string" || !titulo.trim()) {
       return NextResponse.json(
         {
           success: false,
           message: "El título es obligatorio",
         },
-        {
-          status: 400,
-        },
+        { status: 400 },
       );
     }
 
-    /*
-    =====================================
-    VERIFICAR TAREA + PROFESOR
-    =====================================
-
-    La tabla classroom_tasks tiene:
-
-      created_by
-      classroom_id
-
-    Por lo tanto usamos created_by para
-    comprobar que el profesor puede
-    modificar la tarea.
-    */
-
+    // Verificar que la tarea pertenezca al profesor
     const taskResult = await query(
       `
-      SELECT
-        id,
-        classroom_id,
-        created_by
-      FROM classroom_tasks
-      WHERE id = $1
-        AND created_by = $2
+        SELECT id
+        FROM classroom_tasks
+        WHERE id = $1
+          AND created_by = $2
       `,
       [taskId, teacherId],
     );
@@ -113,35 +69,44 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           success: false,
           message: "La tarea no existe o no tienes permiso para modificarla",
         },
-        {
-          status: 403,
-        },
+        { status: 403 },
       );
     }
 
-    /*
-    =====================================
-    ACTUALIZAR TAREA
-    =====================================
-    */
+    // Validar el archivo, si se envía una URL
+    if (
+      archivo !== undefined &&
+      archivo !== null &&
+      (typeof archivo !== "string" || !archivo.startsWith("https://"))
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "La URL del archivo adjunto no es válida",
+        },
+        { status: 400 },
+      );
+    }
 
+    // Actualizar tarea y archivo adjunto
     const result = await query(
       `
-      UPDATE classroom_tasks
-      SET
-        titulo = $1,
-        descripcion = $2,
-        instrucciones = $3,
-        due_date = $4,
-        due_time = $5,
-        allow_submission = $6,
-        submission_type = $7,
-        max_score = $8,
-        is_published = $9,
-        updated_at = NOW()
-      WHERE id = $10
-        AND created_by = $11
-      RETURNING *
+        UPDATE classroom_tasks
+        SET
+          titulo = $1,
+          descripcion = $2,
+          instrucciones = $3,
+          due_date = $4,
+          due_time = $5,
+          allow_submission = $6,
+          submission_type = $7,
+          max_score = $8,
+          is_published = $9,
+          archivo = $10,
+          updated_at = NOW()
+        WHERE id = $11
+          AND created_by = $12
+        RETURNING *
       `,
       [
         titulo.trim(),
@@ -153,6 +118,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         submission_type || "individual",
         max_score ?? 100,
         is_published ?? false,
+        archivo ?? null,
         taskId,
         teacherId,
       ],
@@ -164,17 +130,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           success: false,
           message: "No se pudo actualizar la tarea",
         },
-        {
-          status: 400,
-        },
+        { status: 400 },
       );
     }
-
-    /*
-    =====================================
-    RESPUESTA
-    =====================================
-    */
 
     return NextResponse.json({
       success: true,
@@ -189,9 +147,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         success: false,
         message: "Error editando tarea",
       },
-      {
-        status: 500,
-      },
+      { status: 500 },
     );
   }
 }

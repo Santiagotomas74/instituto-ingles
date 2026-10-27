@@ -27,6 +27,7 @@ export async function GET(
           t.allow_submission,
           t.submission_type,
           t.max_score,
+          t.archivo,
           t.is_published,
           t.created_at,
 
