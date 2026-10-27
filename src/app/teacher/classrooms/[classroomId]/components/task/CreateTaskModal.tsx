@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import CreateTaskForm from "./CreateTaskForm";
 
 type Props = {
@@ -15,14 +17,32 @@ export default function CreateTaskModal({
   onClose,
   onCreated,
 }: Props) {
-  if (!open) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  // Aseguramos que el portal solo se renderice en el cliente
+  useEffect(() => {
+    setMounted(true);
+
+    // Opcional: Bloquear el scroll del fondo cuando el modal está abierto
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [open]);
+
+  if (!open || !mounted) return null;
+
+  const modalContent = (
     <div
       className="
         fixed
         inset-0
-        z-50
+        z-[9999] /* Z-index muy alto para asegurar superposición */
         bg-black/40
         backdrop-blur-sm
         flex
@@ -43,11 +63,9 @@ export default function CreateTaskModal({
         "
       >
         {/* Header */}
-
         <div className="flex items-center justify-between p-7 border-b">
           <div>
             <h2 className="text-2xl font-bold text-gray-700">Nueva tarea</h2>
-
             <p className="text-slate-500 mt-1">
               Crear una actividad para esta classroom.
             </p>
@@ -68,7 +86,6 @@ export default function CreateTaskModal({
         </div>
 
         {/* Formulario */}
-
         <div className="p-7">
           <CreateTaskForm
             classroomId={classroomId}
@@ -81,4 +98,7 @@ export default function CreateTaskModal({
       </div>
     </div>
   );
+
+  // Renderizamos el contenido directamente en el body usando createPortal
+  return createPortal(modalContent, document.body);
 }
